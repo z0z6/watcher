@@ -34,10 +34,11 @@ WOJ = {"14": ("mazowieckie", MAZ, (51.0, 53.7, 19.2, 23.3)),
        "20": ("podlaskie", POD, (52.2, 54.5, 21.8, 24.3)),
        "28": ("warmińsko-mazurskie", WAM, (53.0, 54.5, 19.0, 22.9))}
 
-# Obszar monitorowania: północne Mazowsze, zachodnie Podlasie, południe Warmii i Mazur
-REGION = {"1402","1411","1413","1415","1416","1419","1420","1422","1424","1427","1435","1437","1461","1462",
-          "2003","2004","2006","2007","2008","2010","2013","2014","2062",
-          "2803","2807","2810","2811","2812","2814","2815","2816","2817","2862"}
+# Obszar monitorowania: północno-wschodnia Polska = całe podlaskie i warmińsko-mazurskie
+# + północna i wschodnia część mazowieckiego. Dodaj/usuń kody, żeby zmienić obszar.
+MAZ_NE = {"1402","1410","1411","1413","1415","1416","1419","1420","1422","1424","1426","1427","1429",
+          "1433","1435","1437","1461","1462","1464"}
+REGION = MAZ_NE | {c for c, _ in POD} | {c for c, _ in WAM}
 
 def main(out: Path):
     feats = requests.get(GEOJSON, timeout=60).json()["features"]

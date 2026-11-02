@@ -72,24 +72,41 @@ def _stem_regex(name: str):
 
 
 class Gazetteer:
-    """Miejscowości (miasta) rozpoznawane w tekście."""
+    """Miejscowości rozpoznawane w tekście. Kolumna `forms` (formy odmiany, rozróżniana wielkość liter)
+    zastępuje dopasowanie po temacie słowa dla nazw mylących (Pisz/pisze, Węgrów/Węgry, Płońsk/płonie)."""
 
-    def __init__(self, places: list[Place]):
+    def __init__(self, places: list[Place], forms: dict[str, str] | None = None,
+                 query: set[str] | None = None):
         self.places = places
-        self._rx = [(p, *_stem_regex(p.name)) for p in places]
+        self.query_places = [p for p in places if query is None or p.name in query]
+        forms = forms or {}
+        self._rx = []
+        for p in places:
+            if forms.get(p.name):
+                alts = "|".join(re.escape(x) for x in forms[p.name].split("|"))
+                self._rx.append((p, re.compile(rf"(?<!\w)(?:{alts})(?!\w)"), True, len(norm(p.name)) + 1))
+            else:
+                rx, ln = _stem_regex(p.name)
+                self._rx.append((p, rx, False, ln))
 
     @classmethod
     def load(cls, path: str | Path) -> "Gazetteer":
+        places, forms, query = [], {}, set()
         with open(path, encoding="utf-8") as f:
-            rows = [Place(r["name"], r["powiat"], r["woj"], float(r["lat"]), float(r["lon"]))
-                    for r in csv.DictReader(f)]
-        return cls(rows)
+            for r in csv.DictReader(f):
+                p = Place(r["name"], r["powiat"], r["woj"], float(r["lat"]), float(r["lon"]))
+                places.append(p)
+                if r.get("forms"):
+                    forms[p.name] = r["forms"]
+                if r.get("query", "1") == "1":
+                    query.add(p.name)
+        return cls(places, forms, query)
 
     def find_in_text(self, text: str) -> Place | None:
         t = norm(text)
         best, best_len = None, 0
-        for p, rx, ln in self._rx:
-            if rx.search(t) and ln > best_len:  # dłuższy temat wygrywa (Ostrołęka vs Ostróda)
+        for p, rx, strict, ln in self._rx:
+            if rx.search(text if strict else t) and ln > best_len:  # dłuższy temat wygrywa
                 best, best_len = p, ln
         return best
 

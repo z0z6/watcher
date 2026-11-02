@@ -1,19 +1,54 @@
-name,powiat,woj,lat,lon
-Ciechanów,ciechanowski,mazowieckie,52.8817,20.6193
-Mława,mławski,mazowieckie,53.1126,20.3841
-Płońsk,płoński,mazowieckie,52.6226,20.3783
-Przasnysz,przasnyski,mazowieckie,53.0197,20.8815
-Ostrołęka,ostrołęcki,mazowieckie,53.0840,21.5740
-Maków Mazowiecki,makowski,mazowieckie,52.8660,21.1000
-Pułtusk,pułtuski,mazowieckie,52.7070,21.0830
-Łomża,łomżyński,podlaskie,53.1780,22.0590
-Zambrów,zambrowski,podlaskie,52.9850,22.2430
-Wysokie Mazowieckie,wysokomazowiecki,podlaskie,52.9180,22.5150
-Bielsk Podlaski,bielski,podlaskie,52.7660,23.1910
-Kolno,kolneński,podlaskie,53.4100,21.9310
-Olsztyn,olsztyński,warmińsko-mazurskie,53.7784,20.4801
-Szczytno,szczycieński,warmińsko-mazurskie,53.5630,20.9870
-Działdowo,działdowski,warmińsko-mazurskie,53.2340,20.1760
-Nidzica,nidzicki,warmińsko-mazurskie,53.3600,20.4280
-Ostróda,ostródzki,warmińsko-mazurskie,53.6960,19.9640
-Iława,iławski,warmińsko-mazurskie,53.5960,19.5680
+name,powiat,woj,lat,lon,query,forms
+Ciechanów,ciechanowski,mazowieckie,52.8817,20.6193,1,
+Mława,mławski,mazowieckie,53.1126,20.3841,1,
+Płońsk,płoński,mazowieckie,52.6226,20.3783,1,Płońsk|Płońska|Płońsku|Płońskiem
+Przasnysz,przasnyski,mazowieckie,53.0197,20.8815,1,
+Ostrołęka,ostrołęcki,mazowieckie,53.084,21.574,1,
+Maków Mazowiecki,makowski,mazowieckie,52.866,21.1,0,Maków Mazowiecki|Makowa Mazowieckiego|Makowie Mazowieckim
+Pułtusk,pułtuski,mazowieckie,52.707,21.083,0,
+Ostrów Mazowiecka,ostrowski,mazowieckie,52.8003,21.89,1,
+Wyszków,wyszkowski,mazowieckie,52.5922,21.4553,0,
+Płock,płocki,mazowieckie,52.5463,19.7065,1,
+Sierpc,sierpecki,mazowieckie,52.8556,19.6736,0,Sierpc|Sierpca|Sierpcu|Sierpcem
+Żuromin,żuromiński,mazowieckie,53.0667,19.9167,0,
+Raciąż,płoński,mazowieckie,52.7728,20.1264,0,Raciąż|Raciąża|Raciążu|Raciążem
+Siedlce,siedlecki,mazowieckie,52.1676,22.2902,1,
+Sokołów Podlaski,sokołowski,mazowieckie,52.4097,22.25,0,
+Węgrów,węgrowski,mazowieckie,52.4,22.0167,0,Węgrów|Węgrowa|Węgrowie|Węgrowem
+Łosice,łosicki,mazowieckie,52.2147,22.7192,0,
+Białystok,białostocki,podlaskie,53.1325,23.1688,1,Białystok|Białegostoku|Białemustoku|Białymstoku|Białymstokiem|Białegostokiem
+Łomża,łomżyński,podlaskie,53.178,22.059,1,
+Suwałki,suwalski,podlaskie,54.1118,22.9309,1,
+Augustów,augustowski,podlaskie,53.8431,22.9797,1,
+Sejny,sejneński,podlaskie,54.1077,23.35,0,
+Sokółka,sokólski,podlaskie,53.4064,23.5036,0,
+Hajnówka,hajnowski,podlaskie,52.7436,23.5812,0,
+Bielsk Podlaski,bielski,podlaskie,52.766,23.191,0,
+Siemiatycze,siemiatycki,podlaskie,52.4264,22.8656,0,
+Grajewo,grajewski,podlaskie,53.6481,22.4547,0,
+Mońki,moniecki,podlaskie,53.4044,22.8036,0,Mońki|Mońkach|Moniek
+Zambrów,zambrowski,podlaskie,52.985,22.243,0,
+Wysokie Mazowieckie,wysokomazowiecki,podlaskie,52.918,22.515,0,
+Kolno,kolneński,podlaskie,53.41,21.931,0,Kolno|Kolna|Kolnie|Kolnem
+Olsztyn,olsztyński,warmińsko-mazurskie,53.7784,20.4801,1,
+Elbląg,elbląski,warmińsko-mazurskie,54.1522,19.4088,1,
+Ełk,ełcki,warmińsko-mazurskie,53.8283,22.3647,1,Ełk|Ełku|Ełkiem|Ełka
+Giżycko,giżycki,warmińsko-mazurskie,54.0381,21.7656,0,
+Mrągowo,mrągowski,warmińsko-mazurskie,53.865,21.3053,0,
+Kętrzyn,kętrzyński,warmińsko-mazurskie,54.0764,21.3761,0,
+Bartoszyce,bartoszycki,warmińsko-mazurskie,54.2528,20.8083,0,
+Braniewo,braniewski,warmińsko-mazurskie,54.3825,19.8264,0,
+Lidzbark Warmiński,lidzbarski,warmińsko-mazurskie,54.1239,20.58,0,
+Pisz,piski,warmińsko-mazurskie,53.6264,21.8119,0,Pisz|Piszu|Piszem|Pisza
+Gołdap,gołdapski,warmińsko-mazurskie,54.305,22.3047,0,Gołdap|Gołdapi|Gołdapia
+Olecko,olecki,warmińsko-mazurskie,54.0378,22.5044,0,
+Węgorzewo,węgorzewski,warmińsko-mazurskie,54.2144,21.7356,0,
+Szczytno,szczycieński,warmińsko-mazurskie,53.563,20.987,1,
+Działdowo,działdowski,warmińsko-mazurskie,53.234,20.176,1,
+Nidzica,nidzicki,warmińsko-mazurskie,53.36,20.428,0,
+Ostróda,ostródzki,warmińsko-mazurskie,53.696,19.964,1,Ostróda|Ostródy|Ostródzie|Ostródę|Ostródą
+Iława,iławski,warmińsko-mazurskie,53.596,19.568,1,
+Nowe Miasto Lubawskie,nowomiejski,warmińsko-mazurskie,53.4167,19.5833,0,
+Morąg,ostródzki,warmińsko-mazurskie,54.0167,19.9333,0,Morąg|Morąga|Morągu|Morągiem
+Biskupiec,olsztyński,warmińsko-mazurskie,53.8667,20.9667,0,Biskupiec|Biskupca|Biskupcu|Biskupcem
+Mikołajki,mrągowski,warmińsko-mazurskie,53.8,21.5667,0,Mikołajki|Mikołajkach|Mikołajek|Mikołajkom

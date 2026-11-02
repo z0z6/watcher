@@ -34,6 +34,16 @@ class Store {
   static Future<String?> loadFeedCache() async =>
       (await SharedPreferences.getInstance()).getString('feedCache');
 
+  /// Zdarzenia już widziane w aplikacji (do wykrywania NOWYCH na mapie).
+  static Future<Set<String>> loadSeen() async =>
+      ((await SharedPreferences.getInstance()).getStringList('seen') ?? []).toSet();
+
+  static Future<void> saveSeen(Set<String> s) async {
+    final list = s.toList();
+    final tail = list.length > 500 ? list.sublist(list.length - 500) : list;
+    await (await SharedPreferences.getInstance()).setStringList('seen', tail);
+  }
+
   static Future<Set<String>> loadNotified() async =>
       ((await SharedPreferences.getInstance()).getStringList('notified') ?? []).toSet();
 

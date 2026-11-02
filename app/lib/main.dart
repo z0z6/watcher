@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -27,28 +30,96 @@ Future<void> main() async {
   runApp(const WatchApp());
 }
 
+// ---------- paleta (jasny i ciemny motyw) ----------
+// Ciemny: czarno-zielone tło i kolory ostrzegawcze w stylu paneli OSINT. Jasny: neutralny.
+
+const appBg = CupertinoDynamicColor.withBrightness(color: Color(0xFFF2F4F2), darkColor: Color(0xFF0A0F0A));
+const appCard = CupertinoDynamicColor.withBrightness(color: Color(0xFFFFFFFF), darkColor: Color(0xFF121A12));
+const appBorder = CupertinoDynamicColor.withBrightness(color: Color(0x26000000), darkColor: Color(0x3322C55E));
+const cRed = CupertinoDynamicColor.withBrightness(color: Color(0xFFDC2626), darkColor: Color(0xFFF87171));
+const cAmber = CupertinoDynamicColor.withBrightness(color: Color(0xFFD97706), darkColor: Color(0xFFFBBF24));
+const cGray = CupertinoDynamicColor.withBrightness(color: Color(0xFF64748B), darkColor: Color(0xFF94A3B8));
+const cGreen = CupertinoDynamicColor.withBrightness(color: Color(0xFF16A34A), darkColor: Color(0xFF4ADE80));
+const cBlue = CupertinoDynamicColor.withBrightness(color: Color(0xFF2563EB), darkColor: Color(0xFF60A5FA));
+
+/// Ważność -> kolor: czerwony (4-5), żółty (3), szary (1-2) - jak poziomy na panelach OSINT.
+Color sevColor(BuildContext c, int s) => (s >= 4 ? cRed : s == 3 ? cAmber : cGray).resolveFrom(c);
+
+Color verdictColor(BuildContext c, String v) => (switch (v) {
+      'confirmed' => cGreen,
+      'likely' => cBlue,
+      'unverified' => cAmber,
+      _ => cRed,
+    })
+        .resolveFrom(c);
+
+Color secondary(BuildContext c) => CupertinoColors.secondaryLabel.resolveFrom(c);
+bool isDark(BuildContext c) => CupertinoTheme.brightnessOf(c) == Brightness.dark;
+
+Widget section(BuildContext c, List<Widget> children, {Widget? header, Widget? footer}) =>
+    CupertinoListSection.insetGrouped(
+        backgroundColor: appBg.resolveFrom(c), header: header, footer: footer, children: children);
+
+String ago(DateTime t) {
+  final m = DateTime.now().difference(t).inMinutes;
+  if (m < 1) return 'przed chwilą';
+  if (m < 60) return '$m min temu';
+  if (m < 48 * 60) return '${m ~/ 60} h temu';
+  return '${m ~/ 1440} dni temu';
+}
+
+String fmtDate(DateTime t) {
+  final l = t.toLocal();
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${two(l.day)}.${two(l.month)} ${two(l.hour)}:${two(l.minute)}';
+}
+
 // ---------- stan aplikacji ----------
 
 class AppState extends ChangeNotifier {
   Settings settings = Settings();
   Feed? feed;
   LatLon? pos;
-  LatLon? focus;                 // "Pokaż na mapie"
+  LatLon? focus;                         // "Pokaż na mapie"
   bool locationOk = false;
   String? error;
   final tabs = CupertinoTabController();
+
+  Set<String> seen = {};                 // zdarzenia już widziane
+  final Map<String, DateTime> fresh = {};// id -> do kiedy oznaczone jako NOWE
+  FeedEvent? toast;                      // baner "nowe zdarzenie"
+  int toastCount = 0;
+  Timer? _toastTimer, _tick, _auto;
+
+  bool isFresh(String id) => (fresh[id]?.isAfter(DateTime.now())) ?? false;
 
   Future<void> init() async {
     settings = await Store.loadSettings();
     feed = await FeedService.cached();
     pos = await Store.loadLastPos();
+    seen = await Store.loadSeen();
     notifyListeners();
     try {
       if (await Geolocator.checkPermission() == LocationPermission.denied) {
         await Geolocator.requestPermission();
       }
     } catch (_) {}
+    _tick = Timer.periodic(const Duration(seconds: 30), (_) {   // wygaszanie znaczników NOWE
+      final n = DateTime.now();
+      final before = fresh.length;
+      fresh.removeWhere((_, until) => until.isBefore(n));
+      if (before != fresh.length) notifyListeners();
+    });
+    _auto = Timer.periodic(const Duration(minutes: 3), (_) => refresh());   // tryb LIVE
     await refresh();
+  }
+
+  @override
+  void dispose() {
+    _toastTimer?.cancel();
+    _tick?.cancel();
+    _auto?.cancel();
+    super.dispose();
   }
 
   Future<void> refresh() async {
@@ -59,10 +130,36 @@ class AppState extends ChangeNotifier {
     } else {
       try {
         feed = await FeedService.fetch(settings.feedUrl);
+        await _detectNew();
       } catch (_) {
         error = 'Nie udało się pobrać danych (pokazuję ostatnie znane)';
       }
     }
+    notifyListeners();
+  }
+
+  /// NOWE = id, którego jeszcze nie widziałeś. Przy pierwszym uruchomieniu nie alarmujemy o wszystkim.
+  Future<void> _detectNew() async {
+    final f = feed!;
+    final firstRun = seen.isEmpty;
+    final newOnes = filterEvents(f.events, settings).where((e) => !seen.contains(e.id)).toList();
+    seen.addAll(f.events.map((e) => e.id));
+    await Store.saveSeen(seen);
+    if (firstRun || newOnes.isEmpty) return;
+    final until = DateTime.now().add(const Duration(minutes: 10));
+    for (final e in newOnes) {
+      fresh[e.id] = until;
+    }
+    newOnes.sort((a, b) => b.severity.compareTo(a.severity));
+    toast = newOnes.first;
+    toastCount = newOnes.length;
+    HapticFeedback.mediumImpact();
+    _toastTimer?.cancel();
+    _toastTimer = Timer(const Duration(seconds: 8), dismissToast);
+  }
+
+  void dismissToast() {
+    toast = null;
     notifyListeners();
   }
 
@@ -92,35 +189,6 @@ class AppState extends ChangeNotifier {
   }
 }
 
-// ---------- pomocnicze ----------
-
-Color sevColor(int s) => s >= 4
-    ? CupertinoColors.systemRed
-    : s == 3 ? CupertinoColors.systemOrange : CupertinoColors.systemYellow;
-
-Color verdictColor(String v) => switch (v) {
-      'confirmed' => CupertinoColors.systemGreen,
-      'likely' => CupertinoColors.systemBlue,
-      'unverified' => CupertinoColors.systemOrange,
-      _ => CupertinoColors.systemRed,
-    };
-
-String ago(DateTime t) {
-  final m = DateTime.now().difference(t).inMinutes;
-  if (m < 1) return 'przed chwilą';
-  if (m < 60) return '$m min temu';
-  if (m < 48 * 60) return '${m ~/ 60} h temu';
-  return '${m ~/ 1440} dni temu';
-}
-
-String fmtDate(DateTime t) {
-  final l = t.toLocal();
-  String two(int v) => v.toString().padLeft(2, '0');
-  return '${two(l.day)}.${two(l.month)} ${two(l.hour)}:${two(l.minute)}';
-}
-
-Color secondary(BuildContext c) => CupertinoColors.secondaryLabel.resolveFrom(c);
-
 // ---------- aplikacja ----------
 
 class WatchApp extends StatefulWidget {
@@ -139,24 +207,194 @@ class _WatchAppState extends State<WatchApp> {
   }
 
   @override
-  Widget build(BuildContext context) => CupertinoApp(
-        title: 'WatchPL',
-        debugShowCheckedModeBanner: false,
-        theme: const CupertinoThemeData(primaryColor: CupertinoColors.systemBlue),
-        home: CupertinoTabScaffold(
-          controller: st.tabs,
-          tabBar: CupertinoTabBar(items: const [
-            BottomNavigationBarItem(icon: Icon(CupertinoIcons.bell_fill), label: 'Alerty'),
-            BottomNavigationBarItem(icon: Icon(CupertinoIcons.map_fill), label: 'Mapa'),
-            BottomNavigationBarItem(icon: Icon(CupertinoIcons.location_fill), label: 'Miejsca'),
-            BottomNavigationBarItem(icon: Icon(CupertinoIcons.slider_horizontal_3), label: 'Ustawienia'),
+  void dispose() {
+    st.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: st,
+        builder: (context, _) {
+          final t = st.settings.theme;
+          return CupertinoApp(
+            title: 'WatchPL',
+            debugShowCheckedModeBanner: false,
+            theme: CupertinoThemeData(
+              brightness: t == 1 ? Brightness.light : t == 2 ? Brightness.dark : null,
+              primaryColor: cBlue,
+              scaffoldBackgroundColor: appBg,
+              barBackgroundColor: appCard,
+            ),
+            home: Builder(
+              builder: (ctx) => Stack(fit: StackFit.expand, children: [
+                CupertinoTabScaffold(
+                  controller: st.tabs,
+                  tabBar: CupertinoTabBar(items: const [
+                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.bell_fill), label: 'Alerty'),
+                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.map_fill), label: 'Mapa'),
+                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.location_fill), label: 'Miejsca'),
+                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.slider_horizontal_3), label: 'Ustawienia'),
+                  ]),
+                  tabBuilder: (_, i) => switch (i) {
+                    0 => AlertsTab(st),
+                    1 => MapTab(st),
+                    2 => PlacesTab(st),
+                    _ => SettingsTab(st),
+                  },
+                ),
+                Positioned(
+                  top: MediaQuery.of(ctx).padding.top + 8, left: 12, right: 12,
+                  child: _Toast(st),
+                ),
+              ]),
+            ),
+          );
+        },
+      );
+}
+
+/// Baner "NOWE ZDARZENIE" wsuwany od góry (z wibracją), dotknięcie przenosi na mapę.
+class _Toast extends StatelessWidget {
+  final AppState st;
+  const _Toast(this.st);
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: st,
+        builder: (context, _) {
+          final e = st.toast;
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            switchInCurve: Curves.easeOutCubic,
+            transitionBuilder: (child, anim) => SlideTransition(
+              position: Tween(begin: const Offset(0, -1.4), end: Offset.zero).animate(anim),
+              child: FadeTransition(opacity: anim, child: child),
+            ),
+            child: e == null
+                ? const SizedBox.shrink(key: ValueKey('none'))
+                : GestureDetector(
+                    key: ValueKey(e.id),
+                    onTap: () {
+                      st.dismissToast();
+                      st.showOnMap(e);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: appCard.resolveFrom(context).withValues(alpha: 0.97),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: sevColor(context, e.severity), width: 1.5),
+                        boxShadow: [BoxShadow(color: sevColor(context, e.severity).withValues(alpha: 0.35), blurRadius: 18)],
+                      ),
+                      child: Row(children: [
+                        _PulseDot(color: sevColor(context, e.severity), period: const Duration(milliseconds: 1200),
+                            isNew: true, box: 44, core: 12),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            Text(
+                              st.toastCount > 1 ? 'NOWE ZDARZENIA · ${st.toastCount}' : 'NOWE ZDARZENIE',
+                              style: TextStyle(fontSize: 10, letterSpacing: 1.4, fontWeight: FontWeight.w700,
+                                  color: sevColor(context, e.severity)),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(e.summary, maxLines: 2, overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text('${typeLabels[e.type] ?? e.type} · ${verdictLabels[e.verdict] ?? e.verdict}',
+                                style: TextStyle(fontSize: 12, color: secondary(context))),
+                          ]),
+                        ),
+                        Icon(CupertinoIcons.chevron_right, size: 16, color: secondary(context)),
+                      ]),
+                    ),
+                  ),
+          );
+        },
+      );
+}
+
+// ---------- pulsujący punkt ----------
+
+/// Rdzeń + powoli rozchodzący się pierścień. isNew dokłada szybszy, jaśniejszy "ping".
+class _PulseDot extends StatefulWidget {
+  final Color color;
+  final Duration period;
+  final bool pulse, isNew;
+  final double box, core, phase;
+  const _PulseDot({
+    super.key,
+    required this.color, required this.period, this.pulse = true, this.isNew = false,
+    this.box = 64, this.core = 14, this.phase = 0,
+  });
+  @override
+  State<_PulseDot> createState() => _PulseDotState();
+}
+
+class _PulseDotState extends State<_PulseDot> with TickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: widget.period);
+  late final AnimationController _n =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
+
+  @override
+  void initState() {
+    super.initState();
+    _c.value = widget.phase;
+    if (widget.pulse) _c.repeat();
+    if (widget.isNew) _n.repeat();
+  }
+
+  @override
+  void didUpdateWidget(_PulseDot old) {
+    super.didUpdateWidget(old);
+    if (widget.pulse && !_c.isAnimating) _c.repeat();
+    if (!widget.pulse) _c.stop();
+    if (widget.isNew && !_n.isAnimating) _n.repeat();
+    if (!widget.isNew) _n.stop();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    _n.dispose();
+    super.dispose();
+  }
+
+  Widget _ring(double p, double span, double alpha, double width) {
+    final base = widget.box * 0.46;
+    return Opacity(
+      opacity: ((1 - p) * alpha).clamp(0.0, 1.0),
+      child: Transform.scale(
+        scale: 0.5 + p * span,
+        child: Container(
+          width: base, height: base,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: widget.color.withValues(alpha: 0.12),
+            border: Border.all(color: widget.color, width: width),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: widget.box, height: widget.box,
+        child: AnimatedBuilder(
+          animation: Listenable.merge([_c, _n]),
+          builder: (_, __) => Stack(alignment: Alignment.center, children: [
+            if (widget.pulse) _ring(Curves.easeOut.transform(_c.value), 1.6, 0.6, 1.5),
+            if (widget.isNew) _ring(_n.value, 1.7, 0.95, 2.5),
+            Container(
+              width: widget.core, height: widget.core,
+              decoration: BoxDecoration(
+                color: widget.color, shape: BoxShape.circle,
+                border: Border.all(color: CupertinoColors.white.withValues(alpha: 0.85), width: 1.5),
+                boxShadow: [BoxShadow(color: widget.color.withValues(alpha: 0.7), blurRadius: 10)],
+              ),
+            ),
           ]),
-          tabBuilder: (_, i) => switch (i) {
-            0 => AlertsTab(st),
-            1 => MapTab(st),
-            2 => PlacesTab(st),
-            _ => SettingsTab(st),
-          },
         ),
       );
 }
@@ -173,7 +411,7 @@ class AlertsTab extends StatelessWidget {
         builder: (context, _) {
           final rel = st.feed == null ? <Relevance>[] : evaluate(st.feed!.events, st.settings, st.pos);
           return CupertinoPageScaffold(
-            backgroundColor: CupertinoColors.systemGroupedBackground,
+            backgroundColor: appBg.resolveFrom(context),
             child: CustomScrollView(slivers: [
               const CupertinoSliverNavigationBar(largeTitle: Text('Alerty')),
               CupertinoSliverRefreshControl(onRefresh: st.refresh),
@@ -190,11 +428,7 @@ class AlertsTab extends StatelessWidget {
                   ),
                 )
               else
-                SliverToBoxAdapter(
-                  child: CupertinoListSection.insetGrouped(
-                    children: [for (final r in rel) _tile(context, r)],
-                  ),
-                ),
+                SliverToBoxAdapter(child: section(context, [for (final r in rel) _tile(context, r)])),
               const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
             ]),
           );
@@ -204,21 +438,28 @@ class AlertsTab extends StatelessWidget {
   Widget _tile(BuildContext context, Relevance r) {
     final e = r.event;
     final note = r.zoneNote(st.settings.safeKm);
+    final isNew = st.isFresh(e.id);
     return CupertinoListTile.notched(
       leading: Container(
         width: 30, height: 30, alignment: Alignment.center,
-        decoration: BoxDecoration(color: sevColor(e.severity), shape: BoxShape.circle),
+        decoration: BoxDecoration(color: sevColor(context, e.severity), shape: BoxShape.circle),
         child: Text('${e.severity}',
             style: const TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.w700)),
       ),
       title: Text(e.summary),
-      subtitle: Text([typeLabels[e.type] ?? e.type, r.proximity, if (note != null) note]
-          .where((x) => x.isNotEmpty).join('\n')),
+      subtitle: Text.rich(TextSpan(children: [
+        if (isNew)
+          TextSpan(
+              text: '● NOWE  ',
+              style: TextStyle(color: sevColor(context, e.severity), fontWeight: FontWeight.w700, letterSpacing: 1)),
+        TextSpan(
+            text: [typeLabels[e.type] ?? e.type, r.proximity, if (note != null) note]
+                .where((x) => x.isNotEmpty).join('\n')),
+      ])),
       additionalInfo: Text(verdictLabels[e.verdict] ?? e.verdict,
-          style: TextStyle(color: verdictColor(e.verdict), fontWeight: FontWeight.w600)),
+          style: TextStyle(color: verdictColor(context, e.verdict), fontWeight: FontWeight.w600)),
       trailing: const CupertinoListTileChevron(),
-      onTap: () => Navigator.of(context)
-          .push(CupertinoPageRoute(builder: (_) => DetailPage(st, r))),
+      onTap: () => Navigator.of(context).push(CupertinoPageRoute(builder: (_) => DetailPage(st, r))),
     );
   }
 }
@@ -249,8 +490,9 @@ class _StatusCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: CupertinoColors.secondarySystemGroupedBackground.resolveFrom(context),
+        color: appCard.resolveFrom(context),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: appBorder.resolveFrom(context)),
       ),
       child: Text(lines.join('\n'), style: TextStyle(fontSize: 13, height: 1.4, color: secondary(context))),
     );
@@ -266,16 +508,16 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final e = r.event;
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemGroupedBackground,
+      backgroundColor: appBg.resolveFrom(context),
       navigationBar: CupertinoNavigationBar(middle: Text(e.place)),
       child: SafeArea(
         child: ListView(children: [
-          CupertinoListSection.insetGrouped(header: const Text('OCENA'), children: [
+          section(context, header: const Text('OCENA'), [
             CupertinoListTile(title: const Text('Zdarzenie'), additionalInfo: Text(e.summary)),
             CupertinoListTile(
               title: const Text('Werdykt'),
               additionalInfo: Text(verdictLabels[e.verdict] ?? e.verdict,
-                  style: TextStyle(color: verdictColor(e.verdict), fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: verdictColor(context, e.verdict), fontWeight: FontWeight.w600)),
             ),
             CupertinoListTile(title: const Text('Wiarygodność'), additionalInfo: Text('${e.credibility}%')),
             CupertinoListTile(title: const Text('Ważność'), additionalInfo: Text('${e.severity}/5')),
@@ -297,22 +539,20 @@ class DetailPage extends StatelessWidget {
                 },
               ),
           ]),
-          CupertinoListSection.insetGrouped(header: const Text('DLACZEGO TAKA OCENA'), children: [
+          section(context, header: const Text('DLACZEGO TAKA OCENA'), [
             for (final reason in e.reasons)
               CupertinoListTile(
                 leading: const Icon(CupertinoIcons.info_circle, size: 20),
                 title: Text(reason, maxLines: 4),
               ),
           ]),
-          CupertinoListSection.insetGrouped(header: const Text('ŹRÓDŁA'), children: [
-            for (final s in e.sources)
-              CupertinoListTile(title: Text(s.name), additionalInfo: Text(s.kind)),
+          section(context, header: const Text('ŹRÓDŁA'), [
+            for (final s in e.sources) CupertinoListTile(title: Text(s.name), additionalInfo: Text(s.kind)),
           ]),
           if (e.snippet.isNotEmpty)
-            CupertinoListSection.insetGrouped(
-              header: const Text('FRAGMENT (TREŚĆ ZEWNĘTRZNA, NIEZWERYFIKOWANA)'),
-              children: [CupertinoListTile(title: Text(e.snippet, maxLines: 8))],
-            ),
+            section(context,
+                header: const Text('FRAGMENT (TREŚĆ ZEWNĘTRZNA, NIEZWERYFIKOWANA)'),
+                [CupertinoListTile(title: Text(e.snippet, maxLines: 8))]),
         ]),
       ),
     );
@@ -320,6 +560,10 @@ class DetailPage extends StatelessWidget {
 }
 
 // ---------- zakładka: Mapa ----------
+
+const _tilesDark = 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+const _tilesLight = 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+const _neCenter = LatLng(53.6, 22.0);   // środek północno-wschodniej Polski
 
 class MapTab extends StatefulWidget {
   final AppState st;
@@ -330,13 +574,19 @@ class MapTab extends StatefulWidget {
 
 class _MapTabState extends State<MapTab> {
   final _mc = MapController();
+  String? _selected, _hovered;
+  Timer? _hideTimer;
+
+  @override
+  void dispose() {
+    _hideTimer?.cancel();
+    super.dispose();
+  }
 
   LatLng get _start {
     final st = widget.st;
-    final f = st.focus ?? st.pos ?? (st.settings.pins.isNotEmpty
-        ? LatLon(st.settings.pins.first.lat, st.settings.pins.first.lon)
-        : const LatLon(53.1, 21.3));
-    return LatLng(f.lat, f.lon);
+    final f = st.focus ?? st.pos;
+    return f == null ? _neCenter : LatLng(f.lat, f.lon);
   }
 
   void _applyFocus() {
@@ -350,71 +600,98 @@ class _MapTabState extends State<MapTab> {
     });
   }
 
+  void _hover(String id, bool on) {
+    _hideTimer?.cancel();
+    if (on) {
+      setState(() => _hovered = id);
+    } else {
+      _hideTimer = Timer(const Duration(milliseconds: 350), () {
+        if (mounted) setState(() => _hovered = null);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: widget.st,
         builder: (context, _) {
           final st = widget.st;
+          final dark = isDark(context);
           final events = st.feed == null
               ? <FeedEvent>[]
               : filterEvents(st.feed!.events, st.settings).where((e) => !e.nationwide).toList();
+          final focusing = st.focus != null;
           final center = _start;
           _applyFocus();
+          final openId = _selected ?? _hovered;
+          final open = events.where((e) => e.id == openId).firstOrNull;
+          final newCount = events.where((e) => st.isFresh(e.id)).length;
+
           return CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: const Text('Mapa'),
-              backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
-            ),
+            navigationBar: CupertinoNavigationBar(middle: const Text('Mapa'), backgroundColor: appCard.resolveFrom(context)),
             child: Stack(children: [
               FlutterMap(
                 mapController: _mc,
-                options: MapOptions(initialCenter: center, initialZoom: st.focus != null ? 11 : 8),
+                options: MapOptions(
+                  initialCenter: center,
+                  initialZoom: focusing ? 11 : (st.pos != null ? 9 : 7),
+                  onTap: (_, __) => setState(() { _selected = null; _hovered = null; }),
+                ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    key: ValueKey(dark),
+                    urlTemplate: dark ? _tilesDark : _tilesLight,
                     userAgentPackageName: 'pl.watchpl.watchpl',
                   ),
                   CircleLayer(circles: [
                     for (final p in st.settings.pins)
                       CircleMarker(
                         point: LatLng(p.lat, p.lon), radius: p.radiusKm * 1000, useRadiusInMeter: true,
-                        color: CupertinoColors.systemBlue.withValues(alpha: 0.06),
-                        borderColor: CupertinoColors.systemBlue.withValues(alpha: 0.6), borderStrokeWidth: 1.5,
+                        color: cBlue.resolveFrom(context).withValues(alpha: 0.07),
+                        borderColor: cBlue.resolveFrom(context).withValues(alpha: 0.6), borderStrokeWidth: 1.2,
                       ),
                     for (final e in events.where((e) => e.radiusKm > 0))
                       CircleMarker(
                         point: LatLng(e.lat, e.lon), radius: e.radiusKm * 1000, useRadiusInMeter: true,
-                        color: sevColor(e.severity).withValues(alpha: e.verdict == 'dubious' ? 0.08 : 0.2),
-                        borderColor: sevColor(e.severity).withValues(alpha: 0.8), borderStrokeWidth: 1.5,
+                        color: sevColor(context, e.severity).withValues(alpha: e.verdict == 'dubious' ? 0.05 : 0.13),
+                        borderColor: sevColor(context, e.severity).withValues(alpha: 0.55), borderStrokeWidth: 1,
                       ),
                   ]),
                   MarkerLayer(markers: [
                     for (final p in st.settings.pins)
                       Marker(
                         point: LatLng(p.lat, p.lon), width: 32, height: 32,
-                        child: const Icon(CupertinoIcons.location_solid, color: CupertinoColors.systemBlue, size: 30),
+                        child: Icon(CupertinoIcons.location_solid, color: cBlue.resolveFrom(context), size: 30),
                       ),
                     if (st.pos != null)
                       Marker(
                         point: LatLng(st.pos!.lat, st.pos!.lon), width: 20, height: 20,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: CupertinoColors.systemBlue, shape: BoxShape.circle,
+                            color: cBlue.resolveFrom(context), shape: BoxShape.circle,
                             border: Border.all(color: CupertinoColors.white, width: 3),
                           ),
                         ),
                       ),
-                    for (final e in events) _eventMarker(context, e),
+                    for (final e in events) _dotMarker(context, e),
+                    if (open != null) _popupMarker(context, open),
                   ]),
                 ],
+              ),
+              Positioned(
+                left: 12, top: 12,
+                child: _LivePill(feed: st.feed, count: events.length, fresh: newCount),
               ),
               Positioned(
                 left: 8, bottom: 8,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  color: CupertinoColors.white.withValues(alpha: 0.75),
-                  child: const Text('© OpenStreetMap  ·  kółka: zasięg  ·  ?: podejrzane',
-                      style: TextStyle(fontSize: 10, color: CupertinoColors.black)),
+                  decoration: BoxDecoration(
+                    color: appCard.resolveFrom(context).withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text('© OpenStreetMap · © CARTO · kółka: zasięg · ?: podejrzane',
+                      style: TextStyle(fontSize: 10, color: secondary(context))),
                 ),
               ),
               if (st.pos != null)
@@ -432,25 +709,146 @@ class _MapTabState extends State<MapTab> {
         },
       );
 
-  Marker _eventMarker(BuildContext context, FeedEvent e) {
-    final dubious = e.verdict == 'dubious';
+  /// Punkt zdarzenia: im ważniejsze, tym szybciej pulsuje. Podejrzane = szare, bez pulsu.
+  Marker _dotMarker(BuildContext context, FeedEvent e) {
     final st = widget.st;
+    final dubious = e.verdict == 'dubious';
+    final color = dubious ? cGray.resolveFrom(context) : sevColor(context, e.severity);
+    final period = e.severity >= 4
+        ? const Duration(milliseconds: 1800)
+        : e.severity == 3 ? const Duration(milliseconds: 2800) : const Duration(milliseconds: 4200);
     return Marker(
-      point: LatLng(e.lat, e.lon), width: 34, height: 34,
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(CupertinoPageRoute(
-            builder: (_) => DetailPage(st, relevanceFor(e, st.settings, st.pos)))),
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: dubious ? CupertinoColors.systemGrey : sevColor(e.severity),
-            shape: BoxShape.circle,
-            border: Border.all(color: CupertinoColors.white, width: 2),
+      point: LatLng(e.lat, e.lon), width: 64, height: 64,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => _hover(e.id, true),     // najechanie myszą/rysikiem
+        onExit: (_) => _hover(e.id, false),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => setState(() => _selected = _selected == e.id ? null : e.id),   // dotyk
+          child: _PulseDot(
+            key: ValueKey('dot-${e.id}-${st.isFresh(e.id)}'),
+            color: color, period: period, pulse: !dubious, isNew: st.isFresh(e.id),
+            phase: (e.id.hashCode % 100) / 100,
           ),
-          child: Text(dubious ? '?' : '${e.severity}',
-              style: const TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.w700)),
         ),
       ),
+    );
+  }
+
+  /// Rozwijana karta nad punktem. Marker ma stałą wysokość, a karta stoi na jego dolnej krawędzi.
+  Marker _popupMarker(BuildContext context, FeedEvent e) {
+    final st = widget.st;
+    final r = relevanceFor(e, st.settings, st.pos);
+    const h = 190.0;
+    return Marker(
+      point: LatLng(e.lat, e.lon), width: 262, height: h * 2,
+      child: Column(children: [
+        SizedBox(
+          height: h,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: _Popup(
+                r: r, isNew: st.isFresh(e.id),
+                onHover: (on) => _hover(e.id, on),
+                onOpen: () => Navigator.of(context).push(CupertinoPageRoute(builder: (_) => DetailPage(st, r))),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: h),
+      ]),
+    );
+  }
+}
+
+class _Popup extends StatelessWidget {
+  final Relevance r;
+  final bool isNew;
+  final ValueChanged<bool> onHover;
+  final VoidCallback onOpen;
+  const _Popup({required this.r, required this.isNew, required this.onHover, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final e = r.event;
+    final c = sevColor(context, e.severity);
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: GestureDetector(
+        onTap: onOpen,
+        child: Container(
+          width: 250,
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            color: appCard.resolveFrom(context).withValues(alpha: 0.97),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: c.withValues(alpha: 0.8), width: 1.2),
+            boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.35), blurRadius: 14)],
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Text('WAŻNOŚĆ ${e.severity}/5',
+                  style: TextStyle(fontSize: 10, letterSpacing: 1.2, fontWeight: FontWeight.w700, color: c)),
+              if (isNew)
+                Text('  ● NOWE', style: TextStyle(fontSize: 10, letterSpacing: 1.2, fontWeight: FontWeight.w700, color: c)),
+              const Spacer(),
+              Text(verdictLabels[e.verdict] ?? e.verdict,
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: verdictColor(context, e.verdict))),
+            ]),
+            const SizedBox(height: 5),
+            Text(e.summary, maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 2),
+            Text([typeLabels[e.type] ?? e.type, if (r.proximity.isNotEmpty) r.proximity].join(' · '),
+                maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11, color: secondary(context))),
+            if (e.reasons.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(e.reasons.first, maxLines: 3, overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, height: 1.25)),
+            ],
+            const SizedBox(height: 6),
+            Row(children: [
+              Text('${ago(e.lastSeen)} · ${e.sources.length} źr.', style: TextStyle(fontSize: 10, color: secondary(context))),
+              const Spacer(),
+              Text('Szczegóły ›', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: cBlue.resolveFrom(context))),
+            ]),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+/// "LIVE" w rogu mapy: stan danych i licznik zdarzeń.
+class _LivePill extends StatelessWidget {
+  final Feed? feed;
+  final int count, fresh;
+  const _LivePill({required this.feed, required this.count, required this.fresh});
+
+  @override
+  Widget build(BuildContext context) {
+    final live = feed != null && DateTime.now().difference(feed!.generatedAt).inMinutes < 45;
+    final c = live ? cGreen.resolveFrom(context) : cGray.resolveFrom(context);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
+      decoration: BoxDecoration(
+        color: appCard.resolveFrom(context).withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: appBorder.resolveFrom(context)),
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        _PulseDot(color: c, period: const Duration(milliseconds: 2000), pulse: live, box: 32, core: 8),
+        Text(
+          '${live ? 'LIVE' : 'OFFLINE'} · $count${fresh > 0 ? ' · $fresh NOWE' : ''}'
+          '${feed == null ? '' : ' · ${ago(feed!.generatedAt)}'}',
+          style: TextStyle(fontSize: 11, letterSpacing: 1, fontWeight: FontWeight.w600, color: c),
+        ),
+      ]),
     );
   }
 }
@@ -465,7 +863,7 @@ class PlacesTab extends StatelessWidget {
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: st,
         builder: (context, _) => CupertinoPageScaffold(
-          backgroundColor: CupertinoColors.systemGroupedBackground,
+          backgroundColor: appBg.resolveFrom(context),
           child: CustomScrollView(slivers: [
             CupertinoSliverNavigationBar(
               largeTitle: const Text('Miejsca'),
@@ -476,10 +874,11 @@ class PlacesTab extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(
-              child: CupertinoListSection.insetGrouped(
+              child: section(
+                context,
                 header: const Text('PUNKTY MONITOROWANE NIEZALEŻNIE OD TWOJEJ LOKALIZACJI'),
                 footer: const Text('Dostaniesz alert o zdarzeniach w promieniu punktu, nawet gdy jesteś daleko.'),
-                children: [
+                [
                   if (st.settings.pins.isEmpty)
                     const CupertinoListTile(title: Text('Brak punktów — dodaj dom lub pracę (+)')),
                   for (final p in st.settings.pins)
@@ -575,16 +974,36 @@ class SettingsTab extends StatelessWidget {
           final s = st.settings;
           final m = modes[s.mode.clamp(0, modes.length - 1).toInt()];
           return CupertinoPageScaffold(
-            backgroundColor: CupertinoColors.systemGroupedBackground,
+            backgroundColor: appBg.resolveFrom(context),
             child: CustomScrollView(slivers: [
               const CupertinoSliverNavigationBar(largeTitle: Text('Ustawienia')),
               SliverToBoxAdapter(
                 child: Column(children: [
-                  CupertinoListSection.insetGrouped(
+                  section(
+                    context,
+                    header: const Text('WYGLĄD'),
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: s.theme,
+                          children: const {0: Text('Auto'), 1: Text('Jasny'), 2: Text('Ciemny')},
+                          onValueChanged: (v) {
+                            if (v != null) {
+                              s.theme = v;
+                              st.save();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  section(
+                    context,
                     header: const Text('CZUJNOŚĆ'),
                     footer: Text('${m.label}: ważność od ${m.minSeverity}/5, w promieniu ${m.nearbyKm.round()} km '
                         'od Ciebie i Twoich punktów, powiadomienia od ${m.notifySeverity}/5.'),
-                    children: [
+                    [
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: CupertinoSlidingSegmentedControl<int>(
@@ -606,7 +1025,7 @@ class SettingsTab extends StatelessWidget {
                       ),
                     ],
                   ),
-                  CupertinoListSection.insetGrouped(header: const Text('CO MONITOROWAĆ'), children: [
+                  section(context, header: const Text('CO MONITOROWAĆ'), [
                     for (final g in typeGroups)
                       CupertinoListTile(
                         title: Text(g.label),
@@ -616,10 +1035,11 @@ class SettingsTab extends StatelessWidget {
                         ),
                       ),
                   ]),
-                  CupertinoListSection.insetGrouped(
+                  section(
+                    context,
                     header: const Text('ŹRÓDŁO DANYCH'),
                     footer: const Text('Adres feed.json z Twojego repozytorium (gałąź data).'),
-                    children: [
+                    [
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: CupertinoTextField(
@@ -633,10 +1053,11 @@ class SettingsTab extends StatelessWidget {
                       ),
                     ],
                   ),
-                  CupertinoListSection.insetGrouped(
+                  section(
+                    context,
                     header: const Text('UPRAWNIENIA'),
                     footer: const Text('Alerty o punktach (dom, praca) działają bez lokalizacji. Dla alertów wokół Ciebie w tle ustaw lokalizację „Zawsze" w ustawieniach systemu.'),
-                    children: [
+                    [
                       CupertinoListTile(
                         title: const Text('Lokalizacja'),
                         trailing: const CupertinoListTileChevron(),

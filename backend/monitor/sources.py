@@ -16,6 +16,7 @@ from .models import Claim, RawItem
 UA = {"User-Agent": "watchpl/0.2 (personal monitor)"}
 WAW = ZoneInfo("Europe/Warsaw")
 REGION_WOJ = set(WOJ_PLACES)
+WOJ_FALLBACK = {"podlaskie", "warminsko-mazurskie"}   # całe województwo w obszarze monitorowania
 
 
 # ---------- pomocnicze ----------
@@ -96,7 +97,9 @@ def parse_imgw_hydro(data: list[dict], gaz: Gazetteer, now: datetime) -> list[Cl
             if woj not in REGION_WOJ:
                 continue
             opis = str(a.get("opis") or event)
-            p = gaz.find_in_text(opis) or WOJ_PLACES[woj]
+            p = gaz.find_in_text(opis) or (WOJ_PLACES[woj] if woj in WOJ_FALLBACK else None)
+            if p is None:      # mazowieckie: tylko gdy opis wskazuje znaną miejscowość (reszta poza obszarem)
+                continue
             claims.append(Claim(
                 _imgw_item("imgw_hydro", "IMGW-PIB ostrzeżenia hydro", opis, now), p, "disaster",
                 IMGW_SEVERITY.get(level, 2), label=f"{event}, stopień {level}",
@@ -128,8 +131,8 @@ def fetch_google_news(src, gaz: Gazetteer, now) -> list[RawItem]:
     topics = src.get("topics", "prąd OR woda OR pożar OR wichura OR zamieszki OR awaria")
     when = src.get("when", "2d")
     trusted = set(src.get("trusted_domains", []))
-    queries = [f'"{p.name}" ({topics}) when:{when}' for p in gaz.places]
-    queries += [f"{q} when:{when}" for q in src.get("national_queries", [])]
+    queries = [f'"{p.name}" ({topics}) when:{when}' for p in gaz.query_places]
+    queries += [f"{q} when:{when}" for q in src.get("region_queries", []) + src.get("national_queries", [])]
     items, seen = [], set()
     for i, q in enumerate(queries):
         url = "https://news.google.com/rss/search?" + urlencode(

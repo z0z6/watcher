@@ -106,12 +106,13 @@ const modes = [
 
 class Settings {
   int mode;
+  int theme;            // 0 = jak w systemie, 1 = jasny, 2 = ciemny
   bool showDubious;
   Set<String> groups;
   String feedUrl;
   List<Pin> pins;
 
-  Settings({this.mode = 1, this.showDubious = true, Set<String>? groups, this.feedUrl = '', List<Pin>? pins})
+  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, Set<String>? groups, this.feedUrl = '', List<Pin>? pins})
       : groups = groups ?? typeGroups.map((g) => g.id).toSet(),
         pins = pins ?? [];
 
@@ -125,12 +126,13 @@ class Settings {
       typeGroups.any((g) => groups.contains(g.id) && g.types.contains(type));
 
   Map<String, dynamic> toJson() => {
-        'mode': mode, 'showDubious': showDubious, 'groups': groups.toList(),
+        'mode': mode, 'theme': theme, 'showDubious': showDubious, 'groups': groups.toList(),
         'feedUrl': feedUrl, 'pins': pins.map((p) => p.toJson()).toList(),
       };
 
   factory Settings.fromJson(Map<String, dynamic> j) => Settings(
         mode: j['mode'] ?? 1,
+        theme: j['theme'] ?? 0,
         showDubious: j['showDubious'] ?? true,
         groups: j['groups'] == null ? null : Set<String>.from(j['groups']),
         feedUrl: j['feedUrl'] ?? '',

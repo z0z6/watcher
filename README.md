@@ -1,6 +1,7 @@
 # WatchPL
 
-Prywatny monitor zdarzeń dla północnego Mazowsza, zachodniego Podlasia i południa Warmii i Mazur.
+Prywatny monitor zdarzeń dla **północno-wschodniej Polski**: całe podlaskie i warmińsko-mazurskie oraz
+północna i wschodnia część mazowieckiego (57 powiatów).
 Backend ocenia **wiarygodność** doniesień twardymi sygnałami, aplikacja (Flutter, styl iOS) pokazuje na liście
 i **mapie** tylko to, co spełnia Twoje kryteria.
 
@@ -18,6 +19,16 @@ GH Actions (cron co 10 min)           Aplikacja Android
  -> opcjonalnie push ntfy
 ```
 **Prywatność:** feed jest wspólny dla regionu, a Twoja lokalizacja i punkty nigdy nie opuszczają telefonu.
+
+## Mapa i wygląd
+- Jasny i ciemny motyw (Ustawienia -> Wygląd: Auto / Jasny / Ciemny). Mapa ma ciemne lub jasne kafelki CARTO.
+- Punkty zdarzeń pulsują powoli, tym szybciej, im wyższa ważność: czerwony (4-5), żółty (3), szary (1-2).
+  Podejrzane są szare, bez pulsu.
+- Okienko ze szczegółami rozwija się po **najechaniu** (mysz, rysik) lub **dotknięciu** punktu.
+- NOWE zdarzenie: szybki pierścień "ping" wokół punktu, baner od góry z wibracją, znacznik "● NOWE" na liście
+  (10 min), licznik w pastylce LIVE. Aplikacja odświeża dane sama co 3 minuty, gdy jest otwarta.
+- Wygląd odwzorowuje konwencje paneli OSINT (ciemne tło, kolory ostrzegawcze, pulsujące punkty), a nie
+  konkretną stronę - nie widziałem jej wyglądu, tylko opis i dokumentację projektu open source.
 
 ## Źródła
 | Źródło | Rodzaj | Status |
@@ -43,12 +54,13 @@ trafiają na listę, ale nie na mapę.
 6. Zakładka Miejsca: dodaj dom i pracę.
 
 ## Dane obszaru
-`backend/data/powiaty.csv` (33 powiaty, kody TERYT z Dz.U. 2025 poz. 1721, środki z granic powiatów)
+`backend/data/powiaty.csv` (57 powiatów, kody TERYT z Dz.U. 2025 poz. 1721, środki z granic powiatów)
 generuje `tools/build_powiaty.py`. Zmień `REGION` w skrypcie, żeby zmienić obszar. `backend/data/places.csv`
-(18 miast) służy do rozpoznawania miejscowości w tekstach - rozbuduj o kolejne.
+(53 miejscowości) służy do rozpoznawania miejscowości w tekstach. Kolumna `query` = czy pytać o nią Google News
+osobno, kolumna `forms` = formy odmiany dla nazw mylących (Pisz/pisze, Węgrów/Węgry). Rozbuduj o kolejne.
 
 ## Ograniczenia
-- Testy: backend (15 testów) przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
+- Testy: backend (17 testów) przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
 - Powiadomienia w tle: min. 15 min, mogą być opóźnione przez oszczędzanie baterii. Alerty wokół Ciebie w tle
   wymagają lokalizacji "Zawsze"; alerty o punktach działają bez niej.
 - Ostrzeżenia hydro bez rozpoznanej miejscowości dostają obszar całego województwa (promień 60 km od środka).

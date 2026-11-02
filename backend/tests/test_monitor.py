@@ -32,6 +32,24 @@ def test_gazetteer_declension():
     assert GAZ.find_in_text("nic tu nie ma") is None
 
 
+def test_gazetteer_no_false_positives():
+    for text in ("Płonie las pod miastem", "Pisze do nas czytelnik z gminy", "Premier spotkał się z Węgrami w Budapeszcie",
+                 "Ostro skrytykował rząd", "Biskup odprawił mszę", "Morał z tej historii jest prosty"):
+        assert GAZ.find_in_text(text) is None, text
+    assert GAZ.find_in_text("Pożar w Płońsku").name == "Płońsk"
+    assert GAZ.find_in_text("Awaria w Piszu").name == "Pisz"
+    assert GAZ.find_in_text("w Węgrowie nie ma wody").name == "Węgrów"
+    assert GAZ.find_in_text("Ełk: burza przeszła nad miastem").name == "Ełk"
+
+
+def test_gazetteer_covers_whole_ne_poland():
+    for text, name in (("Wichura w Suwałkach", "Suwałki"), ("Brak prądu w Giżycku", "Giżycko"),
+                       ("Awaria w Hajnówce", "Hajnówka"), ("Pożar w Elblągu", "Elbląg"),
+                       ("Zalane ulice w Białymstoku", "Białystok"), ("Burza w Siedlcach", "Siedlce")):
+        assert GAZ.find_in_text(text).name == name, text
+    assert len(GAZ.query_places) < len(GAZ.places)    # nie odpytujemy wiadomości o każdą wieś
+
+
 def test_powiaty_by_teryt():
     assert POW.get("1402").name == "powiat ciechanowski"
     assert POW.get(1413).powiat == "mławski"
@@ -39,6 +57,9 @@ def test_powiaty_by_teryt():
     assert POW.get("140201").name == "powiat ciechanowski"    # kod gminy -> powiat
     assert POW.get("0201") is None                            # poza obszarem
     assert 10 < POW.get("2814").radius_km < 40
+    assert POW.get("2012").name == "powiat suwalski"          # podlaskie w całości
+    assert POW.get("2805").name == "powiat ełcki"             # warmińsko-mazurskie w całości
+    assert len(POW.by_code) >= 50
 
 
 def test_haversine():
@@ -102,7 +123,8 @@ def test_imgw_hydro_place_from_text_or_voivodeship():
              "obowiazuje_do": "2026-11-04 08:00:00",
              "obszary": [{"wojewodztwo": "warmińsko-mazurskie", "opis": "Rzeka Drwęca w rejonie Nidzicy"},
                          {"wojewodztwo": "podlaskie", "opis": "Narew"},
-                         {"wojewodztwo": "małopolskie", "opis": "Wisła"}]}]
+                         {"wojewodztwo": "małopolskie", "opis": "Wisła"},
+                         {"wojewodztwo": "mazowieckie", "opis": "Wisła w Warszawie"}]}]
     cl = parse_imgw_hydro(data, GAZ, NOW)
     assert sorted(c.place.name for c in cl) == ["Nidzica", "woj. podlaskie"]
     assert all(c.type == "disaster" for c in cl)

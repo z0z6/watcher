@@ -24,6 +24,10 @@ sources:
     kind: media_local
     when: 2d
     topics: "prąd OR woda OR pożar OR powódź OR wichura OR burza OR mróz OR upał OR zamieszki OR awaria OR sabotaż OR epidemia"
+    region_queries:          # zdarzenia opisane regionem, a nie miejscowością
+      - '(Podlasie OR podlaskie) (prąd OR woda OR pożar OR powódź OR wichura OR burza OR awaria)'
+      - '(Warmia OR Mazury OR warmińsko-mazurskie) (prąd OR woda OR pożar OR powódź OR wichura OR burza OR awaria)'
+      - '(północne Mazowsze OR Mazowsze) (prąd OR woda OR pożar OR powódź OR wichura OR burza OR awaria)'
     national_queries:        # zdarzenia ogólnokrajowe (bez miejscowości)
       - '(awaria mObywatel OR awaria ePUAP OR awaria bankowości OR awaria systemu bankowego OR cyberatak urząd)'
       - '(epidemia OR ognisko choroby OR komunikat GIS OR grypa ptaków) Polska'
