@@ -1,7 +1,7 @@
 name: feed
 on:
   schedule:
-    - cron: "*/10 * * * *"   # GH Actions bywa opóźniony o kilka-kilkanaście minut
+    - cron: "*/15 * * * *"   # GH Actions bywa opóźniony o kilka-kilkanaście minut
   workflow_dispatch:
     inputs:
       demo:
