@@ -7,6 +7,9 @@ on:
       demo:
         description: "Dane demonstracyjne (1 = tak)"
         default: "0"
+      probe:
+        description: "Diagnostyka źródeł - wypisz, co zwraca każde (1 = tak)"
+        default: "0"
 permissions:
   contents: write
 concurrency:
@@ -32,6 +35,10 @@ jobs:
       - name: Testy
         working-directory: backend
         run: python -m pytest -q
+      - name: Diagnostyka źródeł
+        if: github.event.inputs.probe == '1'
+        working-directory: backend
+        run: python -m monitor.run --probe
       - name: Zbierz, oceń, opublikuj feed
         working-directory: backend
         env:
