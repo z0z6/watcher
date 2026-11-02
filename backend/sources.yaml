@@ -1,0 +1,27 @@
+# Konfiguracja źródeł. kind: official | media_national | media_local | social | aggregator
+# UWAGA: adresy oznaczone "DO SPRAWDZENIA" nie zostały zweryfikowane - sprawdź w przeglądarce
+# (zakładka Network) zanim włączysz. Szanuj regulaminy serwisów; nie scrapuj tego, czego nie wolno.
+sources:
+  - id: energa_biezace
+    name: Energa Operator - wyłączenia bieżące
+    kind: official
+    type: xml_records
+    url: https://www.energa-operator.pl/wylaczenia/wylaczenia_biezace.xml   # DO SPRAWDZENIA (stary adres ze strony gminnej)
+    hard_types: [power]
+    enabled: false
+
+  - id: pge_bialystok
+    name: PGE Dystrybucja Białystok - awarie
+    kind: official
+    type: xml_records
+    url: ""        # DO USTALENIA: znajdź endpoint, z którego ładuje się mapa awarii PGE
+    hard_types: [power]
+    enabled: false
+
+  # Przykład lokalnego portalu przez RSS - wpisz prawdziwe adresy feedów dla swoich powiatów
+  - id: portal_przyklad
+    name: Portal lokalny (przykład)
+    kind: media_local
+    type: rss
+    url: ""
+    enabled: false
