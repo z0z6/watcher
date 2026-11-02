@@ -1,0 +1,52 @@
+name: feed
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # GH Actions bywa opóźniony o kilka-kilkanaście minut
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: "Dane demonstracyjne (1 = tak)"
+        default: "0"
+permissions:
+  contents: write
+concurrency:
+  group: feed
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Poprzedni stan (gałąź data)
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: out
+        continue-on-error: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r backend/requirements.txt
+      - name: Testy
+        working-directory: backend
+        run: python -m pytest -q
+      - name: Zbierz, oceń, opublikuj feed
+        working-directory: backend
+        env:
+          OUT_DIR: ${{ github.workspace }}/out
+          DEMO: ${{ github.event.inputs.demo || '0' }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NTFY_PREFIX: ${{ secrets.NTFY_PREFIX }}
+        run: |
+          mkdir -p "$OUT_DIR"
+          python -m monitor.run
+      - name: Publikacja (gałąź data, jeden commit)
+        run: |
+          cd out
+          rm -rf .git
+          git init -q -b data
+          git add -A
+          git -c user.name=bot -c user.email=bot@users.noreply.github.com commit -qm "feed $(date -u +%FT%TZ)"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data
