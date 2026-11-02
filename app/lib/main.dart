@@ -14,11 +14,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Notifier.init(askPermission: true);
   try {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    await Workmanager().initialize(callbackDispatcher);
     await Workmanager().registerPeriodicTask(
       'watchpl-poll', 'watchpl-poll',
       frequency: const Duration(minutes: 15),
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.update,
       constraints: Constraints(networkType: NetworkType.connected),
     );
   } catch (_) {}
