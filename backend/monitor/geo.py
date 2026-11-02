@@ -28,10 +28,37 @@ class Place:
     woj: str
     lat: float
     lon: float
+    radius_km: float = 0.0   # >0 = zdarzenie obszarowe (powiat, województwo, cały kraj)
 
     @property
     def powiat_slug(self) -> str:
         return re.sub(r"[^a-z0-9]+", "-", norm(self.powiat)).strip("-")
+
+
+# Zdarzenia ogólnokrajowe (awaria mObywatela, bankowości) i obszary województw (ostrzeżenia hydro)
+NATIONAL = Place("Cała Polska", "ogólnokrajowo", "Polska", 52.0, 19.4, 400.0)
+WOJ_PLACES = {
+    "mazowieckie": Place("woj. mazowieckie", "mazowieckie", "mazowieckie", 52.35, 21.1, 60.0),
+    "podlaskie": Place("woj. podlaskie", "podlaskie", "podlaskie", 53.2, 22.9, 60.0),
+    "warminsko-mazurskie": Place("woj. warmińsko-mazurskie", "warmińsko-mazurskie",
+                                 "warmińsko-mazurskie", 53.8, 20.8, 60.0),
+}
+
+
+class Powiaty:
+    """Powiaty po kodzie TERYT (4 cyfry) - do ostrzeżeń IMGW, które wskazują obszar kodami."""
+
+    def __init__(self, path: str | Path):
+        self.by_code: dict[str, Place] = {}
+        with open(path, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                short = re.sub(r"^(powiat|m\.)\s+", "", r["name"])
+                self.by_code[r["teryt"]] = Place(r["name"], short, r["woj"], float(r["lat"]),
+                                                 float(r["lon"]), float(r["radius_km"]))
+
+    def get(self, code) -> Place | None:
+        s = re.sub(r"\D", "", str(code))
+        return self.by_code.get(s.zfill(4)[:4]) if s else None
 
 
 def _stem_regex(name: str):
@@ -45,6 +72,8 @@ def _stem_regex(name: str):
 
 
 class Gazetteer:
+    """Miejscowości (miasta) rozpoznawane w tekście."""
+
     def __init__(self, places: list[Place]):
         self.places = places
         self._rx = [(p, *_stem_regex(p.name)) for p in places]
@@ -65,4 +94,8 @@ class Gazetteer:
         return best
 
     def find(self, name: str | None) -> Place | None:
-        return self.find_in_text(name) if name else None
+        if not name:
+            return None
+        if norm(name).startswith("polsk") or "ogolnokraj" in norm(name):
+            return NATIONAL
+        return self.find_in_text(name)

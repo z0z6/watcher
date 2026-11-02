@@ -1,27 +1,48 @@
 # Konfiguracja źródeł. kind: official | media_national | media_local | social | aggregator
-# UWAGA: adresy oznaczone "DO SPRAWDZENIA" nie zostały zweryfikowane - sprawdź w przeglądarce
-# (zakładka Network) zanim włączysz. Szanuj regulaminy serwisów; nie scrapuj tego, czego nie wolno.
+# Źródła oznaczone "DO SPRAWDZENIA" nie zostały przetestowane na żywo - zobacz wynik workflow `feed`
+# (sekcja source_status w feed.json) lub uruchom `python -m monitor.run --probe`.
 sources:
+  # --- Oficjalne, strukturalne, bezpłatne, bez klucza ---
+  - id: imgw_meteo
+    name: IMGW-PIB ostrzeżenia meteorologiczne
+    type: imgw_meteo
+    kind: official
+    url: https://danepubliczne.imgw.pl/api/data/warningsmeteo   # pola: nazwa_zdarzenia, stopien, teryt, obowiazuje_od/do, tresc
+    enabled: true
+
+  - id: imgw_hydro
+    name: IMGW-PIB ostrzeżenia hydrologiczne
+    type: imgw_hydro
+    kind: official
+    url: https://danepubliczne.imgw.pl/api/data/warningshydro   # DO SPRAWDZENIA: schemat znany tylko częściowo
+    enabled: true
+
+  # --- Wiadomości lokalne i krajowe (agregator RSS, jeden adapter) ---
+  - id: google_news
+    name: Google News
+    type: google_news
+    kind: media_local
+    when: 2d
+    topics: "prąd OR woda OR pożar OR powódź OR wichura OR burza OR mróz OR upał OR zamieszki OR awaria OR sabotaż OR epidemia"
+    national_queries:        # zdarzenia ogólnokrajowe (bez miejscowości)
+      - '(awaria mObywatel OR awaria ePUAP OR awaria bankowości OR awaria systemu bankowego OR cyberatak urząd)'
+      - '(epidemia OR ognisko choroby OR komunikat GIS OR grypa ptaków) Polska'
+    trusted_domains: [pap.pl, polskieradio.pl, tvp.info, tvn24.pl, rmf24.pl, onet.pl, wp.pl, gazeta.pl, polsatnews.pl]
+    enabled: true            # DO SPRAWDZENIA: Google może ograniczać zapytania z adresów GitHub Actions
+
+  # --- Operator sieci (twarde dane o prądzie) ---
   - id: energa_biezace
     name: Energa Operator - wyłączenia bieżące
-    kind: official
     type: xml_records
+    kind: official
     url: https://www.energa-operator.pl/wylaczenia/wylaczenia_biezace.xml   # DO SPRAWDZENIA (stary adres ze strony gminnej)
     hard_types: [power]
     enabled: false
 
   - id: pge_bialystok
     name: PGE Dystrybucja Białystok - awarie
-    kind: official
     type: xml_records
-    url: ""        # DO USTALENIA: znajdź endpoint, z którego ładuje się mapa awarii PGE
+    kind: official
+    url: ""        # DO USTALENIA: endpoint, z którego ładuje się mapa awarii PGE
     hard_types: [power]
-    enabled: false
-
-  # Przykład lokalnego portalu przez RSS - wpisz prawdziwe adresy feedów dla swoich powiatów
-  - id: portal_przyklad
-    name: Portal lokalny (przykład)
-    kind: media_local
-    type: rss
-    url: ""
     enabled: false

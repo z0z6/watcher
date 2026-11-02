@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'background.dart';
@@ -31,8 +33,10 @@ class AppState extends ChangeNotifier {
   Settings settings = Settings();
   Feed? feed;
   LatLon? pos;
+  LatLon? focus;                 // "Pokaż na mapie"
   bool locationOk = false;
   String? error;
+  final tabs = CupertinoTabController();
 
   Future<void> init() async {
     settings = await Store.loadSettings();
@@ -80,6 +84,12 @@ class AppState extends ChangeNotifier {
     await Store.saveSettings(settings);
     notifyListeners();
   }
+
+  void showOnMap(FeedEvent e) {
+    focus = LatLon(e.lat, e.lon);
+    tabs.index = 1;
+    notifyListeners();
+  }
 }
 
 // ---------- pomocnicze ----------
@@ -101,6 +111,12 @@ String ago(DateTime t) {
   if (m < 60) return '$m min temu';
   if (m < 48 * 60) return '${m ~/ 60} h temu';
   return '${m ~/ 1440} dni temu';
+}
+
+String fmtDate(DateTime t) {
+  final l = t.toLocal();
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${two(l.day)}.${two(l.month)} ${two(l.hour)}:${two(l.minute)}';
 }
 
 Color secondary(BuildContext c) => CupertinoColors.secondaryLabel.resolveFrom(c);
@@ -128,14 +144,17 @@ class _WatchAppState extends State<WatchApp> {
         debugShowCheckedModeBanner: false,
         theme: const CupertinoThemeData(primaryColor: CupertinoColors.systemBlue),
         home: CupertinoTabScaffold(
+          controller: st.tabs,
           tabBar: CupertinoTabBar(items: const [
             BottomNavigationBarItem(icon: Icon(CupertinoIcons.bell_fill), label: 'Alerty'),
+            BottomNavigationBarItem(icon: Icon(CupertinoIcons.map_fill), label: 'Mapa'),
             BottomNavigationBarItem(icon: Icon(CupertinoIcons.location_fill), label: 'Miejsca'),
             BottomNavigationBarItem(icon: Icon(CupertinoIcons.slider_horizontal_3), label: 'Ustawienia'),
           ]),
           tabBuilder: (_, i) => switch (i) {
             0 => AlertsTab(st),
-            1 => PlacesTab(st),
+            1 => MapTab(st),
+            2 => PlacesTab(st),
             _ => SettingsTab(st),
           },
         ),
@@ -192,12 +211,14 @@ class AlertsTab extends StatelessWidget {
         child: Text('${e.severity}',
             style: const TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.w700)),
       ),
-      title: Text('${e.place} · ${typeLabels[e.type] ?? e.type}'),
-      subtitle: Text([r.proximity, if (note != null) note].where((x) => x.isNotEmpty).join('\n')),
+      title: Text(e.summary),
+      subtitle: Text([typeLabels[e.type] ?? e.type, r.proximity, if (note != null) note]
+          .where((x) => x.isNotEmpty).join('\n')),
       additionalInfo: Text(verdictLabels[e.verdict] ?? e.verdict,
           style: TextStyle(color: verdictColor(e.verdict), fontWeight: FontWeight.w600)),
       trailing: const CupertinoListTileChevron(),
-      onTap: () => Navigator.of(context).push(CupertinoPageRoute(builder: (_) => DetailPage(r))),
+      onTap: () => Navigator.of(context)
+          .push(CupertinoPageRoute(builder: (_) => DetailPage(st, r))),
     );
   }
 }
@@ -206,20 +227,23 @@ class _StatusCard extends StatelessWidget {
   final AppState st;
   const _StatusCard(this.st);
 
-  String _cov(dynamic v) => switch (v) { 'good' => '✓', 'partial' => '◐', _ => '✕' };
+  String _mark(dynamic v) => switch (v) { 'good' => '✓', 'partial' => '◐', _ => '✕' };
 
   @override
   Widget build(BuildContext context) {
     final cov = st.feed?.coverage ?? {};
+    const names = [
+      ['weather', 'pogoda'], ['disaster', 'żywioły'], ['power', 'prąd'], ['water', 'woda'],
+      ['infrastructure', 'infrastruktura'], ['epidemic', 'epidemie'],
+      ['unrest', 'niepokoje'], ['shortage', 'sklepy'],
+    ];
     final lines = <String>[
       if (st.error != null) st.error!,
       if (st.feed != null) 'Dane z ${ago(st.feed!.generatedAt)}',
       st.locationOk
           ? 'Lokalizacja: aktywna'
           : 'Lokalizacja: brak — działają tylko Twoje punkty (zakładka Miejsca)',
-      if (cov.isNotEmpty)
-        'Pokrycie: prąd ${_cov(cov['power'])}${cov['power_live'] == false ? ' (dane operatora niedostępne)' : ''}'
-            ' · woda ${_cov(cov['water'])} · zamieszki ${_cov(cov['unrest'])} · sklepy ${_cov(cov['shortage'])}',
+      if (cov.isNotEmpty) 'Pokrycie: ${names.map((n) => '${n[1]} ${_mark(cov[n[0]])}').join(' · ')}',
     ];
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -234,8 +258,9 @@ class _StatusCard extends StatelessWidget {
 }
 
 class DetailPage extends StatelessWidget {
+  final AppState st;
   final Relevance r;
-  const DetailPage(this.r, {super.key});
+  const DetailPage(this.st, this.r, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -246,6 +271,7 @@ class DetailPage extends StatelessWidget {
       child: SafeArea(
         child: ListView(children: [
           CupertinoListSection.insetGrouped(header: const Text('OCENA'), children: [
+            CupertinoListTile(title: const Text('Zdarzenie'), additionalInfo: Text(e.summary)),
             CupertinoListTile(
               title: const Text('Werdykt'),
               additionalInfo: Text(verdictLabels[e.verdict] ?? e.verdict,
@@ -253,10 +279,23 @@ class DetailPage extends StatelessWidget {
             ),
             CupertinoListTile(title: const Text('Wiarygodność'), additionalInfo: Text('${e.credibility}%')),
             CupertinoListTile(title: const Text('Ważność'), additionalInfo: Text('${e.severity}/5')),
-            CupertinoListTile(title: const Text('Bliskość'), additionalInfo: Text(r.proximity)),
+            if (r.proximity.isNotEmpty)
+              CupertinoListTile(title: const Text('Bliskość'), additionalInfo: Text(r.proximity)),
+            if (e.validTo != null)
+              CupertinoListTile(title: const Text('Obowiązuje do'), additionalInfo: Text(fmtDate(e.validTo!))),
             CupertinoListTile(
                 title: const Text('Pierwsze / ostatnie doniesienie'),
                 additionalInfo: Text('${ago(e.firstSeen)} / ${ago(e.lastSeen)}')),
+            if (!e.nationwide)
+              CupertinoListTile(
+                leading: const Icon(CupertinoIcons.map),
+                title: const Text('Pokaż na mapie'),
+                trailing: const CupertinoListTileChevron(),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  st.showOnMap(e);
+                },
+              ),
           ]),
           CupertinoListSection.insetGrouped(header: const Text('DLACZEGO TAKA OCENA'), children: [
             for (final reason in e.reasons)
@@ -275,6 +314,142 @@ class DetailPage extends StatelessWidget {
               children: [CupertinoListTile(title: Text(e.snippet, maxLines: 8))],
             ),
         ]),
+      ),
+    );
+  }
+}
+
+// ---------- zakładka: Mapa ----------
+
+class MapTab extends StatefulWidget {
+  final AppState st;
+  const MapTab(this.st, {super.key});
+  @override
+  State<MapTab> createState() => _MapTabState();
+}
+
+class _MapTabState extends State<MapTab> {
+  final _mc = MapController();
+
+  LatLng get _start {
+    final st = widget.st;
+    final f = st.focus ?? st.pos ?? (st.settings.pins.isNotEmpty
+        ? LatLon(st.settings.pins.first.lat, st.settings.pins.first.lon)
+        : const LatLon(53.1, 21.3));
+    return LatLng(f.lat, f.lon);
+  }
+
+  void _applyFocus() {
+    final f = widget.st.focus;
+    if (f == null) return;
+    widget.st.focus = null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        _mc.move(LatLng(f.lat, f.lon), 11);
+      } catch (_) {}   // mapa jeszcze nie gotowa - użyto initialCenter
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: widget.st,
+        builder: (context, _) {
+          final st = widget.st;
+          final events = st.feed == null
+              ? <FeedEvent>[]
+              : filterEvents(st.feed!.events, st.settings).where((e) => !e.nationwide).toList();
+          final center = _start;
+          _applyFocus();
+          return CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: const Text('Mapa'),
+              backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
+            ),
+            child: Stack(children: [
+              FlutterMap(
+                mapController: _mc,
+                options: MapOptions(initialCenter: center, initialZoom: st.focus != null ? 11 : 8),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'pl.watchpl.watchpl',
+                  ),
+                  CircleLayer(circles: [
+                    for (final p in st.settings.pins)
+                      CircleMarker(
+                        point: LatLng(p.lat, p.lon), radius: p.radiusKm * 1000, useRadiusInMeter: true,
+                        color: CupertinoColors.systemBlue.withValues(alpha: 0.06),
+                        borderColor: CupertinoColors.systemBlue.withValues(alpha: 0.6), borderStrokeWidth: 1.5,
+                      ),
+                    for (final e in events.where((e) => e.radiusKm > 0))
+                      CircleMarker(
+                        point: LatLng(e.lat, e.lon), radius: e.radiusKm * 1000, useRadiusInMeter: true,
+                        color: sevColor(e.severity).withValues(alpha: e.verdict == 'dubious' ? 0.08 : 0.2),
+                        borderColor: sevColor(e.severity).withValues(alpha: 0.8), borderStrokeWidth: 1.5,
+                      ),
+                  ]),
+                  MarkerLayer(markers: [
+                    for (final p in st.settings.pins)
+                      Marker(
+                        point: LatLng(p.lat, p.lon), width: 32, height: 32,
+                        child: const Icon(CupertinoIcons.location_solid, color: CupertinoColors.systemBlue, size: 30),
+                      ),
+                    if (st.pos != null)
+                      Marker(
+                        point: LatLng(st.pos!.lat, st.pos!.lon), width: 20, height: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.systemBlue, shape: BoxShape.circle,
+                            border: Border.all(color: CupertinoColors.white, width: 3),
+                          ),
+                        ),
+                      ),
+                    for (final e in events) _eventMarker(context, e),
+                  ]),
+                ],
+              ),
+              Positioned(
+                left: 8, bottom: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  color: CupertinoColors.white.withValues(alpha: 0.75),
+                  child: const Text('© OpenStreetMap  ·  kółka: zasięg  ·  ?: podejrzane',
+                      style: TextStyle(fontSize: 10, color: CupertinoColors.black)),
+                ),
+              ),
+              if (st.pos != null)
+                Positioned(
+                  right: 12, top: 12,
+                  child: CupertinoButton.filled(
+                    padding: const EdgeInsets.all(10),
+                    borderRadius: BorderRadius.circular(22),
+                    onPressed: () => _mc.move(LatLng(st.pos!.lat, st.pos!.lon), 10),
+                    child: const Icon(CupertinoIcons.location_fill, size: 20),
+                  ),
+                ),
+            ]),
+          );
+        },
+      );
+
+  Marker _eventMarker(BuildContext context, FeedEvent e) {
+    final dubious = e.verdict == 'dubious';
+    final st = widget.st;
+    return Marker(
+      point: LatLng(e.lat, e.lon), width: 34, height: 34,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(CupertinoPageRoute(
+            builder: (_) => DetailPage(st, relevanceFor(e, st.settings, st.pos)))),
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: dubious ? CupertinoColors.systemGrey : sevColor(e.severity),
+            shape: BoxShape.circle,
+            border: Border.all(color: CupertinoColors.white, width: 2),
+          ),
+          child: Text(dubious ? '?' : '${e.severity}',
+              style: const TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.w700)),
+        ),
       ),
     );
   }
@@ -393,54 +568,51 @@ class SettingsTab extends StatelessWidget {
   final AppState st;
   const SettingsTab(this.st, {super.key});
 
-  Widget _slider(BuildContext c, String label, String value, double v, double min, double max,
-      int div, ValueChanged<double> on) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-      child: Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(label),
-          Text(value, style: TextStyle(color: secondary(c))),
-        ]),
-        CupertinoSlider(value: v, min: min, max: max, divisions: div, onChanged: on),
-      ]),
-    );
-  }
-
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: st,
         builder: (context, _) {
           final s = st.settings;
+          final m = modes[s.mode.clamp(0, modes.length - 1).toInt()];
           return CupertinoPageScaffold(
             backgroundColor: CupertinoColors.systemGroupedBackground,
             child: CustomScrollView(slivers: [
               const CupertinoSliverNavigationBar(largeTitle: Text('Ustawienia')),
               SliverToBoxAdapter(
                 child: Column(children: [
-                  CupertinoListSection.insetGrouped(header: const Text('KRYTERIA'), children: [
-                    _slider(context, 'Minimalna ważność', '${s.minSeverity}/5', s.minSeverity.toDouble(),
-                        1, 5, 4, (v) { s.minSeverity = v.round(); st.save(); }),
-                    _slider(context, 'Promień wokół Ciebie', '${s.nearbyKm.round()} km', s.nearbyKm,
-                        10, 150, 14, (v) { s.nearbyKm = v; st.save(); }),
-                    _slider(context, '„Z dala od zdarzenia" od', '${s.safeKm.round()} km', s.safeKm,
-                        30, 300, 27, (v) { s.safeKm = v; st.save(); }),
-                    _slider(context, 'Powiadomienia od ważności', '${s.notifySeverity}/5',
-                        s.notifySeverity.toDouble(), 3, 5, 2, (v) { s.notifySeverity = v.round(); st.save(); }),
-                    CupertinoListTile(
-                      title: const Text('Pokazuj zdarzenia podejrzane'),
-                      subtitle: const Text('Z czerwoną flagą i uzasadnieniem; bez powiadomień'),
-                      trailing: CupertinoSwitch(
-                          value: s.showDubious, onChanged: (v) { s.showDubious = v; st.save(); }),
-                    ),
-                  ]),
-                  CupertinoListSection.insetGrouped(header: const Text('TYPY ZDARZEŃ'), children: [
-                    for (final t in allTypes)
+                  CupertinoListSection.insetGrouped(
+                    header: const Text('CZUJNOŚĆ'),
+                    footer: Text('${m.label}: ważność od ${m.minSeverity}/5, w promieniu ${m.nearbyKm.round()} km '
+                        'od Ciebie i Twoich punktów, powiadomienia od ${m.notifySeverity}/5.'),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: s.mode,
+                          children: {for (var i = 0; i < modes.length; i++) i: Text(modes[i].label)},
+                          onValueChanged: (v) {
+                            if (v != null) {
+                              s.mode = v;
+                              st.save();
+                            }
+                          },
+                        ),
+                      ),
                       CupertinoListTile(
-                        title: Text(typeLabels[t]!),
+                        title: const Text('Pokazuj zdarzenia podejrzane'),
+                        subtitle: const Text('Z flagą i uzasadnieniem; bez powiadomień'),
                         trailing: CupertinoSwitch(
-                          value: s.types.contains(t),
-                          onChanged: (v) { v ? s.types.add(t) : s.types.remove(t); st.save(); },
+                            value: s.showDubious, onChanged: (v) { s.showDubious = v; st.save(); }),
+                      ),
+                    ],
+                  ),
+                  CupertinoListSection.insetGrouped(header: const Text('CO MONITOROWAĆ'), children: [
+                    for (final g in typeGroups)
+                      CupertinoListTile(
+                        title: Text(g.label),
+                        trailing: CupertinoSwitch(
+                          value: s.groups.contains(g.id),
+                          onChanged: (v) { v ? s.groups.add(g.id) : s.groups.remove(g.id); st.save(); },
                         ),
                       ),
                   ]),

@@ -11,7 +11,9 @@ from .models import SOURCE_WEIGHT, Claim
 HARD_TYPES = {"power"}          # typy, dla których operator publikuje dane
 WINDOW = timedelta(hours=6)
 FRESH_MIN = 30                  # świeże zdarzenie: dane operatora mogą mieć opóźnienie
-LABEL = {"power": "brak prądu", "water": "awaria wody", "unrest": "niepokoje",
+LABEL = {"power": "brak prądu", "water": "awaria wody", "weather": "zagrożenie pogodowe",
+         "disaster": "klęska żywiołowa", "infrastructure": "awaria infrastruktury",
+         "epidemic": "zagrożenie epidemiologiczne", "unrest": "niepokoje",
          "shortage": "braki w sklepach", "sabotage": "podejrzenie sabotażu", "other": "zdarzenie"}
 
 
@@ -88,14 +90,19 @@ def _make(cs: list[Claim], official_ok: dict[str, bool], now: datetime) -> dict:
     seen = {}
     for c in cs:
         seen.setdefault(c.item.source_id, {"name": c.item.source_name, "url": c.item.url, "kind": c.item.kind})
-    eid = hashlib.sha1(f"{place.name}|{typ}|{first:%Y%m%d%H}".encode()).hexdigest()[:12]
+    keyed = next((c for c in cs if c.key), None)
+    stable = keyed.key if keyed else f"{first:%Y%m%d}"   # dzień, nie godzina: stabilne id między uruchomieniami
+    eid = hashlib.sha1(f"{place.name}|{typ}|{stable}".encode()).hexdigest()[:12]
+    labelled = next((c.label for c in cs if c.label), None)
+    valid_to = max((c.valid_to for c in cs if c.valid_to), default=None)
     return {
         "id": eid, "type": typ, "severity": max(c.severity for c in cs),
         "place": place.name, "powiat": place.powiat, "powiat_slug": place.powiat_slug,
-        "lat": place.lat, "lon": place.lon,
+        "lat": place.lat, "lon": place.lon, "radius_km": place.radius_km,
+        "valid_to": valid_to.isoformat() if valid_to else None,
         "first_seen": first.isoformat(), "last_seen": last.isoformat(),
         "credibility": cred, "verdict": verdict, "attribution_claimed": attribution,
-        "summary": f"{place.name}: {LABEL.get(typ, 'zdarzenie')}",
+        "summary": f"{place.name}: {labelled or LABEL.get(typ, 'zdarzenie')}",
         "snippet": best.item.text[:200], "reasons": reasons, "sources": list(seen.values()),
     }
 
@@ -103,7 +110,7 @@ def _make(cs: list[Claim], official_ok: dict[str, bool], now: datetime) -> dict:
 def build_events(claims: list[Claim], official_ok: dict[str, bool], now: datetime) -> list[dict]:
     buckets = defaultdict(list)
     for c in claims:
-        buckets[(c.place.name, c.type)].append(c)
+        buckets[(c.place.name, c.type, c.key or "")].append(c)
     events = []
     for cs in buckets.values():
         cs.sort(key=lambda c: c.item.published)

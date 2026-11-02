@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'geo.dart';
 import 'models.dart';
 
-/// Wynik dopasowania zdarzenia do Ciebie: bliskość bieżącej lokalizacji LUB punktów (dom, praca).
-/// Punkty działają niezależnie od tego, gdzie aktualnie jesteś.
+/// Dopasowanie zdarzenia do Ciebie: bliskość bieżącej lokalizacji LUB punktów (dom, praca).
+/// Punkty działają niezależnie od tego, gdzie jesteś. Zdarzenia obszarowe (powiat, województwo,
+/// cały kraj) liczą się, gdy ich obszar sięga do Twojej lokalizacji lub punktu.
 class Relevance {
   final FeedEvent event;
   final double? kmMe;
@@ -11,15 +13,26 @@ class Relevance {
   final bool nearMe;
   Relevance(this.event, this.kmMe, this.pin, this.kmPin, this.nearMe);
 
+  bool get relevant => nearMe || pin != null;
+
   String get proximity {
+    final area = event.radiusKm > 0;
     final parts = <String>[];
-    if (nearMe && kmMe != null) parts.add('${kmMe!.round()} km od Ciebie');
-    if (pin != null) parts.add('${kmPin!.round()} km od: ${pin!.name}');
+    if (nearMe && kmMe != null) {
+      parts.add(area && kmMe! <= event.radiusKm
+          ? 'obejmuje Twoją lokalizację'
+          : '${kmMe!.round()} km od Ciebie');
+    }
+    if (pin != null) {
+      parts.add(area && kmPin! <= event.radiusKm
+          ? 'obejmuje: ${pin!.name}'
+          : '${kmPin!.round()} km od: ${pin!.name}');
+    }
     if (parts.isEmpty && kmMe != null) parts.add('${kmMe!.round()} km od Ciebie');
     return parts.join(' · ');
   }
 
-  /// Dodatkowa informacja kontekstowa, gdy zdarzenie dotyczy punktu, a Ty jesteś gdzie indziej.
+  /// Dodatkowa informacja kontekstowa.
   String? zoneNote(double safeKm) {
     if (kmMe == null) return null;
     if (pin != null && !nearMe && kmMe! >= safeKm) return 'Jesteś z dala od miejsca zdarzenia';
@@ -28,28 +41,29 @@ class Relevance {
   }
 }
 
-List<Relevance> evaluate(List<FeedEvent> events, Settings s, LatLon? me) {
-  final out = <Relevance>[];
-  for (final e in events) {
-    if (e.severity < s.minSeverity) continue;
-    if (!s.types.contains(e.type)) continue;
-    if (!s.showDubious && e.verdict == 'dubious') continue;
+/// Filtr bez lokalizacji: ważność, typ, podejrzane. Używany przez listę i mapę.
+List<FeedEvent> filterEvents(List<FeedEvent> events, Settings s) => events
+    .where((e) =>
+        e.severity >= s.minSeverity && s.allows(e.type) && (s.showDubious || e.verdict != 'dubious'))
+    .toList();
 
-    final kmMe = me == null ? null : haversineKm(me.lat, me.lon, e.lat, e.lon);
-    final nearMe = kmMe != null && kmMe <= s.nearbyKm;
-
-    Pin? best;
-    double? bestKm;
-    for (final p in s.pins) {
-      final km = haversineKm(p.lat, p.lon, e.lat, e.lon);
-      if (km <= p.radiusKm && (bestKm == null || km < bestKm)) {
-        best = p;
-        bestKm = km;
-      }
+Relevance relevanceFor(FeedEvent e, Settings s, LatLon? me) {
+  final kmMe = me == null ? null : haversineKm(me.lat, me.lon, e.lat, e.lon);
+  final nearMe = kmMe != null && max(0.0, kmMe - e.radiusKm) <= s.nearbyKm;
+  Pin? best;
+  double? bestKm;
+  for (final p in s.pins) {
+    final km = haversineKm(p.lat, p.lon, e.lat, e.lon);
+    if (max(0.0, km - e.radiusKm) <= p.radiusKm && (bestKm == null || km < bestKm)) {
+      best = p;
+      bestKm = km;
     }
-    if (!nearMe && best == null) continue;
-    out.add(Relevance(e, kmMe, best, bestKm, nearMe));
   }
+  return Relevance(e, kmMe, best, bestKm, nearMe);
+}
+
+List<Relevance> evaluate(List<FeedEvent> events, Settings s, LatLon? me) {
+  final out = filterEvents(events, s).map((e) => relevanceFor(e, s, me)).where((r) => r.relevant).toList();
   out.sort((a, b) {
     final c = b.event.severity.compareTo(a.event.severity);
     if (c != 0) return c;
