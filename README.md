@@ -21,7 +21,8 @@ GH Actions (cron co 10 min)           Aplikacja Android
 **Prywatność:** feed jest wspólny dla regionu, a Twoja lokalizacja i punkty nigdy nie opuszczają telefonu.
 
 ## Mapa i wygląd
-- Jasny i ciemny motyw (Ustawienia -> Wygląd: Auto / Jasny / Ciemny). Mapa ma ciemne lub jasne kafelki CARTO.
+- Jasny i ciemny motyw (Ustawienia -> Wygląd: Auto / Jasny / Ciemny). Mapa używa kafelków OpenStreetMap (bez klucza); ciemny motyw to ten sam kafelek przefiltrowany kolorystycznie.
+  (CARTO wymaga teraz klucza API, więc z niego zrezygnowałem.)
 - Punkty zdarzeń pulsują powoli, tym szybciej, im wyższa ważność: czerwony (4-5), żółty (3), szary (1-2).
   Podejrzane są szare, bez pulsu.
 - Okienko ze szczegółami rozwija się po **najechaniu** (mysz, rysik) lub **dotknięciu** punktu.
@@ -50,7 +51,8 @@ trafiają na listę, ale nie na mapę.
    regułowa, mniej dokładna dla wiadomości), `NTFY_PREFIX` (opcjonalnie).
 3. *Actions -> feed -> Run workflow*: najpierw `probe = 1`, potem `demo = 1` (dane demonstracyjne).
 4. *Actions -> build-apk*, pobierz `watchpl-apk`, zainstaluj.
-5. W aplikacji (Ustawienia): `https://raw.githubusercontent.com/<user>/<repo>/data/feed.json`.
+5. W aplikacji (Ustawienia -> Źródło danych) wklej `https://raw.githubusercontent.com/<user>/<repo>/data/feed.json`
+   i zatwierdź. Najpierw otwórz ten adres w przeglądarce telefonu - ma pokazać JSON. Repozytorium musi być publiczne.
 6. Zakładka Miejsca: dodaj dom i pracę.
 
 ## Dane obszaru

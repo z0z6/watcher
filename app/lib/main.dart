@@ -561,8 +561,14 @@ class DetailPage extends StatelessWidget {
 
 // ---------- zakładka: Mapa ----------
 
-const _tilesDark = 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
-const _tilesLight = 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+// Kafelki OpenStreetMap (bez klucza API). Ciemny motyw: odwrócenie kolorów + ściemnienie filtrem.
+const _tiles = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const _darkMatrix = <double>[
+  -0.85, 0, 0, 0, 217,
+  0, -0.9, 0, 0, 225,
+  0, 0, -0.8, 0, 200,
+  0, 0, 0, 1, 0,
+];
 const _neCenter = LatLng(53.6, 22.0);   // środek północno-wschodniej Polski
 
 class MapTab extends StatefulWidget {
@@ -638,11 +644,17 @@ class _MapTabState extends State<MapTab> {
                   onTap: (_, __) => setState(() { _selected = null; _hovered = null; }),
                 ),
                 children: [
-                  TileLayer(
-                    key: ValueKey(dark),
-                    urlTemplate: dark ? _tilesDark : _tilesLight,
-                    userAgentPackageName: 'pl.watchpl.watchpl',
-                  ),
+                  dark
+                      ? ColorFiltered(
+                          key: const ValueKey('tiles-dark'),
+                          colorFilter: const ColorFilter.matrix(_darkMatrix),
+                          child: TileLayer(urlTemplate: _tiles, userAgentPackageName: 'pl.watchpl.watchpl'),
+                        )
+                      : TileLayer(
+                          key: const ValueKey('tiles-light'),
+                          urlTemplate: _tiles,
+                          userAgentPackageName: 'pl.watchpl.watchpl',
+                        ),
                   CircleLayer(circles: [
                     for (final p in st.settings.pins)
                       CircleMarker(
@@ -690,7 +702,7 @@ class _MapTabState extends State<MapTab> {
                     color: appCard.resolveFrom(context).withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text('© OpenStreetMap · © CARTO · kółka: zasięg · ?: podejrzane',
+                  child: Text('© OpenStreetMap contributors · kółka: zasięg · ?: podejrzane',
                       style: TextStyle(fontSize: 10, color: secondary(context))),
                 ),
               ),
@@ -1038,20 +1050,12 @@ class SettingsTab extends StatelessWidget {
                   section(
                     context,
                     header: const Text('ŹRÓDŁO DANYCH'),
-                    footer: const Text('Adres feed.json z Twojego repozytorium (gałąź data).'),
-                    [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: CupertinoTextField(
-                          controller: TextEditingController(text: s.feedUrl),
-                          placeholder: 'https://raw.githubusercontent.com/…/data/feed.json',
-                          keyboardType: TextInputType.url,
-                          autocorrect: false,
-                          onSubmitted: (v) { s.feedUrl = v.trim(); st.save(); st.refresh(); },
-                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                        ),
-                      ),
-                    ],
+                    footer: Text(st.error != null && s.feedUrl.isNotEmpty
+                        ? '⚠ ${st.error}'
+                        : st.feed != null && s.feedUrl.isNotEmpty
+                            ? '✓ Połączono: ${st.feed!.events.length} zdarzeń w feedzie, dane z ${ago(st.feed!.generatedAt)}.'
+                            : 'Wklej adres pliku feed.json z gałęzi „data” Twojego repozytorium i zatwierdź (Enter / „Gotowe”).'),
+                    [Padding(padding: const EdgeInsets.all(12), child: _UrlField(st))],
                   ),
                   section(
                     context,
@@ -1083,6 +1087,50 @@ class SettingsTab extends StatelessWidget {
               ),
             ]),
           );
+        },
+      );
+}
+
+/// Pole adresu feedu: własny kontroler (tekst nie "skacze" przy odświeżaniu ekranu),
+/// zapis przy zatwierdzeniu albo dotknięciu poza polem.
+class _UrlField extends StatefulWidget {
+  final AppState st;
+  const _UrlField(this.st);
+  @override
+  State<_UrlField> createState() => _UrlFieldState();
+}
+
+class _UrlFieldState extends State<_UrlField> {
+  late final TextEditingController _c = TextEditingController(text: widget.st.settings.feedUrl);
+
+  void _commit() {
+    final v = _c.text.trim();
+    if (v == widget.st.settings.feedUrl) return;
+    widget.st.settings.feedUrl = v;
+    widget.st.save();
+    widget.st.refresh();
+  }
+
+  @override
+  void dispose() {
+    _commit();
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => CupertinoTextField(
+        controller: _c,
+        placeholder: 'https://raw.githubusercontent.com/UŻYTKOWNIK/REPO/data/feed.json',
+        keyboardType: TextInputType.url,
+        textInputAction: TextInputAction.done,
+        autocorrect: false,
+        enableSuggestions: false,
+        clearButtonMode: OverlayVisibilityMode.editing,
+        onSubmitted: (_) => _commit(),
+        onTapOutside: (_) {
+          _commit();
+          FocusScope.of(context).unfocus();
         },
       );
 }
