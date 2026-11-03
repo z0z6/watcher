@@ -3,6 +3,8 @@
 # (sekcja source_status w feed.json) lub uruchom `python -m monitor.run --probe`.
 # Twarda świeżość: pozycje starsze (lub bez daty) są odrzucane, zanim trafią do analizy.
 max_age_hours: 36
+# Pogoda tylko z oficjalnych ostrzeżeń IMGW. true = dodatkowo z wiadomości (więcej szumu i dawnych przedruków).
+weather_from_news: false
 
 sources:
   # --- Oficjalne, strukturalne, bezpłatne, bez klucza ---

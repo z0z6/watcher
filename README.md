@@ -70,6 +70,34 @@ trafiają na listę, ale nie na mapę.
    dotknięcie źródła (w szczegółach lub w rozwijanej karcie na mapie) otwiera oryginał w przeglądarce.
    Linki z Google News przechodzą przez przekierowanie Google do strony wydawcy.
 
+## Pogoda
+Pogoda pochodzi **wyłącznie z ostrzeżeń IMGW** (oficjalne, z datami obowiązywania). Pogoda "z wiadomości" jest domyślnie
+wyłączona (`weather_from_news: false` w `sources.yaml`), bo to głównie przedruki i dawne zdarzenia. Dodatkowo
+wiadomości przechodzą kontrolę sezonowości: upał w listopadzie albo śnieg w lipcu w świeżym artykule to prawie na pewno
+stara historia i jest odrzucany. Dowody z weryfikacji AI muszą mieć znaną datę strony nie starszą niż 3 dni.
+
+## Schrony (dane rządowe)
+Źródło: oficjalny zbiór Komendy Głównej PSP "Punkty schronienia w Polsce"
+(https://dane.gov.pl/pl/dataset/28058,punkty-schronienia-w-polsce, plik CSV z serwisu gdziesieukryc.pl, aktualizowany w
+poniedziałki, ok. 88 tys. punktów w kraju). Backend pobiera plik tylko gdy się zmienił (nagłówek Last-Modified), filtruje
+do obszaru monitorowania i publikuje `shelters.json` obok `feed.json`. Aplikacja trzyma kopię w telefonie, więc **lista
+schronów działa bez internetu** (kafelki mapy nie).
+- Zakładka **Schrony**: najbliższe punkty wokół Ciebie, domu albo pracy (1 / 2 / 5 km), odległość, czas dojścia
+  w linii prostej, dostępność (całodobowa / określone godziny / na żądanie), trasa piesza w Mapach Google.
+- Mapa: przycisk tarczy włącza warstwę schronów, a pasek "Schrony: Ja / Dom / Praca" przełącza punkt odniesienia.
+- Status pobierania: `source_status.shelters` w `feed.json`. Nazwy kolumn CSV pochodzą z kodu niezależnego projektu,
+  który czyta ten plik, a nie z testów na żywo - przy zmianie formatu parser kończy się jawnym błędem, nie cichym brakiem.
+- To **nie jest oficjalna aplikacja PSP** i punkt na mapie nie gwarantuje schronienia ani dostępu. Licencja zbioru wg
+  opisu: CC BY 4.0 (źródło: KG PSP, dane.gov.pl) - sprawdź na stronie zbioru. Nowa kategoria ustawowa "punkt schronienia"
+  (od 29.05.2026) to nie to samo co schron, ukrycie czy miejsce doraźnego schronienia. Rejestr CEOZO (ceozo.pl) nie jest
+  zintegrowany (brak zweryfikowanego otwartego API).
+
+## Udostępnianie
+Systemowe okno udostępniania Androida (`share_plus`): Signal, SMS, e-mail, WhatsApp itd. Udostępnić można zdarzenie
+(z oceną, linkiem do źródła i mapą), lokalizację zdarzenia, schron, punkt (dom/praca) i własną lokalizację. Facebook
+Messenger bywa niedostępny w tym oknie (ograniczenia Meta) - użyj wtedy "Skopiuj". Treść udostępnianego zdarzenia mówi
+wprost, że ocena jest automatyczna i podaje link do sprawdzenia.
+
 ## Dane obszaru
 `backend/data/powiaty.csv` (57 powiatów, kody TERYT z Dz.U. 2025 poz. 1721, środki z granic powiatów)
 generuje `tools/build_powiaty.py`. Zmień `REGION` w skrypcie, żeby zmienić obszar. `backend/data/places.csv`
@@ -77,7 +105,7 @@ generuje `tools/build_powiaty.py`. Zmień `REGION` w skrypcie, żeby zmienić ob
 osobno, kolumna `forms` = formy odmiany dla nazw mylących (Pisz/pisze, Węgrów/Węgry). Rozbuduj o kolejne.
 
 ## Ograniczenia
-- Testy: backend (25 testów) przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
+- Testy: backend (35 testów), logika Darta (modele, schrony, teksty udostępniania) sprawdzona kompilatorem Darta i testem zgodności z plikami backendu; pliki z interfejsem Fluttera przeszły tylko kontrolę składni przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
 - Powiadomienia w tle: min. 15 min, mogą być opóźnione przez oszczędzanie baterii. Alerty wokół Ciebie w tle
   wymagają lokalizacji "Zawsze"; alerty o punktach działają bez niej.
 - Ostrzeżenia hydro bez rozpoznanej miejscowości dostają obszar całego województwa (promień 60 km od środka).

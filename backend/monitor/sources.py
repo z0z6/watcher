@@ -3,7 +3,7 @@ import re
 import sys
 import time
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from time import mktime
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -69,6 +69,8 @@ def parse_imgw_meteo(data: list[dict], powiaty: Powiaty, now: datetime) -> list[
         event = str(_first(w, "nazwa_zdarzenia") or "Ostrzeżenie meteorologiczne")
         v_from, v_to = _dt(w.get("obowiazuje_od")), _dt(w.get("obowiazuje_do"))
         if v_to and v_to < now:
+            continue
+        if v_from and v_from > now + timedelta(hours=48):   # ostrzeżenie zbyt odległe w czasie
             continue
         text = str(w.get("tresc") or event)
         for code in _codes(w.get("teryt")):

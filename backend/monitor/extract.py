@@ -44,10 +44,29 @@ HIST_REL = (r"\b(rok|roku|lata|lat|miesiac|miesiace|miesiecy|tydzien|tygodnie|ty
 HIST_YEAR = r"\b(?:w|z|od|po|przed|latem|zima|wiosna|jesienia) (19\d\d|20\d\d)(?: r\b| roku|\b)"
 
 
+HEAT = r"\b(upal|upaly|upalow|upalem|skwar|fala goraca|temperatur\w* powyzej 3\d)"
+COLD = r"\b(mroz|mrozy|mrozow|mrozem|zamiec|zawieja|sniezyc|snieg|sniegu|gololedz|oblodzen|marznac|marznie)"
+
+
+def season_mismatch(text: str, ref: datetime) -> bool:
+    """Upały w listopadzie albo śnieg w lipcu w świeżym artykule to prawie na pewno przedruk lub dawne
+    wydarzenie (np. upał w pociągu sprzed pół roku). Obowiązuje tylko dla wiadomości - ostrzeżenia IMGW
+    są oficjalne i tego filtra nie przechodzą."""
+    t = norm(text)
+    m = ref.month
+    if re.search(HEAT, t) and m not in (5, 6, 7, 8, 9):
+        return True
+    if re.search(COLD, t) and m in (6, 7, 8):
+        return True
+    return False
+
+
 def looks_historical(text: str, ref: datetime) -> bool:
     """Heurystyka: tekst opisuje dawne zdarzenie, mimo że pozycja ma świeżą datę (przedruk, odświeżony artykuł).
     ref = data publikacji pozycji."""
     t = norm(text)
+    if season_mismatch(text, ref):
+        return True
     if re.search(HIST_REL, t):
         return True
     for m in re.finditer(HIST_YEAR, t):

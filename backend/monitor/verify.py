@@ -13,7 +13,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
 from .score import verdict_for
@@ -38,9 +38,30 @@ def domain(url: str) -> str:
     return re.sub(r"^www\.", "", urlparse(url).netloc.lower())
 
 
-def search_urls(resp) -> dict[str, str]:
-    """URL -> tytuł ze wszystkich wyników wyszukiwania w odpowiedzi."""
-    out: dict[str, str] = {}
+def parse_page_age(v, now: datetime) -> datetime | None:
+    """Pole page_age z wyników wyszukiwania: data ("April 30, 2025", ISO) albo "3 days ago". None = nieznana."""
+    if not v:
+        return None
+    v = str(v).strip()
+    m = re.match(r"(\d+)\s+(minute|hour|day|week|month|year)s?\s+ago", v, re.I)
+    if m:
+        days = {"minute": 1 / 1440, "hour": 1 / 24, "day": 1, "week": 7, "month": 30, "year": 365}[m.group(2).lower()]
+        return now - timedelta(days=int(m.group(1)) * days)
+    for fmt in ("%B %d, %Y", "%b %d, %Y", "%Y-%m-%d", "%d %B %Y", "%d.%m.%Y"):
+        try:
+            return datetime.strptime(v, fmt).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    try:
+        d = datetime.fromisoformat(v.replace("Z", "+00:00"))
+        return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def search_urls(resp) -> dict[str, tuple[str, str]]:
+    """URL -> (tytuł, page_age) ze wszystkich wyników wyszukiwania w odpowiedzi."""
+    out: dict[str, tuple[str, str]] = {}
     for b in _get(resp, "content", []) or []:
         if _get(b, "type") == "web_search_tool_result":
             content = _get(b, "content")
@@ -48,7 +69,7 @@ def search_urls(resp) -> dict[str, str]:
                 for r in content:
                     u = _get(r, "url")
                     if u:
-                        out[str(u)] = str(_get(r, "title", "") or "")
+                        out[str(u)] = (str(_get(r, "title", "") or ""), str(_get(r, "page_age", "") or ""))
     return out
 
 
@@ -83,9 +104,13 @@ def ask(client, model: str, e: dict, now: datetime) -> dict | None:
     for x in (ans.get("evidence") or [])[:6]:
         u = str(_get(x, "url", ""))
         d = domain(u)
-        if u in allowed and u.startswith("https://") and d not in own and d not in used:
-            used.add(d)
-            evidence.append({"url": u, "title": (str(_get(x, "title", "")) or allowed[u])[:140]})
+        if u not in allowed or not u.startswith("https://") or d in own or d in used:
+            continue
+        age = parse_page_age(allowed[u][1], now)
+        if age is None or now - age > timedelta(days=3):    # dowód musi mieć znaną i świeżą datę
+            continue
+        used.add(d)
+        evidence.append({"url": u, "title": (str(_get(x, "title", "")) or allowed[u][0])[:140]})
     return {"current": ans.get("current") is not False,
             "corroborated": bool(ans.get("corroborated")) and bool(evidence),
             "evidence": evidence, "note": str(ans.get("note", ""))[:200], "at": now.isoformat()}

@@ -14,6 +14,10 @@ import 'geo.dart';
 import 'models.dart';
 import 'notifier.dart';
 import 'relevance.dart';
+import 'share.dart';
+import 'share_text.dart';
+import 'shelter_service.dart';
+import 'shelters.dart';
 import 'store.dart';
 
 Future<void> main() async {
@@ -99,6 +103,8 @@ class AppState extends ChangeNotifier {
   final Map<String, DateTime> fresh = {};// id -> do kiedy oznaczone jako NOWE
   FeedEvent? toast;                      // baner "nowe zdarzenie"
   int toastCount = 0;
+  ShelterSet? shelters;                  // punkty schronienia (PSP) z obszaru monitorowania
+  int shelterAnchor = -1;                // punkt odniesienia: -1 = Ty, 0.. = indeks punktu (Dom, Praca...)
   Timer? _toastTimer, _tick, _auto;
 
   bool isFresh(String id) => (fresh[id]?.isAfter(DateTime.now())) ?? false;
@@ -109,6 +115,7 @@ class AppState extends ChangeNotifier {
     pos = await Store.loadLastPos();
     seen = await Store.loadSeen();
     notifyListeners();
+    unawaited(_loadShelters());
     try {
       if (await Geolocator.checkPermission() == LocationPermission.denied) {
         await Geolocator.requestPermission();
@@ -142,6 +149,7 @@ class AppState extends ChangeNotifier {
     } catch (_) {
       error = 'Nie udało się pobrać danych (pokazuję ostatnie znane)';
     }
+    unawaited(_loadShelters());
     notifyListeners();
   }
 
@@ -186,6 +194,61 @@ class AppState extends ChangeNotifier {
 
   Future<void> save() async {
     await Store.saveSettings(settings);
+    notifyListeners();
+  }
+
+  Future<void> _loadShelters() async {
+    try {
+      shelters ??= await ShelterService.cached();   // kopia lokalna działa bez internetu
+      notifyListeners();
+      final fresh = await ShelterService.refresh(settings.feedUrl);
+      if (fresh != null) {
+        shelters = fresh;
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  /// Punkt odniesienia dla schronów: Ty (GPS) albo wybrany punkt (Dom, Praca...).
+  int get anchorIndex {
+    if (shelterAnchor >= 0 && shelterAnchor < settings.pins.length) return shelterAnchor;
+    if (pos != null) return -1;
+    return settings.pins.isNotEmpty ? 0 : -1;
+  }
+
+  LatLon? pointFor(int i) =>
+      (i >= 0 && i < settings.pins.length) ? LatLon(settings.pins[i].lat, settings.pins[i].lon) : pos;
+
+  LatLon? get anchorPoint => pointFor(anchorIndex);
+
+  String get anchorLabel {
+    final i = anchorIndex;
+    if (i >= 0) return settings.pins[i].name;
+    return pos != null ? 'Ja' : '—';
+  }
+
+  List<ShelterHit> sheltersNear({int limit = 100}) {
+    final a = anchorPoint, set = shelters;
+    if (a == null || set == null) return const [];
+    return set.nearest(a.lat, a.lon, settings.shelterKm, limit: limit);
+  }
+
+  void setAnchor(int i) {
+    shelterAnchor = i;
+    notifyListeners();
+  }
+
+  void showSheltersAround(int pinIndex) {
+    shelterAnchor = pinIndex;
+    tabs.index = 2;
+    notifyListeners();
+  }
+
+  void showShelterOnMap(Shelter s) {
+    focus = LatLon(s.lat, s.lon);
+    settings.showShelters = true;
+    Store.saveSettings(settings);
+    tabs.index = 1;
     notifyListeners();
   }
 
@@ -240,13 +303,15 @@ class _WatchAppState extends State<WatchApp> {
                   tabBar: CupertinoTabBar(items: const [
                     BottomNavigationBarItem(icon: Icon(CupertinoIcons.bell_fill), label: 'Alerty'),
                     BottomNavigationBarItem(icon: Icon(CupertinoIcons.map_fill), label: 'Mapa'),
+                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.shield_fill), label: 'Schrony'),
                     BottomNavigationBarItem(icon: Icon(CupertinoIcons.location_fill), label: 'Miejsca'),
                     BottomNavigationBarItem(icon: Icon(CupertinoIcons.slider_horizontal_3), label: 'Ustawienia'),
                   ]),
                   tabBuilder: (_, i) => switch (i) {
                     0 => AlertsTab(st),
                     1 => MapTab(st),
-                    2 => PlacesTab(st),
+                    2 => SheltersTab(st),
+                    3 => PlacesTab(st),
                     _ => SettingsTab(st),
                   },
                 ),
@@ -546,6 +611,30 @@ class DetailPage extends StatelessWidget {
                 },
               ),
           ]),
+          section(context, header: const Text('UDOSTĘPNIJ'), [
+            CupertinoListTile(
+              leading: const Icon(CupertinoIcons.share),
+              title: const Text('Udostępnij zdarzenie…'),
+              subtitle: const Text('Signal, Messenger, SMS, e-mail…'),
+              trailing: const CupertinoListTileChevron(),
+              onTap: () => shareText(eventText(e, proximity: r.proximity), subject: e.summary),
+            ),
+            if (!e.nationwide)
+              CupertinoListTile(
+                leading: const Icon(CupertinoIcons.location),
+                title: const Text('Udostępnij lokalizację zdarzenia'),
+                trailing: const CupertinoListTileChevron(),
+                onTap: () => shareText(locationText(e.place, e.lat, e.lon), subject: e.place),
+              ),
+            CupertinoListTile(
+              leading: const Icon(CupertinoIcons.doc_on_doc),
+              title: const Text('Skopiuj opis'),
+              onTap: () {
+                copyText(eventText(e, proximity: r.proximity));
+                flash(context, 'Skopiowano do schowka');
+              },
+            ),
+          ]),
           section(context, header: const Text('DLACZEGO TAKA OCENA'), [
             for (final reason in e.reasons)
               CupertinoListTile(
@@ -653,6 +742,13 @@ class _MapTabState extends State<MapTab> {
           final openId = _selected ?? _hovered;
           final open = events.where((e) => e.id == openId).firstOrNull;
           final newCount = events.where((e) => st.isFresh(e.id)).length;
+          final showSh = st.settings.showShelters && st.shelters != null;
+          final shelterHits = showSh ? st.sheltersNear(limit: 150) : <ShelterHit>[];
+          final anchor = showSh ? st.anchorPoint : null;
+          final anchors = <(String, int)>[
+            if (st.pos != null) ('Ja', -1),
+            for (var i = 0; i < st.settings.pins.length; i++) (st.settings.pins[i].name, i),
+          ];
 
           return CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(middle: const Text('Mapa'), backgroundColor: appCard.resolveFrom(context)),
@@ -677,6 +773,12 @@ class _MapTabState extends State<MapTab> {
                           userAgentPackageName: 'pl.watchpl.watchpl',
                         ),
                   CircleLayer(circles: [
+                    if (anchor != null)
+                      CircleMarker(
+                        point: LatLng(anchor.lat, anchor.lon), radius: st.settings.shelterKm * 1000, useRadiusInMeter: true,
+                        color: cGreen.resolveFrom(context).withValues(alpha: 0.06),
+                        borderColor: cGreen.resolveFrom(context).withValues(alpha: 0.55), borderStrokeWidth: 1.2,
+                      ),
                     for (final p in st.settings.pins)
                       CircleMarker(
                         point: LatLng(p.lat, p.lon), radius: p.radiusKm * 1000, useRadiusInMeter: true,
@@ -706,6 +808,23 @@ class _MapTabState extends State<MapTab> {
                           ),
                         ),
                       ),
+                    for (final h in shelterHits)
+                      Marker(
+                        point: LatLng(h.s.lat, h.s.lon), width: 30, height: 30,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => showShelterActions(context, st, h.s, h.km),
+                          child: Center(
+                            child: Container(
+                              width: 13, height: 13,
+                              decoration: BoxDecoration(
+                                color: availColor(context, h.s.d), shape: BoxShape.circle,
+                                border: Border.all(color: CupertinoColors.white, width: 1.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     for (final e in events) _dotMarker(context, e),
                     if (open != null) _popupMarker(context, open),
                   ]),
@@ -723,18 +842,53 @@ class _MapTabState extends State<MapTab> {
                     color: appCard.resolveFrom(context).withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text('© OpenStreetMap contributors · kółka: zasięg · ?: podejrzane',
+                  child: Text('© OpenStreetMap contributors · kółka: zasięg · ?: podejrzane${showSh ? ' · schrony: KG PSP, dane.gov.pl (stan ${st.shelters!.stanPl})' : ''}',
                       style: TextStyle(fontSize: 10, color: secondary(context))),
                 ),
               ),
-              if (st.pos != null)
+              Positioned(
+                right: 12, top: 12,
+                child: Column(children: [
+                  if (st.pos != null) ...[
+                    _RoundBtn(icon: CupertinoIcons.location_fill, onTap: () => _mc.move(LatLng(st.pos!.lat, st.pos!.lon), 10)),
+                    const SizedBox(height: 8),
+                  ],
+                  _RoundBtn(
+                    icon: CupertinoIcons.shield_fill, active: st.settings.showShelters,
+                    onTap: () {
+                      st.settings.showShelters = !st.settings.showShelters;
+                      st.save();
+                    },
+                  ),
+                  if (st.pos != null) ...[
+                    const SizedBox(height: 8),
+                    _RoundBtn(
+                      icon: CupertinoIcons.share,
+                      onTap: () => shareText(locationText('Moja lokalizacja', st.pos!.lat, st.pos!.lon), subject: 'Moja lokalizacja'),
+                    ),
+                  ],
+                ]),
+              ),
+              if (st.settings.showShelters && anchors.isNotEmpty)
                 Positioned(
-                  right: 12, top: 12,
-                  child: CupertinoButton.filled(
-                    padding: const EdgeInsets.all(10),
-                    borderRadius: BorderRadius.circular(22),
-                    onPressed: () => _mc.move(LatLng(st.pos!.lat, st.pos!.lon), 10),
-                    child: const Icon(CupertinoIcons.location_fill, size: 20),
+                  left: 8, right: 8, bottom: 34,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(children: [
+                      for (final a in anchors)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6),
+                          child: _Chip(
+                            label: 'Schrony: ${a.$1}',
+                            selected: st.anchorIndex == a.$2,
+                            onTap: () {
+                              st.setAnchor(a.$2);
+                              final p = st.pointFor(a.$2);
+                              if (p != null) _mc.move(LatLng(p.lat, p.lon), 14);
+                            },
+                          ),
+                        ),
+                    ]),
                   ),
                 ),
             ]),
@@ -787,6 +941,7 @@ class _MapTabState extends State<MapTab> {
                 r: r, isNew: st.isFresh(e.id),
                 onHover: (on) => _hover(e.id, on),
                 onOpen: () => Navigator.of(context).push(CupertinoPageRoute(builder: (_) => DetailPage(st, r))),
+                onShare: () => shareText(eventText(e, proximity: r.proximity), subject: e.summary),
               ),
             ),
           ),
@@ -801,8 +956,8 @@ class _Popup extends StatelessWidget {
   final Relevance r;
   final bool isNew;
   final ValueChanged<bool> onHover;
-  final VoidCallback onOpen;
-  const _Popup({required this.r, required this.isNew, required this.onHover, required this.onOpen});
+  final VoidCallback onOpen, onShare;
+  const _Popup({required this.r, required this.isNew, required this.onHover, required this.onOpen, required this.onShare});
 
   @override
   Widget build(BuildContext context) {
@@ -869,6 +1024,14 @@ class _Popup extends StatelessWidget {
             Row(children: [
               Text('${ago(e.lastSeen)} · ${e.sources.length} źr.', style: TextStyle(fontSize: 10, color: secondary(context))),
               const Spacer(),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: onShare,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(CupertinoIcons.share, size: 16, color: cBlue.resolveFrom(context)),
+                ),
+              ),
               Text('Szczegóły ›', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: cBlue.resolveFrom(context))),
             ]),
           ]),
@@ -955,6 +1118,20 @@ class PlacesTab extends StatelessWidget {
         builder: (_) => CupertinoActionSheet(
           title: Text(p.name),
           actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                st.showSheltersAround(st.settings.pins.indexOf(p));
+              },
+              child: const Text('Schrony w pobliżu'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                shareText(locationText(p.name, p.lat, p.lon), subject: p.name);
+              },
+              child: const Text('Udostępnij lokalizację punktu…'),
+            ),
             CupertinoActionSheetAction(
               isDestructiveAction: true,
               onPressed: () {
@@ -1101,6 +1278,33 @@ class SettingsTab extends StatelessWidget {
                   ),
                   section(
                     context,
+                    header: const Text('SCHRONY'),
+                    footer: const Text('Źródło: oficjalny zbiór KG PSP „Punkty schronienia w Polsce” (dane.gov.pl). '
+                        'Punkt na mapie nie gwarantuje schronienia ani dostępu - sprawdź na miejscu; w razie zagrożenia '
+                        'stosuj się do komunikatów służb (112).'),
+                    [
+                      CupertinoListTile(
+                        title: const Text('Pokazuj schrony na mapie'),
+                        trailing: CupertinoSwitch(
+                            value: s.showShelters, onChanged: (v) { s.showShelters = v; st.save(); }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: CupertinoSlidingSegmentedControl<double>(
+                          groupValue: s.shelterKm,
+                          children: const {1.0: Text('1 km'), 2.0: Text('2 km'), 5.0: Text('5 km')},
+                          onValueChanged: (v) {
+                            if (v != null) {
+                              s.shelterKm = v;
+                              st.save();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  section(
+                    context,
                     header: const Text('UPRAWNIENIA'),
                     footer: const Text('Alerty o punktach (dom, praca) działają bez lokalizacji. Dla alertów wokół Ciebie w tle ustaw lokalizację „Zawsze" w ustawieniach systemu.'),
                     [
@@ -1173,6 +1377,244 @@ class _UrlFieldState extends State<_UrlField> {
         onTapOutside: (_) {
           _commit();
           FocusScope.of(context).unfocus();
+        },
+      );
+}
+
+// ---------- schrony: zakładka, akcje, pomocnicze ----------
+
+Color availColor(BuildContext c, int d) => (d == 0 ? cGreen : d == 1 ? cAmber : cGray).resolveFrom(c);
+
+/// Krótki komunikat potwierdzający (np. "Skopiowano"), znika sam.
+void flash(BuildContext context, String msg) {
+  showCupertinoDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (ctx) {
+      Future.delayed(const Duration(milliseconds: 1100), () {
+        if (ctx.mounted) Navigator.of(ctx).pop();
+      });
+      return CupertinoAlertDialog(content: Text(msg));
+    },
+  );
+}
+
+void showShelterActions(BuildContext context, AppState st, Shelter s, double? km) {
+  showCupertinoModalPopup(
+    context: context,
+    builder: (ctx) => CupertinoActionSheet(
+      title: Text(s.adres.isEmpty ? 'Punkt schronienia' : s.adres),
+      message: Text([s.gmina, availabilityLabels[s.d], if (km != null) '${km.toStringAsFixed(2)} km']
+          .where((x) => x.isNotEmpty).join(' · ')),
+      actions: [
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(ctx);
+            openLink(walkLink(s.lat, s.lon));
+          },
+          child: const Text('Prowadź (trasa piesza, Mapy Google)'),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(ctx);
+            st.showShelterOnMap(s);
+          },
+          child: const Text('Pokaż na mapie'),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(ctx);
+            shareText(shelterText(s, km: km), subject: 'Punkt schronienia');
+          },
+          child: const Text('Udostępnij…'),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(ctx);
+            copyText(shelterText(s, km: km));
+            flash(context, 'Skopiowano do schowka');
+          },
+          child: const Text('Skopiuj adres i link'),
+        ),
+      ],
+      cancelButton: CupertinoActionSheetAction(onPressed: () => Navigator.pop(ctx), child: const Text('Anuluj')),
+    ),
+  );
+}
+
+class _RoundBtn extends StatelessWidget {
+  final IconData icon;
+  final bool active;
+  final VoidCallback onTap;
+  const _RoundBtn({required this.icon, required this.onTap, this.active = false});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 44, height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: active ? cBlue.resolveFrom(context) : appCard.resolveFrom(context).withValues(alpha: 0.95),
+            border: Border.all(color: appBorder.resolveFrom(context)),
+            boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.2), blurRadius: 6)],
+          ),
+          child: Icon(icon, size: 20, color: active ? CupertinoColors.white : cBlue.resolveFrom(context)),
+        ),
+      );
+}
+
+class _Chip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _Chip({required this.label, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          decoration: BoxDecoration(
+            color: selected ? cBlue.resolveFrom(context) : appCard.resolveFrom(context).withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: appBorder.resolveFrom(context)),
+          ),
+          child: Text(label,
+              style: TextStyle(
+                  fontSize: 13, fontWeight: FontWeight.w600,
+                  color: selected ? CupertinoColors.white : CupertinoColors.label.resolveFrom(context))),
+        ),
+      );
+}
+
+class _InfoCard extends StatelessWidget {
+  final List<String> lines;
+  const _InfoCard(this.lines);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: appCard.resolveFrom(context),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: appBorder.resolveFrom(context)),
+        ),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(lines.join('\n'), style: TextStyle(fontSize: 13, height: 1.4, color: secondary(context))),
+        ),
+      );
+}
+
+/// Zakładka "Schrony": najbliższe punkty schronienia wokół Ciebie, domu, pracy (dane PSP).
+class SheltersTab extends StatelessWidget {
+  final AppState st;
+  const SheltersTab(this.st, {super.key});
+
+  void _pickAnchor(BuildContext context) => showCupertinoModalPopup(
+        context: context,
+        builder: (ctx) => CupertinoActionSheet(
+          title: const Text('Szukaj schronów wokół'),
+          actions: [
+            if (st.pos != null)
+              CupertinoActionSheetAction(
+                onPressed: () { Navigator.pop(ctx); st.setAnchor(-1); },
+                child: const Text('Ja (bieżąca lokalizacja)'),
+              ),
+            for (var i = 0; i < st.settings.pins.length; i++)
+              CupertinoActionSheetAction(
+                onPressed: () { Navigator.pop(ctx); st.setAnchor(i); },
+                child: Text(st.settings.pins[i].name),
+              ),
+          ],
+          cancelButton: CupertinoActionSheetAction(onPressed: () => Navigator.pop(ctx), child: const Text('Anuluj')),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: st,
+        builder: (context, _) {
+          final s = st.settings;
+          final set = st.shelters;
+          final hits = st.sheltersNear(limit: 60);
+          final noAnchor = st.anchorPoint == null;
+          return CupertinoPageScaffold(
+            backgroundColor: appBg.resolveFrom(context),
+            child: CustomScrollView(slivers: [
+              const CupertinoSliverNavigationBar(largeTitle: Text('Schrony')),
+              SliverToBoxAdapter(
+                child: Column(children: [
+                  section(context, header: const Text('OKOLICA'), [
+                    CupertinoListTile(
+                      title: const Text('Szukaj wokół'),
+                      additionalInfo: Text(st.anchorLabel),
+                      trailing: const CupertinoListTileChevron(),
+                      onTap: () => _pickAnchor(context),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: CupertinoSlidingSegmentedControl<double>(
+                        groupValue: s.shelterKm,
+                        children: const {1.0: Text('1 km'), 2.0: Text('2 km'), 5.0: Text('5 km')},
+                        onValueChanged: (v) {
+                          if (v != null) {
+                            s.shelterKm = v;
+                            st.save();
+                          }
+                        },
+                      ),
+                    ),
+                    CupertinoListTile(
+                      title: const Text('Pokaż na mapie'),
+                      trailing: CupertinoSwitch(
+                          value: s.showShelters, onChanged: (v) { s.showShelters = v; st.save(); }),
+                    ),
+                  ]),
+                  _InfoCard([
+                    if (set == null)
+                      'Brak danych o schronach. Sprawdź adres feedu w Ustawieniach i uruchom workflow „feed” (pobiera zbiór PSP).'
+                    else
+                      'Dane: Komenda Główna PSP, dane.gov.pl · stan ${set.stanPl} · punktów w obszarze: ${set.items.length}'
+                          '${set.demo ? ' · DANE DEMONSTRACYJNE' : ''}',
+                    if (noAnchor) 'Brak punktu odniesienia: włącz lokalizację albo dodaj punkt w zakładce Miejsca.',
+                    'Odległość i czas dojścia liczone w linii prostej (ok. 5 km/h).',
+                  ]),
+                  if (set != null && !noAnchor && hits.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        'Brak punktów schronienia w promieniu ${s.shelterKm.round()} km od: ${st.anchorLabel}. Zwiększ promień.\n\n'
+                        'Brak punktu w zbiorze nie oznacza, że w okolicy nie ma żadnego miejsca ukrycia.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: secondary(context)),
+                      ),
+                    )
+                  else if (hits.isNotEmpty)
+                    section(context, header: Text('NAJBLIŻSZE (${hits.length}${hits.length == 60 ? '+' : ''})'), [
+                      for (final h in hits)
+                        CupertinoListTile.notched(
+                          leading: Container(
+                            width: 14, height: 14,
+                            decoration: BoxDecoration(color: availColor(context, h.s.d), shape: BoxShape.circle),
+                          ),
+                          title: Text(h.s.adres.isEmpty ? h.s.gmina : h.s.adres, maxLines: 2, overflow: TextOverflow.ellipsis),
+                          subtitle: Text('${h.s.gmina} · ${availabilityLabels[h.s.d]}'),
+                          additionalInfo: Text('${h.distanceLabel} · ~${h.walkMinutes} min'),
+                          trailing: const CupertinoListTileChevron(),
+                          onTap: () => showShelterActions(context, st, h.s, h.km),
+                        ),
+                    ]),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
+                    child: Text(shelterDisclaimer, style: TextStyle(fontSize: 12, height: 1.35, color: secondary(context))),
+                  ),
+                ]),
+              ),
+            ]),
+          );
         },
       );
 }

@@ -215,9 +215,9 @@ def test_events_carry_source_links_best_first():
 
 # ---------- weryfikacja wyszukiwarką ----------
 
-def fake_client(answer_json, result_urls):
+def fake_client(answer_json, result_urls, page_age="1 day ago"):
     resp = NS(content=[
-        NS(type="web_search_tool_result", content=[NS(url=u, title="t " + u) for u in result_urls]),
+        NS(type="web_search_tool_result", content=[NS(url=u, title="t " + u, page_age=page_age) for u in result_urls]),
         NS(type="text", text="Wynik:\n" + answer_json),
     ])
     return NS(messages=NS(create=lambda **kw: resp))
@@ -275,3 +275,130 @@ def test_verify_events_caches_and_respects_limit(monkeypatch):
     e2b = build_events(one("W Płońsku wichura, połamane drzewa", "media_local", 300), {}, NOW)[0]
     assert verify_events([e1b, e2b], state, NOW, client) == 1 and len(calls) == 2    # wcześniejszy z cache, drugi nowy
     assert verify_events([e1b, e2b], state, NOW, client) == 0 and len(calls) == 2    # wszystko z cache
+
+
+# ---------- pogoda: sezonowość i brak pogody z wiadomości ----------
+from monitor.extract import season_mismatch
+from monitor.verify import parse_page_age
+
+
+def test_season_mismatch_catches_stale_heat_story():
+    assert season_mismatch("Upał w pociągu: pasażerowie bez klimatyzacji", NOW)        # listopad
+    assert not season_mismatch("Upał w pociągu", NOW.replace(month=7))
+    assert season_mismatch("Śnieg i gołoledź w Ełku", NOW.replace(month=7))
+    assert not season_mismatch("Mróz w Suwałkach, -15 stopni", NOW)
+    assert one("Upał w pociągu relacji Białystok - Warszawa, awaria klimatyzacji") == []
+
+
+def test_weather_from_news_disabled_by_default():
+    from monitor.run import drop_weather_news
+    cl = one("Silna wichura w Ciechanowie, połamane drzewa") + one("Brak prądu w Mławie")
+    assert [c.type for c in cl] == ["weather", "power"]
+    assert [c.type for c in drop_weather_news(cl, {})] == ["power"]                       # domyślnie bez pogody z wiadomości
+    assert [c.type for c in drop_weather_news(cl, {"weather_from_news": True})] == ["weather", "power"]
+
+
+def test_imgw_future_warning_far_ahead_skipped():
+    far = [{"nazwa_zdarzenia": "Upał", "stopien": 1, "obowiazuje_od": "2026-11-10 10:00:00",
+            "obowiazuje_do": "2026-11-11 10:00:00", "teryt": ["1402"]}]
+    assert parse_imgw_meteo(far, POW, NOW) == []
+
+
+def test_verify_requires_fresh_known_page_age():
+    e = base_event()
+    ans = '{"current": true, "corroborated": true, "note": "", "evidence": [{"url": "https://stary.pl/a", "title": "A"}]}'
+    assert ask(fake_client(ans, ["https://stary.pl/a"], page_age="April 30, 2025"), "m", e, NOW)["evidence"] == []
+    assert ask(fake_client(ans, ["https://stary.pl/a"], page_age=""), "m", e, NOW)["evidence"] == []
+    assert len(ask(fake_client(ans, ["https://stary.pl/a"], page_age="2 days ago"), "m", e, NOW)["evidence"]) == 1
+
+
+def test_parse_page_age_formats():
+    assert parse_page_age("3 days ago", NOW) == NOW - timedelta(days=3)
+    assert parse_page_age("November 1, 2026", NOW).day == 1
+    assert parse_page_age("nonsense", NOW) is None
+
+
+# ---------- schrony (CSV PSP) ----------
+import json as _json
+
+from monitor import shelters as sh
+
+BBOX = sh.region_bbox(POW)
+CSV = ('\ufeff"Identyfikator publiczny","Szerokosc geograficzna","Dlugosc geograficzna","Adres","Gmina","Dostepnosc"\r\n'
+       '"OZO-1","52.881700","20.619300","ul. Kościuszki 5, lok. ""A"", Ciechanów","Ciechanów","Całodobowa"\r\n'
+       '"OZO-2","53,0840","21,5740","Parking podziemny, Ostrołęka","Ostrołęka","Określone godziny"\r\n'
+       '"OZO-3","50.0647","19.9450","Kraków - poza obszarem","Kraków","Na żądanie"\r\n'
+       '"OZO-4","","20.1","brak współrzędnej","Mława","Całodobowa"\r\n'
+       '"OZO-5","54.1118","22.9309","Suwałki centrum","Suwałki","Coś nowego"\r\n')
+
+
+def test_region_bbox_covers_ne_poland_only():
+    la0, la1, lo0, lo1 = BBOX
+    assert la0 < 52.0 and la1 > 54.3 and lo0 < 19.3 and lo1 > 24.0     # obejmuje całe NE
+    assert not (la0 <= 50.0647 <= la1)                                  # Kraków poza
+
+
+def test_parse_shelters_csv_bom_quotes_commas_and_filters():
+    cols, st = sh.parse_csv(CSV, BBOX)
+    assert cols["id"] == ["OZO-1", "OZO-2", "OZO-5"]
+    assert cols["adres"][0] == 'ul. Kościuszki 5, lok. "A", Ciechanów'      # pole w cudzysłowie z przecinkiem i ""
+    assert cols["lat"][1] == 53.084 and cols["lon"][1] == 21.574            # przecinek dziesiętny
+    assert cols["d"] == [0, 1, 3]                                           # 3 = nieznana dostępność
+    assert st == {"rows": 5, "kept": 3, "bad_coords": 1, "unknown_availability": 1}
+
+
+def test_parse_shelters_missing_column_fails_loudly():
+    bad = 'Id,Szerokosc geograficzna,Dlugosc geograficzna,Adres,Gmina\r\n1,52,20,x,y\r\n'
+    try:
+        sh.parse_csv(bad, BBOX)
+    except ValueError as e:
+        assert "identyfikator" in str(e) or "dostepnosc" in str(e)
+    else:
+        raise AssertionError("powinien rzucić ValueError")
+
+
+def test_refresh_skips_download_when_unchanged_and_downloads_when_changed(tmp_path):
+    calls = {"get": 0}
+    lm = "Mon, 02 Nov 2026 06:00:00 GMT"
+
+    class R:
+        def __init__(self, headers=None, content=b""):
+            self.headers, self.content = headers or {}, content
+
+        def raise_for_status(self):
+            pass
+
+    class S:
+        def head(self, *a, **k):
+            return R({"Last-Modified": lm})
+
+        def get(self, *a, **k):
+            calls["get"] += 1
+            return R({"Last-Modified": lm}, CSV.encode("utf-8"))
+
+    msg = sh.refresh(tmp_path, NOW, POW, S())
+    assert msg.startswith("ok (3 z 5") and calls["get"] == 1
+    doc = _json.loads((tmp_path / "shelters.json").read_text(encoding="utf-8"))
+    assert doc["stan"] == "2026-11-02" and doc["n"] == 3 and "CC BY" in doc["license"]
+    assert sh.refresh(tmp_path, NOW + timedelta(hours=6), POW, S()).startswith("bez zmian") and calls["get"] == 1
+    lm = "Mon, 09 Nov 2026 06:00:00 GMT"                                    # PSP zaktualizowało plik
+    assert sh.refresh(tmp_path, NOW + timedelta(days=7), POW, S()).startswith("ok") and calls["get"] == 2
+
+
+def test_demo_shelters_replaced_by_real_download(tmp_path):
+    sh.demo_shelters(tmp_path, NOW, GAZ.places)
+    assert _json.loads((tmp_path / "shelters.json").read_text(encoding="utf-8"))["demo"] is True
+
+    class R:
+        headers = {"Last-Modified": "Mon, 02 Nov 2026 06:00:00 GMT"}
+        content = CSV.encode("utf-8")
+
+        def raise_for_status(self):
+            pass
+
+    class S:
+        head = staticmethod(lambda *a, **k: R())
+        get = staticmethod(lambda *a, **k: R())
+
+    assert sh.refresh(tmp_path, NOW, POW, S()).startswith("ok")
+    assert "demo" not in _json.loads((tmp_path / "shelters.json").read_text(encoding="utf-8"))

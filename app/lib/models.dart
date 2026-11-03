@@ -126,11 +126,13 @@ class Settings {
   int mode;
   int theme;            // 0 = jak w systemie, 1 = jasny, 2 = ciemny
   bool showDubious;
+  bool showShelters;    // warstwa schronów na mapie
+  double shelterKm;     // promień szukania schronów wokół punktu odniesienia (1 / 2 / 5)
   Set<String> groups;
   String feedUrl;
   List<Pin> pins;
 
-  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, Set<String>? groups, this.feedUrl = defaultFeedUrl, List<Pin>? pins})
+  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, this.showShelters = true, this.shelterKm = 2.0, Set<String>? groups, this.feedUrl = defaultFeedUrl, List<Pin>? pins})
       : groups = groups ?? typeGroups.map((g) => g.id).toSet(),
         pins = pins ?? [];
 
@@ -144,7 +146,7 @@ class Settings {
       typeGroups.any((g) => groups.contains(g.id) && g.types.contains(type));
 
   Map<String, dynamic> toJson() => {
-        'mode': mode, 'theme': theme, 'showDubious': showDubious, 'groups': groups.toList(),
+        'mode': mode, 'theme': theme, 'showDubious': showDubious, 'showShelters': showShelters, 'shelterKm': shelterKm, 'groups': groups.toList(),
         'feedUrl': feedUrl, 'pins': pins.map((p) => p.toJson()).toList(),
       };
 
@@ -152,6 +154,8 @@ class Settings {
         mode: j['mode'] ?? 1,
         theme: j['theme'] ?? 0,
         showDubious: j['showDubious'] ?? true,
+        showShelters: j['showShelters'] ?? true,
+        shelterKm: ((j['shelterKm'] ?? 2) as num).toDouble(),
         groups: j['groups'] == null ? null : Set<String>.from(j['groups']),
         feedUrl: ((j['feedUrl'] as String?)?.trim().isNotEmpty ?? false) ? j['feedUrl'] : defaultFeedUrl,
         pins: ((j['pins'] ?? []) as List).map((p) => Pin.fromJson(Map<String, dynamic>.from(p))).toList(),

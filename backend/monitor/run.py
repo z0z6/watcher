@@ -14,6 +14,7 @@ from .geo import Gazetteer, Powiaty
 from .score import build_events, LABEL
 from .sources import collect
 from .verify import verify_events
+from . import shelters
 
 ROOT = Path(__file__).resolve().parent.parent
 COVERAGE = {  # statyczny opis pokrycia - pokazywany w aplikacji ("brak alertu != spokój")
@@ -42,6 +43,12 @@ def notify(events: list[dict], state: dict) -> None:
             except requests.RequestException as ex:
                 print(f"[ntfy] {ex}", file=sys.stderr)
     state["notified"] = sent[-500:]
+
+
+def drop_weather_news(news: list, cfg: dict) -> list:
+    """Pogodę podają ostrzeżenia IMGW (oficjalne, z datami ważności). Pogoda "z wiadomości" to głównie
+    przedruki, felietony i dawne zdarzenia, więc domyślnie jej nie bierzemy (weather_from_news: true włącza)."""
+    return news if cfg.get("weather_from_news", False) else [c for c in news if c.type != "weather"]
 
 
 def load_state(out: Path) -> dict:
@@ -88,7 +95,7 @@ def main() -> None:
 
     max_age = float(cfg.get("max_age_hours", 36)) if os.environ.get("DEMO") != "1" else 1e6
     items = fresh_items(items, now, max_age)
-    claims = claims + extract(items, gaz, now)
+    claims = claims + drop_weather_news(extract(items, gaz, now), cfg)
     events = [e for e in build_events(claims, official_ok, now)
               if (e["valid_to"] and datetime.fromisoformat(e["valid_to"]) > now)
               or datetime.fromisoformat(e["last_seen"]) > now - timedelta(hours=max_age)]
@@ -101,6 +108,12 @@ def main() -> None:
         except Exception as ex:  # noqa: BLE001
             print(f"[verify] brak klienta: {ex}", file=sys.stderr)
     verify_events(events, state, now, client)
+    try:
+        status["shelters"] = (shelters.demo_shelters(out, now, gaz.places) if os.environ.get("DEMO") == "1"
+                              else shelters.refresh(out, now, powiaty))
+    except Exception as ex:  # noqa: BLE001   błąd schronów nie może zatrzymać feedu zdarzeń
+        status["shelters"] = f"błąd: {type(ex).__name__}: {str(ex)[:160]}"
+        print(f"[shelters] {ex}", file=sys.stderr)
     feed = {"generated_at": now.isoformat(), "events": events,
             "coverage": {**COVERAGE, "power": "good" if official_ok.get("power") else COVERAGE["power"],
                          "power_live": bool(official_ok.get("power"))},
