@@ -1,4 +1,6 @@
 import 'models.dart';
+import 'poi.dart';
+import 'routing.dart';
 import 'shelters.dart';
 
 /// Teksty do udostępniania (Signal, Messenger, SMS, e-mail...). Czyste funkcje, bez zależności od Fluttera.
@@ -45,5 +47,31 @@ String shelterText(Shelter s, {double? km}) {
     ..writeln(mapsLink(s.lat, s.lon))
     ..writeln('Trasa piesza: ${walkLink(s.lat, s.lon)}')
     ..write('Źródło: Komenda Główna PSP, dane.gov.pl. Sprawdź dostępność na miejscu.');
+  return b.toString();
+}
+
+String poiText(Poi p, PoiCategory c) {
+  final b = StringBuffer()
+    ..writeln('${c.emoji} ${p.name}')
+    ..writeln('${c.label}${p.extra.isEmpty ? '' : ' · ${p.extra}'}')
+    ..writeln(mapsLink(p.lat, p.lon))
+    ..write('Dane: OpenStreetMap. Mogą być nieaktualne - sprawdź na miejscu.');
+  return b.toString();
+}
+
+/// Pomiar odległości i (opcjonalnie) trasa między dwoma punktami.
+String measureText(String aLabel, String bLabel, double aLat, double aLon, double bLat, double bLon, double km,
+    {RouteResult? route}) {
+  final b = StringBuffer()
+    ..writeln('📏 $aLabel → $bLabel')
+    ..writeln('W linii prostej: ${fmtDist(km)}, kierunek: ${bearingLabel(bearingDeg(aLat, aLon, bLat, bLon))}');
+  if (route != null) {
+    b
+      ..writeln('${route.mode.emoji} ${route.mode.label}: ${fmtDist(route.km)}, ok. ${fmtDur(route.minutes)}')
+      ..writeln(googleRouteLink(route.mode, aLat, aLon, bLat, bLon));
+  }
+  b
+    ..writeln('A: ${mapsLink(aLat, aLon)}')
+    ..write('B: ${mapsLink(bLat, bLon)}');
   return b.toString();
 }

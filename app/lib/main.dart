@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' show min;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +14,11 @@ import 'feed_service.dart';
 import 'geo.dart';
 import 'models.dart';
 import 'notifier.dart';
+import 'poi.dart';
+import 'poi_service.dart';
 import 'relevance.dart';
+import 'route_service.dart';
+import 'routing.dart';
 import 'share.dart';
 import 'share_text.dart';
 import 'shelter_service.dart';
@@ -46,6 +51,17 @@ const cAmber = CupertinoDynamicColor.withBrightness(color: Color(0xFFD97706), da
 const cGray = CupertinoDynamicColor.withBrightness(color: Color(0xFF64748B), darkColor: Color(0xFF94A3B8));
 const cGreen = CupertinoDynamicColor.withBrightness(color: Color(0xFF16A34A), darkColor: Color(0xFF4ADE80));
 const cBlue = CupertinoDynamicColor.withBrightness(color: Color(0xFF2563EB), darkColor: Color(0xFF60A5FA));
+const cOlive = CupertinoDynamicColor.withBrightness(color: Color(0xFF4D7C0F), darkColor: Color(0xFFA3E635));
+
+/// Kolor kategorii obiektu na mapie.
+CupertinoDynamicColor catColor(String id) => switch (id) {
+      'pharmacy' => cGreen,
+      'fuel' => cAmber,
+      'hospital' => cRed,
+      'school' => cBlue,
+      'military' => cOlive,
+      _ => cGray,
+    };
 
 /// Ważność -> kolor: czerwony (4-5), żółty (3), szary (1-2) - jak poziomy na panelach OSINT.
 Color sevColor(BuildContext c, int s) => (s >= 4 ? cRed : s == 3 ? cAmber : cGray).resolveFrom(c);
@@ -103,6 +119,7 @@ class AppState extends ChangeNotifier {
   final Map<String, DateTime> fresh = {};// id -> do kiedy oznaczone jako NOWE
   FeedEvent? toast;                      // baner "nowe zdarzenie"
   int toastCount = 0;
+  PoiSet? poi;                           // obiekty strategiczne z OSM (apteki, paliwo, szpitale, szkoły, mosty, wojsko)
   ShelterSet? shelters;                  // punkty schronienia (PSP) z obszaru monitorowania
   int shelterAnchor = -1;                // punkt odniesienia: -1 = Ty, 0.. = indeks punktu (Dom, Praca...)
   Timer? _toastTimer, _tick, _auto;
@@ -116,6 +133,7 @@ class AppState extends ChangeNotifier {
     seen = await Store.loadSeen();
     notifyListeners();
     unawaited(_loadShelters());
+    unawaited(_loadPoi());
     try {
       if (await Geolocator.checkPermission() == LocationPermission.denied) {
         await Geolocator.requestPermission();
@@ -150,6 +168,7 @@ class AppState extends ChangeNotifier {
       error = 'Nie udało się pobrać danych (pokazuję ostatnie znane)';
     }
     unawaited(_loadShelters());
+    unawaited(_loadPoi());
     notifyListeners();
   }
 
@@ -204,6 +223,18 @@ class AppState extends ChangeNotifier {
       final fresh = await ShelterService.refresh(settings.feedUrl);
       if (fresh != null) {
         shelters = fresh;
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _loadPoi() async {
+    try {
+      poi ??= await PoiService.cached();
+      notifyListeners();
+      final fresh = await PoiService.refresh(settings.feedUrl);
+      if (fresh != null) {
+        poi = fresh;
         notifyListeners();
       }
     } catch (_) {}
@@ -674,9 +705,9 @@ class DetailPage extends StatelessWidget {
 // Kafelki OpenStreetMap (bez klucza API). Ciemny motyw: odwrócenie kolorów + ściemnienie filtrem.
 const _tiles = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const _darkMatrix = <double>[
-  -0.85, 0, 0, 0, 217,
-  0, -0.9, 0, 0, 225,
-  0, 0, -0.8, 0, 200,
+  -0.4485, -0.3647, -0.0368, 0, 216.75,
+  -0.1123, -0.7296, -0.0381, 0, 224.4,
+  -0.0957, -0.3218, -0.3324, 0, 191.25,
   0, 0, 0, 1, 0,
 ];
 const _neCenter = LatLng(53.6, 22.0);   // środek północno-wschodniej Polski
@@ -692,10 +723,23 @@ class _MapTabState extends State<MapTab> {
   final _mc = MapController();
   String? _selected, _hovered;
   Timer? _hideTimer;
+  // widok mapy: do pokazywania tylko widocznych obiektów i ukrywania kategorii przy zbyt małym przybliżeniu
+  double _zoom = 8;
+  LatLngBounds? _bounds;
+  Timer? _viewTimer;
+  // szuflada warstw, pomiar odległości i trasa
+  bool _drawer = false;
+  bool _ruler = false;
+  ({LatLng p, String label})? _a, _b;
+  RouteMode _mode = RouteMode.foot;
+  RouteResult? _route;
+  bool _routing = false;
+  String? _routeError;
 
   @override
   void dispose() {
     _hideTimer?.cancel();
+    _viewTimer?.cancel();
     super.dispose();
   }
 
@@ -727,6 +771,423 @@ class _MapTabState extends State<MapTab> {
     }
   }
 
+  void _syncView() {
+    try {
+      final c = _mc.camera;
+      if (mounted) {
+        setState(() {
+          _zoom = c.zoom;
+          _bounds = c.visibleBounds;
+        });
+      }
+    } catch (_) {}
+  }
+
+  void _viewChanged() {
+    _viewTimer?.cancel();
+    _viewTimer = Timer(const Duration(milliseconds: 250), _syncView);
+  }
+
+  void _pickPoint(LatLng p, String label) {
+    setState(() {
+      _route = null;
+      _routeError = null;
+      if (_a == null || _b != null) {
+        _a = (p: p, label: label);
+        _b = null;
+      } else {
+        _b = (p: p, label: label);
+      }
+    });
+  }
+
+  void _clearMeasure() {
+    _a = null;
+    _b = null;
+    _route = null;
+    _routeError = null;
+  }
+
+  void _toggleRuler() {
+    setState(() {
+      _ruler = !_ruler;
+      _clearMeasure();
+      if (_ruler) _drawer = false;
+    });
+  }
+
+  /// Trasa z mojej pozycji do celu (gdy brak pozycji: cel jako punkt A, B wskazuje użytkownik).
+  void _startRouteTo(LatLng dest, String label) {
+    final me = widget.st.pos;
+    setState(() {
+      _ruler = true;
+      _drawer = false;
+      _selected = null;
+      _hovered = null;
+      _clearMeasure();
+      if (me != null) {
+        _a = (p: LatLng(me.lat, me.lon), label: 'Moja pozycja');
+        _b = (p: dest, label: label);
+      } else {
+        _a = (p: dest, label: label);
+      }
+    });
+  }
+
+  Future<void> _calcRoute(RouteMode m) async {
+    final a = _a, b = _b;
+    if (a == null || b == null || _routing) return;
+    setState(() {
+      _mode = m;
+      _routing = true;
+      _routeError = null;
+      _route = null;
+    });
+    try {
+      final r = await RouteService.fetch(m, a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude);
+      if (!mounted) return;
+      setState(() {
+        _route = r;
+        _routing = false;
+      });
+      try {
+        _mc.fitCamera(CameraFit.coordinates(
+          coordinates: [for (final p in r.points) LatLng(p.lat, p.lon)],
+          padding: const EdgeInsets.fromLTRB(40, 90, 40, 300),
+        ));
+      } catch (_) {}
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _routing = false;
+        _routeError = e is RouteException ? e.message : 'Nie udało się wyznaczyć trasy.';
+      });
+    }
+  }
+
+  Color _modeColor(BuildContext c, RouteMode m) =>
+      (m == RouteMode.foot ? cGreen : m == RouteMode.bike ? cAmber : cBlue).resolveFrom(c);
+
+  void _toggleLayer(BuildContext context, AppState st, String id) {
+    final s = st.settings;
+    if (id == 'shelters') {
+      s.showShelters = !s.showShelters;
+      if (s.showShelters && st.shelters == null) {
+        flash(context, 'Brak danych o schronach. Uruchom workflow „feed”.');
+      }
+    } else {
+      if (!s.poiLayers.add(id)) s.poiLayers.remove(id);
+      if (s.poiLayers.contains(id) && st.poi == null) {
+        flash(context, 'Brak danych obiektów. Uruchom workflow „feed” (pobiera dane z OpenStreetMap).');
+      }
+    }
+    st.save();
+  }
+
+  /// Szuflada wysuwana w bok z przełącznikami warstw. Ikony + podpisy o stałym rozmiarze, przewijana na wąskich ekranach.
+  Widget _layerDrawer(BuildContext context, AppState st) {
+    const items = <(String, String, String)>[
+      ('shelters', '🛡️', 'Schrony'),
+      ('pharmacy', '💊', 'Apteki'),
+      ('fuel', '⛽', 'Paliwo'),
+      ('hospital', '🏥', 'Szpitale'),
+      ('school', '🏫', 'Szkoły'),
+      ('bridge', '🌉', 'Mosty'),
+      ('military', '🎖️', 'Wojsko'),
+    ];
+    const itemW = 52.0;
+    final maxW = MediaQuery.of(context).size.width - 12 - 44 - 8 - 12 - 8;
+    final w = _drawer ? min(items.length * itemW + 12, maxW) : 0.0;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      width: w,
+      height: 58,
+      margin: EdgeInsets.only(right: _drawer ? 8 : 0),
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: appCard.resolveFrom(context).withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(29),
+        border: _drawer ? Border.all(color: appBorder.resolveFrom(context)) : null,
+        boxShadow: _drawer ? [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.2), blurRadius: 6)] : null,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: Row(children: [
+          for (final it in items)
+            () {
+              final active = it.$1 == 'shelters' ? st.settings.showShelters : st.settings.poiLayers.contains(it.$1);
+              final col = (it.$1 == 'shelters' ? cGreen : catColor(it.$1)).resolveFrom(context);
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _toggleLayer(context, st, it.$1),
+                child: Container(
+                  width: 48,
+                  height: 50,
+                  margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: active ? col.withValues(alpha: 0.2) : null,
+                    borderRadius: BorderRadius.circular(14),
+                    border: active ? Border.all(color: col, width: 1.5) : null,
+                  ),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text(it.$2, style: const TextStyle(fontSize: 19)),
+                    const SizedBox(height: 1),
+                    Text(it.$3,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 9.5, fontWeight: FontWeight.w600, color: active ? col : secondary(context))),
+                  ]),
+                ),
+              );
+            }(),
+        ]),
+      ),
+    );
+  }
+
+  /// Znacznik obiektu: okrągła plakietka z emoji kategorii; rozmiar rośnie z przybliżeniem, nazwa od dużego zoomu.
+  Marker _poiMarker(BuildContext context, PoiCategory cat, Poi p) {
+    final size = _zoom < 12 ? 24.0 : _zoom < 14 ? 30.0 : 36.0;
+    final label = _zoom >= 14.5;
+    final col = catColor(cat.id).resolveFrom(context);
+    return Marker(
+      point: LatLng(p.lat, p.lon),
+      width: label ? 132 : size + 8,
+      height: label ? size + 24 : size + 8,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _onPoiTap(cat, p),
+        child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            width: size,
+            height: size,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: appCard.resolveFrom(context).withValues(alpha: 0.97),
+              border: Border.all(color: col, width: 2),
+              boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.3), blurRadius: 4)],
+            ),
+            child: Text(cat.emoji, style: TextStyle(fontSize: size * 0.52)),
+          ),
+          if (label)
+            Container(
+              margin: const EdgeInsets.only(top: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+              decoration: BoxDecoration(
+                color: appCard.resolveFrom(context).withValues(alpha: 0.92),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(p.name,
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+            ),
+        ]),
+      ),
+    );
+  }
+
+  Marker _abMarker(BuildContext context, LatLng p, String letter) => Marker(
+        point: p,
+        width: 34,
+        height: 34,
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: cAmber.resolveFrom(context),
+            border: Border.all(color: CupertinoColors.white, width: 2),
+            boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.35), blurRadius: 4)],
+          ),
+          child: Text(letter, style: const TextStyle(color: CupertinoColors.black, fontWeight: FontWeight.w800, fontSize: 15)),
+        ),
+      );
+
+  void _onPoiTap(PoiCategory cat, Poi p) {
+    if (_ruler) {
+      _pickPoint(LatLng(p.lat, p.lon), p.name);
+      return;
+    }
+    final st = widget.st;
+    final me = st.pos;
+    final dist = me == null ? null : haversineKm(me.lat, me.lon, p.lat, p.lon);
+    showCupertinoModalPopup(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        title: Text('${cat.emoji} ${p.name}'),
+        message: Text([cat.label, if (p.extra.isNotEmpty) p.extra, if (dist != null) '${fmtDist(dist)} od Ciebie'].join(' · ')),
+        actions: [
+          if (me != null)
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _startRouteTo(LatLng(p.lat, p.lon), p.name);
+              },
+              child: const Text('Trasa i odległość z mojej pozycji'),
+            ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(ctx);
+              setState(() {
+                _ruler = true;
+                _drawer = false;
+                _clearMeasure();
+                _a = (p: LatLng(p.lat, p.lon), label: p.name);
+              });
+            },
+            child: const Text('Pomiar od tego miejsca'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(ctx);
+              openLink(walkLink(p.lat, p.lon));
+            },
+            child: const Text('Prowadź (Mapy Google)'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(ctx);
+              shareText(poiText(p, cat), subject: p.name);
+            },
+            child: const Text('Udostępnij…'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(ctx);
+              copyText(poiText(p, cat));
+              flash(context, 'Skopiowano do schowka');
+            },
+            child: const Text('Skopiuj opis i link'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(onPressed: () => Navigator.pop(ctx), child: const Text('Anuluj')),
+      ),
+    );
+  }
+
+  /// Panel pomiaru odległości w linii prostej i trasy (pieszo, rowerem, autem).
+  Widget _measurePanel(BuildContext context, AppState st) {
+    final a = _a, b = _b;
+    final km = (a != null && b != null) ? haversineKm(a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude) : null;
+    final route = _route;
+    final link = TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: cBlue.resolveFrom(context));
+    final small = TextStyle(fontSize: 10, color: secondary(context));
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      decoration: BoxDecoration(
+        color: appCard.resolveFrom(context).withValues(alpha: 0.97),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: appBorder.resolveFrom(context)),
+        boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.25), blurRadius: 10)],
+      ),
+      child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Text('POMIAR I TRASA',
+              style: TextStyle(fontSize: 10, letterSpacing: 1.2, fontWeight: FontWeight.w700, color: secondary(context))),
+          const Spacer(),
+          if (a != null)
+            GestureDetector(
+              onTap: () => setState(_clearMeasure),
+              child: Padding(padding: const EdgeInsets.only(right: 14), child: Text('Wyczyść', style: link)),
+            ),
+          GestureDetector(
+            onTap: _toggleRuler,
+            child: Icon(CupertinoIcons.xmark_circle_fill, size: 22, color: secondary(context)),
+          ),
+        ]),
+        const SizedBox(height: 6),
+        if (a == null) ...[
+          Text('Dotknij mapy albo obiektu, aby ustawić punkt A.', style: TextStyle(fontSize: 13, color: secondary(context))),
+          if (st.pos != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: GestureDetector(
+                onTap: () => _pickPoint(LatLng(st.pos!.lat, st.pos!.lon), 'Moja pozycja'),
+                child: Text('Ustaw A = moja pozycja', style: link),
+              ),
+            ),
+        ] else if (b == null) ...[
+          Text('A: ${a.label}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 2),
+          Text('Dotknij mapy albo obiektu, aby ustawić punkt B.', style: TextStyle(fontSize: 13, color: secondary(context))),
+        ] else ...[
+          Text('${a.label} → ${b.label}', maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, color: secondary(context))),
+          const SizedBox(height: 2),
+          Text('W linii prostej: ${fmtDist(km!)} · ${bearingLabel(bearingDeg(a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude))}',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          Row(children: [
+            for (final m in RouteMode.values)
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: m == RouteMode.car ? 0 : 6),
+                  child: _ModeBtn(
+                    mode: m,
+                    selected: route?.mode == m || (_routing && _mode == m),
+                    onTap: () => _calcRoute(m),
+                  ),
+                ),
+              ),
+          ]),
+          if (_routing)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(children: [
+                const CupertinoActivityIndicator(radius: 8),
+                const SizedBox(width: 8),
+                Text('Wyznaczanie trasy…', style: TextStyle(fontSize: 13, color: secondary(context))),
+              ]),
+            ),
+          if (_routeError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(_routeError!, style: TextStyle(fontSize: 12, color: cRed.resolveFrom(context))),
+            ),
+          if (route != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text('${route.mode.emoji} ${route.mode.label}: ${fmtDist(route.km)} · ok. ${fmtDur(route.minutes)}',
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+            ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(children: [
+              if (route != null)
+                GestureDetector(
+                  onTap: () => openLink(googleRouteLink(route.mode, a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude)),
+                  child: Text('Otwórz w Mapach Google', style: link),
+                ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => shareText(
+                  measureText(a.label, b.label, a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude, km, route: route),
+                  subject: 'Pomiar odległości',
+                ),
+                child: Row(children: [
+                  Icon(CupertinoIcons.share, size: 17, color: cBlue.resolveFrom(context)),
+                  const SizedBox(width: 4),
+                  Text('Udostępnij', style: link),
+                ]),
+              ),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Wrap(children: [
+              Text('Trasy: OSRM (FOSSGIS), dane © OpenStreetMap · ', style: small),
+              GestureDetector(
+                onTap: () => openLink(osmFixTheMapUrl),
+                child: Text('Popraw mapę', style: small.copyWith(color: cBlue.resolveFrom(context), decoration: TextDecoration.underline)),
+              ),
+              Text('. Wyznaczenie trasy wysyła współrzędne A i B do serwera tras.', style: small),
+            ]),
+          ),
+        ],
+      ]),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: widget.st,
@@ -750,6 +1211,26 @@ class _MapTabState extends State<MapTab> {
             for (var i = 0; i < st.settings.pins.length; i++) (st.settings.pins[i].name, i),
           ];
 
+          final bounds = _bounds;
+          final poiMarkers = <Marker>[];
+          final hiddenLayers = <String>[];
+          if (st.poi != null) {
+            for (final cat in poiCategories) {
+              if (!st.settings.poiLayers.contains(cat.id)) continue;
+              if (_zoom < cat.minZoom) {
+                hiddenLayers.add(cat.label);
+                continue;
+              }
+              if (bounds == null) continue;
+              for (final p in st.poi!.inBounds(cat.id, bounds.south, bounds.west, bounds.north, bounds.east, limit: 120)) {
+                poiMarkers.add(_poiMarker(context, cat, p));
+              }
+            }
+          }
+          final anyLayer = st.settings.showShelters || st.settings.poiLayers.isNotEmpty;
+          final a = _a, b = _b;
+          final aToB = (a != null && b != null) ? haversineKm(a.p.latitude, a.p.longitude, b.p.latitude, b.p.longitude) : null;
+
           return CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(middle: const Text('Mapa'), backgroundColor: appCard.resolveFrom(context)),
             child: Stack(children: [
@@ -758,7 +1239,18 @@ class _MapTabState extends State<MapTab> {
                 options: MapOptions(
                   initialCenter: center,
                   initialZoom: focusing ? 11 : (st.pos != null ? 9 : 7),
-                  onTap: (_, __) => setState(() { _selected = null; _hovered = null; }),
+                  onTap: (_, point) {
+                    if (_ruler) {
+                      _pickPoint(point, (_a == null || _b != null) ? 'Punkt A' : 'Punkt B');
+                      return;
+                    }
+                    setState(() {
+                      _selected = null;
+                      _hovered = null;
+                    });
+                  },
+                  onMapReady: _syncView,
+                  onPositionChanged: (_, __) => _viewChanged(),
                 ),
                 children: [
                   dark
@@ -792,6 +1284,18 @@ class _MapTabState extends State<MapTab> {
                         borderColor: sevColor(context, e.severity).withValues(alpha: 0.55), borderStrokeWidth: 1,
                       ),
                   ]),
+                  PolylineLayer(polylines: [
+                    if (a != null && b != null)
+                      Polyline(points: [a.p, b.p], strokeWidth: 2.5, color: cGray.resolveFrom(context)),
+                    if (_route != null)
+                      Polyline(
+                        points: [for (final p in _route!.points) LatLng(p.lat, p.lon)],
+                        strokeWidth: 5,
+                        color: _modeColor(context, _route!.mode),
+                        borderStrokeWidth: 1.5,
+                        borderColor: CupertinoColors.white.withValues(alpha: 0.85),
+                      ),
+                  ]),
                   MarkerLayer(markers: [
                     for (final p in st.settings.pins)
                       Marker(
@@ -813,7 +1317,15 @@ class _MapTabState extends State<MapTab> {
                         point: LatLng(h.s.lat, h.s.lon), width: 30, height: 30,
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => showShelterActions(context, st, h.s, h.km),
+                          onTap: () {
+                            final lbl = h.s.adres.isEmpty ? 'Schron' : h.s.adres;
+                            if (_ruler) {
+                              _pickPoint(LatLng(h.s.lat, h.s.lon), lbl);
+                            } else {
+                              showShelterActions(context, st, h.s, h.km,
+                                  onRoute: st.pos == null ? null : () => _startRouteTo(LatLng(h.s.lat, h.s.lon), lbl));
+                            }
+                          },
                           child: Center(
                             child: Container(
                               width: 13, height: 13,
@@ -824,6 +1336,16 @@ class _MapTabState extends State<MapTab> {
                             ),
                           ),
                         ),
+                      ),
+                    ...poiMarkers,
+                    if (a != null) _abMarker(context, a.p, 'A'),
+                    if (b != null) _abMarker(context, b.p, 'B'),
+                    if (aToB != null)
+                      Marker(
+                        point: LatLng((a!.p.latitude + b!.p.latitude) / 2, (a.p.longitude + b.p.longitude) / 2),
+                        width: 96,
+                        height: 28,
+                        child: _DistLabel(fmtDist(aToB)),
                       ),
                     for (final e in events) _dotMarker(context, e),
                     if (open != null) _popupMarker(context, open),
@@ -848,18 +1370,17 @@ class _MapTabState extends State<MapTab> {
               ),
               Positioned(
                 right: 12, top: 12,
-                child: Column(children: [
+                child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   if (st.pos != null) ...[
                     _RoundBtn(icon: CupertinoIcons.location_fill, onTap: () => _mc.move(LatLng(st.pos!.lat, st.pos!.lon), 10)),
                     const SizedBox(height: 8),
                   ],
-                  _RoundBtn(
-                    icon: CupertinoIcons.shield_fill, active: st.settings.showShelters,
-                    onTap: () {
-                      st.settings.showShelters = !st.settings.showShelters;
-                      st.save();
-                    },
-                  ),
+                  Row(mainAxisSize: MainAxisSize.min, children: [
+                    _layerDrawer(context, st),
+                    _RoundBtn(emoji: '🗂️', active: _drawer || anyLayer, onTap: () => setState(() => _drawer = !_drawer)),
+                  ]),
+                  const SizedBox(height: 8),
+                  _RoundBtn(emoji: '📏', active: _ruler, onTap: _toggleRuler),
                   if (st.pos != null) ...[
                     const SizedBox(height: 8),
                     _RoundBtn(
@@ -869,28 +1390,36 @@ class _MapTabState extends State<MapTab> {
                   ],
                 ]),
               ),
-              if (st.settings.showShelters && anchors.isNotEmpty)
-                Positioned(
-                  left: 8, right: 8, bottom: 34,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(children: [
-                      for (final a in anchors)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: _Chip(
-                            label: 'Schrony: ${a.$1}',
-                            selected: st.anchorIndex == a.$2,
-                            onTap: () {
-                              st.setAnchor(a.$2);
-                              final p = st.pointFor(a.$2);
-                              if (p != null) _mc.move(LatLng(p.lat, p.lon), 14);
-                            },
+              if (hiddenLayers.isNotEmpty)
+                Positioned(left: 12, top: 56, child: _Hint('Przybliż mapę, aby zobaczyć: ${hiddenLayers.join(', ')}')),
+              Positioned(
+                left: 8, right: 8, bottom: 34,
+                child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  if (st.settings.showShelters && anchors.isNotEmpty)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(children: [
+                        for (final an in anchors)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: _Chip(
+                              label: 'Schrony: ${an.$1}',
+                              selected: st.anchorIndex == an.$2,
+                              onTap: () {
+                                st.setAnchor(an.$2);
+                                final pt = st.pointFor(an.$2);
+                                if (pt != null) _mc.move(LatLng(pt.lat, pt.lon), 14);
+                              },
+                            ),
                           ),
-                        ),
-                    ]),
-                  ),
-                ),
+                      ]),
+                    ),
+                  if (_ruler) ...[
+                    const SizedBox(height: 6),
+                    _measurePanel(context, st),
+                  ],
+                ]),
+              ),
             ]),
           );
         },
@@ -1049,7 +1578,7 @@ class _LivePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final live = feed != null && DateTime.now().difference(feed!.generatedAt).inMinutes < 45;
+    final live = feed != null && DateTime.now().difference(feed!.generatedAt).inMinutes < 120;
     final c = live ? cGreen.resolveFrom(context) : cGray.resolveFrom(context);
     return Container(
       padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
@@ -1305,6 +1834,18 @@ class SettingsTab extends StatelessWidget {
                   ),
                   section(
                     context,
+                    header: const Text('OBIEKTY NA MAPIE'),
+                    footer: const Text(poiDisclaimer),
+                    [
+                      const CupertinoListTile(
+                        leading: Text('🗂️', style: TextStyle(fontSize: 20)),
+                        title: Text('Apteki, paliwo, szpitale, szkoły, mosty, wojsko'),
+                        subtitle: Text('Włączasz je na mapie przyciskiem warstw, pomiar i trasę przyciskiem 📏.'),
+                      ),
+                    ],
+                  ),
+                  section(
+                    context,
                     header: const Text('UPRAWNIENIA'),
                     footer: const Text('Alerty o punktach (dom, praca) działają bez lokalizacji. Dla alertów wokół Ciebie w tle ustaw lokalizację „Zawsze" w ustawieniach systemu.'),
                     [
@@ -1399,7 +1940,7 @@ void flash(BuildContext context, String msg) {
   );
 }
 
-void showShelterActions(BuildContext context, AppState st, Shelter s, double? km) {
+void showShelterActions(BuildContext context, AppState st, Shelter s, double? km, {VoidCallback? onRoute}) {
   showCupertinoModalPopup(
     context: context,
     builder: (ctx) => CupertinoActionSheet(
@@ -1407,6 +1948,14 @@ void showShelterActions(BuildContext context, AppState st, Shelter s, double? km
       message: Text([s.gmina, availabilityLabels[s.d], if (km != null) '${km.toStringAsFixed(2)} km']
           .where((x) => x.isNotEmpty).join(' · ')),
       actions: [
+        if (onRoute != null)
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(ctx);
+              onRoute();
+            },
+            child: const Text('Trasa i odległość z mojej pozycji'),
+          ),
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(ctx);
@@ -1443,10 +1992,11 @@ void showShelterActions(BuildContext context, AppState st, Shelter s, double? km
 }
 
 class _RoundBtn extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final String? emoji;
   final bool active;
   final VoidCallback onTap;
-  const _RoundBtn({required this.icon, required this.onTap, this.active = false});
+  const _RoundBtn({this.icon, this.emoji, required this.onTap, this.active = false});
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -1459,7 +2009,9 @@ class _RoundBtn extends StatelessWidget {
             border: Border.all(color: appBorder.resolveFrom(context)),
             boxShadow: [BoxShadow(color: CupertinoColors.black.withValues(alpha: 0.2), blurRadius: 6)],
           ),
-          child: Icon(icon, size: 20, color: active ? CupertinoColors.white : cBlue.resolveFrom(context)),
+          child: emoji != null
+              ? Text(emoji!, style: const TextStyle(fontSize: 21))
+              : Icon(icon, size: 20, color: active ? CupertinoColors.white : cBlue.resolveFrom(context)),
         ),
       );
 }
@@ -1616,5 +2168,69 @@ class SheltersTab extends StatelessWidget {
             ]),
           );
         },
+      );
+}
+
+class _ModeBtn extends StatelessWidget {
+  final RouteMode mode;
+  final bool selected;
+  final VoidCallback onTap;
+  const _ModeBtn({required this.mode, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? cBlue.resolveFrom(context) : appBg.resolveFrom(context),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: appBorder.resolveFrom(context)),
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(mode.emoji, style: const TextStyle(fontSize: 18)),
+            Text(mode.label,
+                style: TextStyle(
+                    fontSize: 11, fontWeight: FontWeight.w600,
+                    color: selected ? CupertinoColors.white : CupertinoColors.label.resolveFrom(context))),
+          ]),
+        ),
+      );
+}
+
+/// Etykieta odległości w środku odcinka A-B.
+class _DistLabel extends StatelessWidget {
+  final String text;
+  const _DistLabel(this.text);
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: appCard.resolveFrom(context).withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: cAmber.resolveFrom(context), width: 1.2),
+          ),
+          child: Text(text, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+        ),
+      );
+}
+
+class _Hint extends StatelessWidget {
+  final String text;
+  const _Hint(this.text);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 90),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: appCard.resolveFrom(context).withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: appBorder.resolveFrom(context)),
+        ),
+        child: Text(text, style: TextStyle(fontSize: 11, color: secondary(context))),
       );
 }

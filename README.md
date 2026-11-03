@@ -92,6 +92,25 @@ schronów działa bez internetu** (kafelki mapy nie).
   (od 29.05.2026) to nie to samo co schron, ukrycie czy miejsce doraźnego schronienia. Rejestr CEOZO (ceozo.pl) nie jest
   zintegrowany (brak zweryfikowanego otwartego API).
 
+## Obiekty strategiczne, pomiar i trasy
+**Warstwy (szuflada):** przycisk 🗂️ na mapie wysuwa w bok szufladę z przełącznikami: Schrony, Apteki, Paliwo, Szpitale,
+Szkoły, Mosty, Wojsko. Plakietki mają emoji kategorii i kolorową obwódkę; rozmiar rośnie z przybliżeniem, nazwa pojawia się
+od dużego zoomu, a kategorie gęste (apteki, paliwo, szkoły, mosty) są ukryte, dopóki nie przybliżysz mapy (szpitale i wojsko
+widać już od regionu). Pokazywane są tylko obiekty z widocznego fragmentu mapy (maks. 120 na kategorię).
+Dane: OpenStreetMap przez Overpass API, pobierane przez backend raz na tydzień (`source_status.poi` w `feed.json`), tylko
+w granicach Polski. Dane społecznościowe - mogą być niepełne (zwłaszcza mosty i obiekty wojskowe). Po błędzie Overpass
+backend ponawia próbę najwcześniej po 6 h.
+
+**Pomiar odległości:** przycisk 📏, potem dotknięcie mapy (punkt A, punkt B) albo obiektu/schronu. Pokazuje odległość w
+linii prostej i kierunek; dotknięcie trzeciego punktu zaczyna od nowa.
+
+**Trasy:** po ustawieniu A i B przyciski 🚶 Pieszo / 🚲 Rowerem / 🚗 Autem wyznaczają trasę (długość, czas, linia na mapie).
+Z poziomu obiektu lub schronu: "Trasa i odległość z mojej pozycji". Silnik: OSRM na serwerach FOSSGIS
+(`routing.openstreetmap.de`, prefiksy `routed-foot/bike/car`; zasady: maks. 1 zapytanie/s, niekomercyjnie, widoczne
+źródło i link "Popraw mapę" - aplikacja to realizuje). **Wyznaczenie trasy wysyła współrzędne A i B do tego serwera** -
+to jedyne miejsce, gdzie dane o pozycji opuszczają telefon (pomiar w linii prostej działa lokalnie).
+Do nawigacji głosowej służy przycisk "Otwórz w Mapach Google".
+
 ## Udostępnianie
 Systemowe okno udostępniania Androida (`share_plus`): Signal, SMS, e-mail, WhatsApp itd. Udostępnić można zdarzenie
 (z oceną, linkiem do źródła i mapą), lokalizację zdarzenia, schron, punkt (dom/praca) i własną lokalizację. Facebook
@@ -105,7 +124,7 @@ generuje `tools/build_powiaty.py`. Zmień `REGION` w skrypcie, żeby zmienić ob
 osobno, kolumna `forms` = formy odmiany dla nazw mylących (Pisz/pisze, Węgrów/Węgry). Rozbuduj o kolejne.
 
 ## Ograniczenia
-- Testy: backend (35 testów), logika Darta (modele, schrony, teksty udostępniania) sprawdzona kompilatorem Darta i testem zgodności z plikami backendu; pliki z interfejsem Fluttera przeszły tylko kontrolę składni przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
+- Testy: backend (40 testów), logika Darta (modele, schrony, teksty udostępniania) sprawdzona kompilatorem Darta i testem zgodności z plikami backendu; pliki z interfejsem Fluttera przeszły tylko kontrolę składni przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
 - Powiadomienia w tle: min. 15 min, mogą być opóźnione przez oszczędzanie baterii. Alerty wokół Ciebie w tle
   wymagają lokalizacji "Zawsze"; alerty o punktach działają bez niej.
 - Ostrzeżenia hydro bez rozpoznanej miejscowości dostają obszar całego województwa (promień 60 km od środka).

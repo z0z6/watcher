@@ -14,7 +14,7 @@ from .geo import Gazetteer, Powiaty
 from .score import build_events, LABEL
 from .sources import collect
 from .verify import verify_events
-from . import shelters
+from . import poi, shelters
 
 ROOT = Path(__file__).resolve().parent.parent
 COVERAGE = {  # statyczny opis pokrycia - pokazywany w aplikacji ("brak alertu != spokój")
@@ -114,6 +114,12 @@ def main() -> None:
     except Exception as ex:  # noqa: BLE001   błąd schronów nie może zatrzymać feedu zdarzeń
         status["shelters"] = f"błąd: {type(ex).__name__}: {str(ex)[:160]}"
         print(f"[shelters] {ex}", file=sys.stderr)
+    try:
+        status["poi"] = (poi.demo_poi(out, now, gaz.places) if os.environ.get("DEMO") == "1"
+                         else poi.refresh(out, now, powiaty))
+    except Exception as ex:  # noqa: BLE001   błąd obiektów OSM nie może zatrzymać feedu zdarzeń
+        status["poi"] = f"błąd: {type(ex).__name__}: {str(ex)[:160]}"
+        print(f"[poi] {ex}", file=sys.stderr)
     feed = {"generated_at": now.isoformat(), "events": events,
             "coverage": {**COVERAGE, "power": "good" if official_ok.get("power") else COVERAGE["power"],
                          "power_live": bool(official_ok.get("power"))},

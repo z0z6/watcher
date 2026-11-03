@@ -127,13 +127,15 @@ class Settings {
   int theme;            // 0 = jak w systemie, 1 = jasny, 2 = ciemny
   bool showDubious;
   bool showShelters;    // warstwa schronów na mapie
+  Set<String> poiLayers; // włączone warstwy obiektów (apteki, paliwo, szpitale, szkoły, mosty, wojsko)
   double shelterKm;     // promień szukania schronów wokół punktu odniesienia (1 / 2 / 5)
   Set<String> groups;
   String feedUrl;
   List<Pin> pins;
 
-  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, this.showShelters = true, this.shelterKm = 2.0, Set<String>? groups, this.feedUrl = defaultFeedUrl, List<Pin>? pins})
+  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, this.showShelters = true, this.shelterKm = 2.0, Set<String>? poiLayers, Set<String>? groups, this.feedUrl = defaultFeedUrl, List<Pin>? pins})
       : groups = groups ?? typeGroups.map((g) => g.id).toSet(),
+        poiLayers = poiLayers ?? <String>{},
         pins = pins ?? [];
 
   Mode get _m => modes[mode.clamp(0, modes.length - 1).toInt()];
@@ -146,7 +148,7 @@ class Settings {
       typeGroups.any((g) => groups.contains(g.id) && g.types.contains(type));
 
   Map<String, dynamic> toJson() => {
-        'mode': mode, 'theme': theme, 'showDubious': showDubious, 'showShelters': showShelters, 'shelterKm': shelterKm, 'groups': groups.toList(),
+        'mode': mode, 'theme': theme, 'showDubious': showDubious, 'showShelters': showShelters, 'shelterKm': shelterKm, 'poiLayers': poiLayers.toList(), 'groups': groups.toList(),
         'feedUrl': feedUrl, 'pins': pins.map((p) => p.toJson()).toList(),
       };
 
@@ -156,6 +158,7 @@ class Settings {
         showDubious: j['showDubious'] ?? true,
         showShelters: j['showShelters'] ?? true,
         shelterKm: ((j['shelterKm'] ?? 2) as num).toDouble(),
+        poiLayers: j['poiLayers'] == null ? null : Set<String>.from(j['poiLayers']),
         groups: j['groups'] == null ? null : Set<String>.from(j['groups']),
         feedUrl: ((j['feedUrl'] as String?)?.trim().isNotEmpty ?? false) ? j['feedUrl'] : defaultFeedUrl,
         pins: ((j['pins'] ?? []) as List).map((p) => Pin.fromJson(Map<String, dynamic>.from(p))).toList(),

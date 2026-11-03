@@ -402,3 +402,99 @@ def test_demo_shelters_replaced_by_real_download(tmp_path):
 
     assert sh.refresh(tmp_path, NOW, POW, S()).startswith("ok")
     assert "demo" not in _json.loads((tmp_path / "shelters.json").read_text(encoding="utf-8"))
+
+
+# ---------- obiekty strategiczne z OSM (Overpass) ----------
+from monitor import poi as poimod
+
+
+def node(lat, lon, **tags):
+    return {"type": "node", "id": 1, "lat": lat, "lon": lon, "tags": tags}
+
+
+def way_c(lat, lon, **tags):
+    return {"type": "way", "id": 2, "center": {"lat": lat, "lon": lon}, "tags": tags}
+
+
+def bridge(lat, lon, dlon, **tags):
+    return {"type": "way", "id": 3, "bounds": {"minlat": lat, "maxlat": lat + 0.0001, "minlon": lon, "maxlon": lon + dlon},
+            "tags": {"highway": "primary", **tags}}
+
+
+def test_overpass_query_restricted_to_poland_and_region_bbox():
+    q = poimod.build_query("pharmacy", BBOX)
+    assert 'area["ISO3166-1"="PL"][admin_level=2]->.pl' in q and "(area.pl)(" in q and q.endswith("out center tags;")
+    assert poimod.build_query("bridge", BBOX).endswith("out tags bb;")
+    assert '"military"~' in poimod.build_query("military", BBOX)
+
+
+def test_build_category_pharmacy_fuel_hospital_military():
+    ph = poimod.build_category("pharmacy", [node(52.88, 20.62, name="Apteka Zdrowie", opening_hours="24/7"),
+                                           node(52.88, 20.62, name="Apteka Zdrowie"),          # duplikat
+                                           way_c(53.1, 21.5, opening_hours="Mo-Fr 08:00-20:00")])
+    assert ph["n"] == 2 and ph["x"][0] == "całodobowa" and ph["name"][1] == "Apteka"
+    fu = poimod.build_category("fuel", [node(53.0, 21.0, brand="Orlen", opening_hours="24/7", **{"fuel:lpg": "yes"})])
+    assert fu["x"][0] == "Orlen, całodobowo, LPG"
+    ho = poimod.build_category("hospital", [way_c(53.78, 20.48, name="Szpital Wojewódzki", emergency="yes")])
+    assert ho["x"][0] == "izba przyjęć/SOR"
+    mi = poimod.build_category("military", [way_c(53.4, 20.4, military="barracks", name="JW 1234"),
+                                           way_c(53.5, 20.5, office="military")])
+    assert mi["x"] == ["koszary", "instytucja wojskowa"] and mi["name"][1] == "Obiekt wojskowy"
+
+
+def test_bridges_filtered_by_length_or_name_and_deduped():
+    short = bridge(53.0, 21.0, 0.0001, ref="DK8")                 # ~7 m: przepust
+    long_ = bridge(53.1, 21.1, 0.004, ref="DK8", name="Most na Narwi")   # ~270 m
+    twin = bridge(53.1, 21.1005, 0.004, ref="DK8", name="Most na Narwi")  # druga jezdnia, ~35 m obok
+    unnamed_long = bridge(53.2, 21.2, 0.004, ref="S8")
+    r = poimod.build_category("bridge", [short, long_, twin, unnamed_long])
+    assert r["name"] == ["Most na Narwi", "Most"] and r["n"] == 2
+    assert "DK8" in r["x"][0] and "droga krajowa" in r["x"][0] and "~" in r["x"][0]
+
+
+def test_poi_refresh_merges_old_categories_on_partial_failure(tmp_path):
+    import requests as rq
+
+    class R:
+        def __init__(self, els):
+            self.status_code, self._els = 200, els
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"elements": self._els}
+
+    class S:
+        def __init__(self, fail):
+            self.fail, self.n = fail, 0
+
+        def post(self, url, data=None, **k):
+            self.n += 1
+            q = data["data"]
+            if self.fail and '"bridge"' in q:
+                raise rq.ConnectionError("boom")
+            return R([node(53.0, 21.0, name="X")] if "pharmacy" in q else [])
+
+    msg = poimod.refresh(tmp_path, NOW, POW, S(fail=True), sleep=lambda s: None)
+    assert msg.startswith("ok (") and "błędy: bridge" in msg
+    doc = _json.loads((tmp_path / "poi.json").read_text(encoding="utf-8"))
+    assert doc["cats"]["pharmacy"]["n"] == 1 and "bridge" not in doc["cats"] and "bridge" in doc["errors"]
+    # po błędach nie ma ponownej próby przez 6 h (Overpass to wspólny zasób)...
+    s_wait = S(fail=False)
+    assert poimod.refresh(tmp_path, NOW + timedelta(hours=1), POW, s_wait, sleep=lambda s: None).startswith("ponowna próba po 6 h")
+    assert s_wait.n == 0
+    # ...potem ponowna próba uzupełnia brakującą kategorię, reszta zostaje
+    s2 = S(fail=False)
+    msg2 = poimod.refresh(tmp_path, NOW + timedelta(hours=7), POW, s2, sleep=lambda s: None)
+    doc2 = _json.loads((tmp_path / "poi.json").read_text(encoding="utf-8"))
+    assert "bridge" in doc2["cats"] and not doc2["errors"] and msg2.startswith("ok (")
+    # dane kompletne i świeże -> brak zapytań
+    s3 = S(fail=False)
+    assert poimod.refresh(tmp_path, NOW + timedelta(days=2, hours=7), POW, s3, sleep=lambda s: None).startswith("bez zmian") and s3.n == 0
+
+
+def test_poi_demo_and_run_status(tmp_path):
+    assert poimod.demo_poi(tmp_path, NOW, GAZ.places).startswith("demo")
+    doc = _json.loads((tmp_path / "poi.json").read_text(encoding="utf-8"))
+    assert set(doc["cats"]) == set(poimod.CATEGORIES) and doc["demo"] is True
