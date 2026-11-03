@@ -1,8 +1,26 @@
+/// Adres feedu zapisany na stałe (gałąź data tego repozytorium).
+const defaultFeedUrl = 'https://raw.githubusercontent.com/z0z6/watcher/data/feed.json';
+
+const kindLabels = {
+  'official': 'oficjalne', 'media_national': 'media krajowe', 'media_local': 'media lokalne',
+  'social': 'social media', 'aggregator': 'agregator', 'ai_search': 'wyszukiwarka AI',
+};
+
 class FeedSource {
-  final String name, kind, url;
-  FeedSource(this.name, this.kind, this.url);
-  factory FeedSource.fromJson(Map<String, dynamic> j) =>
-      FeedSource(j['name'] ?? '', j['kind'] ?? '', j['url'] ?? '');
+  final String name, kind, url, title;
+  final DateTime? published;
+  FeedSource(this.name, this.kind, this.url, this.title, this.published);
+
+  /// Link do konkretnego artykułu/komunikatu, który można otworzyć i sprawdzić samemu.
+  bool get openable {
+    final u = Uri.tryParse(url);
+    return u != null && (u.scheme == 'https' || u.scheme == 'http') && !u.host.endsWith('.invalid');
+  }
+
+  factory FeedSource.fromJson(Map<String, dynamic> j) => FeedSource(
+        j['name'] ?? '', j['kind'] ?? '', j['url'] ?? '', j['title'] ?? '',
+        j['published'] == null ? null : DateTime.tryParse(j['published']),
+      );
 }
 
 class FeedEvent {
@@ -112,7 +130,7 @@ class Settings {
   String feedUrl;
   List<Pin> pins;
 
-  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, Set<String>? groups, this.feedUrl = '', List<Pin>? pins})
+  Settings({this.mode = 1, this.theme = 0, this.showDubious = true, Set<String>? groups, this.feedUrl = defaultFeedUrl, List<Pin>? pins})
       : groups = groups ?? typeGroups.map((g) => g.id).toSet(),
         pins = pins ?? [];
 
@@ -135,7 +153,7 @@ class Settings {
         theme: j['theme'] ?? 0,
         showDubious: j['showDubious'] ?? true,
         groups: j['groups'] == null ? null : Set<String>.from(j['groups']),
-        feedUrl: j['feedUrl'] ?? '',
+        feedUrl: ((j['feedUrl'] as String?)?.trim().isNotEmpty ?? false) ? j['feedUrl'] : defaultFeedUrl,
         pins: ((j['pins'] ?? []) as List).map((p) => Pin.fromJson(Map<String, dynamic>.from(p))).toList(),
       );
 }

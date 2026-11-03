@@ -169,3 +169,109 @@ def test_demo_pipeline():
     assert by[("Łomża", "disaster")]["verdict"] == "unverified"   # 1 źródło krajowe = 70% < 75%
     assert by[("Cała Polska", "infrastructure")]["radius_km"] == 400
     assert by[("powiat mławski", "weather")]["severity"] == 5
+
+
+# ---------- świeżość i dawne zdarzenia ----------
+from types import SimpleNamespace as NS
+
+from monitor.extract import looks_historical
+from monitor.run import fresh_items
+from monitor.verify import apply_record, ask, verify_events
+
+
+def test_historical_text_detected():
+    ref = NOW
+    for t in ("Pół roku temu w Ciechanowie wybuchł pożar hali", "W 2024 roku w Olsztynie doszło do awarii prądu",
+              "Rocznica powodzi w Łomży", "Pożar w Suwałkach 12 marca strawił magazyn",
+              "Wspominamy wichurę, która przeszła nad Mławą w zeszłym roku"):
+        assert looks_historical(t, ref), t
+    for t in ("Brak prądu w Ciechanowie od godziny", "Od 5 listopada obowiązuje ostrzeżenie przed wiatrem",
+              "Pożar hali w Suwałkach, trwa akcja gaśnicza"):
+        assert not looks_historical(t, ref), t
+
+
+def test_rule_extract_skips_old_stories_even_with_fresh_date():
+    assert one("Pożar lasu pod Łomżą - przypominamy, 12 marca spłonęło 30 hektarów") == []
+    assert one("Pożar lasu pod Łomżą, trwa akcja gaśnicza")[0].type == "disaster"
+
+
+def test_fresh_items_drops_old_and_undated():
+    from monitor.sources import UNKNOWN_DATE
+    keep = item("a", "media_local", "x", 60)
+    old = item("b", "media_local", "x", 60 * 24 * 180)         # pół roku temu
+    undated = RawItem("c", "c", "media_local", "https://x", "x", UNKNOWN_DATE)
+    assert fresh_items([keep, old, undated], NOW, 36) == [keep]
+
+
+def test_events_carry_source_links_best_first():
+    cl = (rule_extract(RawItem("tg", "Kanał", "social", "https://t.me/x/1", "W Ostrołęce brak prądu", NOW - timedelta(minutes=50),
+                               "Brak prądu"), GAZ)
+          + rule_extract(RawItem("pap", "PAP", "media_national", "https://pap.pl/a", "W Ostrołęce nie ma prądu w centrum",
+                                 NOW - timedelta(minutes=40), "Ostrołęka bez prądu"), GAZ))
+    ev = build_events(cl, {}, NOW)[0]
+    assert [s["url"] for s in ev["sources"]] == ["https://pap.pl/a", "https://t.me/x/1"]   # wiarygodniejsze pierwsze
+    assert ev["sources"][0]["title"] == "Ostrołęka bez prądu" and "published" in ev["sources"][0]
+
+
+# ---------- weryfikacja wyszukiwarką ----------
+
+def fake_client(answer_json, result_urls):
+    resp = NS(content=[
+        NS(type="web_search_tool_result", content=[NS(url=u, title="t " + u) for u in result_urls]),
+        NS(type="text", text="Wynik:\n" + answer_json),
+    ])
+    return NS(messages=NS(create=lambda **kw: resp))
+
+
+def base_event():
+    cl = one("W Przasnyszu brak prądu", "media_local", 300)
+    return build_events(cl, {}, NOW)[0]
+
+
+def test_verify_drops_hallucinated_urls_and_known_domains():
+    e = base_event()
+    ans = ('{"current": true, "corroborated": true, "note": "ok", "evidence": ['
+           '{"url": "https://prawdziwy.pl/a", "title": "A"}, {"url": "https://wymyslony.pl/b", "title": "B"},'
+           '{"url": "https://x.invalid/dup", "title": "dup"}]}')
+    client = fake_client(ans, ["https://prawdziwy.pl/a", "https://x.invalid/dup"])
+    rec = ask(client, "m", e, NOW)
+    assert [x["url"] for x in rec["evidence"]] == ["https://prawdziwy.pl/a"]   # wymyślony odpadł, x.invalid już jest źródłem... 
+    assert rec["corroborated"]
+
+
+def test_verify_raises_credibility_and_adds_links():
+    e = base_event()
+    before = e["credibility"]
+    apply_record(e, {"current": True, "corroborated": True, "note": "", "at": NOW.isoformat(),
+                     "evidence": [{"url": "https://lokalny.pl/a", "title": "A"}, {"url": "https://inny.pl/b", "title": "B"}]})
+    assert e["credibility"] > before
+    assert {s["url"] for s in e["sources"]} >= {"https://lokalny.pl/a", "https://inny.pl/b"}
+    assert any("Weryfikacja AI" in r for r in e["reasons"])
+
+
+def test_verify_not_current_marks_dubious_but_never_touches_confirmed():
+    e = base_event()
+    apply_record(e, {"current": False, "corroborated": False, "evidence": []})
+    assert e["verdict"] == "dubious" and e["credibility"] <= 30
+    conf = build_events(one("Ostrołęka wyłączenie awaryjne brak prądu", "official"), {}, NOW)[0]
+    apply_record(conf, {"current": False, "corroborated": False, "evidence": []})
+    assert conf["verdict"] == "confirmed"
+
+
+def test_verify_events_caches_and_respects_limit(monkeypatch):
+    monkeypatch.setenv("VERIFY_MAX", "1")
+    calls = []
+
+    def create(**kw):
+        calls.append(1)
+        return NS(content=[NS(type="text", text='{"current": true, "corroborated": false, "evidence": [], "note": ""}')])
+
+    client = NS(messages=NS(create=create))
+    e1 = build_events(one("W Przasnyszu brak prądu", "media_local", 300), {}, NOW)[0]
+    e2 = build_events(one("W Płońsku wichura, połamane drzewa", "media_local", 300), {}, NOW)[0]
+    state = {}
+    assert verify_events([e1, e2], state, NOW, client) == 1 and len(calls) == 1      # limit 1 na uruchomienie
+    e1b = build_events(one("W Przasnyszu brak prądu", "media_local", 300), {}, NOW)[0]
+    e2b = build_events(one("W Płońsku wichura, połamane drzewa", "media_local", 300), {}, NOW)[0]
+    assert verify_events([e1b, e2b], state, NOW, client) == 1 and len(calls) == 2    # wcześniejszy z cache, drugi nowy
+    assert verify_events([e1b, e2b], state, NOW, client) == 0 and len(calls) == 2    # wszystko z cache

@@ -51,9 +51,24 @@ trafiają na listę, ale nie na mapę.
    regułowa, mniej dokładna dla wiadomości), `NTFY_PREFIX` (opcjonalnie).
 3. *Actions -> feed -> Run workflow*: najpierw `probe = 1`, potem `demo = 1` (dane demonstracyjne).
 4. *Actions -> build-apk*, pobierz `watchpl-apk`, zainstaluj.
-5. W aplikacji (Ustawienia -> Źródło danych) wklej `https://raw.githubusercontent.com/<user>/<repo>/data/feed.json`
-   i zatwierdź. Najpierw otwórz ten adres w przeglądarce telefonu - ma pokazać JSON. Repozytorium musi być publiczne.
+5. Adres feedu jest wpisany na stałe w `app/lib/models.dart` (`defaultFeedUrl`) - zmień go na własne repozytorium
+   przed budowaniem. Można go też nadpisać w Ustawienia -> Źródło danych. Najpierw otwórz ten adres w przeglądarce telefonu - ma pokazać JSON. Repozytorium musi być publiczne.
 6. Zakładka Miejsca: dodaj dom i pracę.
+
+## Świeżość i weryfikacja (agent AI)
+1. **Twarda świeżość** (`max_age_hours` w `sources.yaml`, domyślnie 36 h): pozycje starsze albo bez daty odpadają
+   przed analizą. Wcześniej pozycja bez daty była traktowana jak świeża.
+2. **Wykrywanie dawnych zdarzeń w treści**: przedruki i odświeżone artykuły mają świeżą datę, ale opisują stare
+   wydarzenia ("pół roku temu", "w 2024 roku", "12 marca...", "rocznica"). Takie pozycje są odrzucane regułami,
+   a model dostaje datę publikacji i dzisiejszą datę oraz zwraca `current` i `event_date`.
+3. **Weryfikacja wyszukiwarką** (wymaga `ANTHROPIC_API_KEY`): dla ważnych (>= 3/5), niepotwierdzonych zdarzeń
+   model szuka niezależnych, aktualnych potwierdzeń. Akceptowane są **tylko adresy URL, które faktycznie wystąpiły
+   w wynikach wyszukiwania** (model nie może wymyślić linku). Wynik jest zapamiętywany w `state.json`, więc to samo
+   zdarzenie kosztuje jedno wyszukiwanie; limit `VERIFY_MAX` (domyślnie 3) nowych na uruchomienie.
+   Wyłączenie: zmienna `VERIFY=0`. Oficjalnie potwierdzone zdarzenia nigdy nie są obniżane.
+4. **Linki do źródeł**: każde zdarzenie ma listę źródeł z tytułem, datą i adresem artykułu/komunikatu. W aplikacji
+   dotknięcie źródła (w szczegółach lub w rozwijanej karcie na mapie) otwiera oryginał w przeglądarce.
+   Linki z Google News przechodzą przez przekierowanie Google do strony wydawcy.
 
 ## Dane obszaru
 `backend/data/powiaty.csv` (57 powiatów, kody TERYT z Dz.U. 2025 poz. 1721, środki z granic powiatów)
@@ -62,7 +77,7 @@ generuje `tools/build_powiaty.py`. Zmień `REGION` w skrypcie, żeby zmienić ob
 osobno, kolumna `forms` = formy odmiany dla nazw mylących (Pisz/pisze, Węgrów/Węgry). Rozbuduj o kolejne.
 
 ## Ograniczenia
-- Testy: backend (17 testów) przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
+- Testy: backend (25 testów) przechodzi; **aplikacja Flutter nie była kompilowana w środowisku, w którym powstała**.
 - Powiadomienia w tle: min. 15 min, mogą być opóźnione przez oszczędzanie baterii. Alerty wokół Ciebie w tle
   wymagają lokalizacji "Zawsze"; alerty o punktach działają bez niej.
 - Ostrzeżenia hydro bez rozpoznanej miejscowości dostają obszar całego województwa (promień 60 km od środka).

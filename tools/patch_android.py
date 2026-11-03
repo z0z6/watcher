@@ -18,8 +18,12 @@ root = pathlib.Path("android/app")
 # --- manifest ---
 mf = root / "src/main/AndroidManifest.xml"
 txt = mf.read_text(encoding="utf-8")
+QUERIES = """    <queries>
+        <intent><action android:name="android.intent.action.VIEW"/><data android:scheme="https"/></intent>
+    </queries>
+"""
 if "ACCESS_FINE_LOCATION" not in txt:
-    txt = txt.replace("<application", PERMS + "    <application", 1)
+    txt = txt.replace("<application", PERMS + QUERIES + "    <application", 1)
     mf.write_text(txt, encoding="utf-8")
     print("manifest: dodano uprawnienia")
 

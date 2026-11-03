@@ -13,7 +13,8 @@ import requests
 from .geo import WOJ_PLACES, Gazetteer, Powiaty, norm
 from .models import Claim, RawItem
 
-UA = {"User-Agent": "watchpl/0.2 (personal monitor)"}
+UA = {"User-Agent": "watchpl/0.3 (personal monitor)"}
+UNKNOWN_DATE = datetime(1970, 1, 1, tzinfo=timezone.utc)   # pozycje bez daty odpadają przy filtrze świeżości
 WAW = ZoneInfo("Europe/Warsaw")
 REGION_WOJ = set(WOJ_PLACES)
 WOJ_FALLBACK = {"podlaskie", "warminsko-mazurskie"}   # całe województwo w obszarze monitorowania
@@ -149,10 +150,10 @@ def fetch_google_news(src, gaz: Gazetteer, now) -> list[RawItem]:
             publisher = (e.get("source") or {}).get("title", "") or domain or "Google News"
             title = re.sub(r"\s+-\s+[^-]+$", "", e.get("title", ""))
             ts = e.get("published_parsed")
-            pub = datetime.fromtimestamp(mktime(ts), timezone.utc) if ts else now
+            pub = datetime.fromtimestamp(mktime(ts), timezone.utc) if ts else UNKNOWN_DATE
             kind = "media_national" if any(domain.endswith(t) for t in trusted) else "media_local"
             items.append(RawItem(domain or publisher, publisher, kind, link,
-                                 f"{title}. {_clean(e.get('summary', ''))}", pub))
+                                 f"{title}. {_clean(e.get('summary', ''))}", pub, title))
         time.sleep(0.7)   # grzeczność wobec serwera
     return items
 
@@ -165,9 +166,9 @@ def fetch_rss(src, gaz, now) -> list[RawItem]:
     out = []
     for e in d.entries[:60]:
         ts = e.get("published_parsed") or e.get("updated_parsed")
-        pub = datetime.fromtimestamp(mktime(ts), timezone.utc) if ts else now
+        pub = datetime.fromtimestamp(mktime(ts), timezone.utc) if ts else UNKNOWN_DATE
         out.append(RawItem(src["id"], src["name"], src["kind"], e.get("link", src["url"]),
-                           f"{e.get('title', '')}. {_clean(e.get('summary', ''))}", pub))
+                           f"{e.get('title', '')}. {_clean(e.get('summary', ''))}", pub, e.get("title", "")))
     return out
 
 

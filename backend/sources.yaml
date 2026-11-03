@@ -1,6 +1,9 @@
 # Konfiguracja źródeł. kind: official | media_national | media_local | social | aggregator
 # Źródła oznaczone "DO SPRAWDZENIA" nie zostały przetestowane na żywo - zobacz wynik workflow `feed`
 # (sekcja source_status w feed.json) lub uruchom `python -m monitor.run --probe`.
+# Twarda świeżość: pozycje starsze (lub bez daty) są odrzucane, zanim trafią do analizy.
+max_age_hours: 36
+
 sources:
   # --- Oficjalne, strukturalne, bezpłatne, bez klucza ---
   - id: imgw_meteo

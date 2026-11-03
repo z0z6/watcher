@@ -25,6 +25,7 @@ class RawItem:
     url: str
     text: str
     published: datetime
+    title: str = ""
 
 
 @dataclass

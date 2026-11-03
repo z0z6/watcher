@@ -48,6 +48,10 @@ def _origins(claims: list[Claim]) -> list[list[Claim]]:
     return list(groups.values())
 
 
+def verdict_for(cred: int) -> str:
+    return "likely" if cred >= 75 else "unverified" if cred >= 40 else "dubious"
+
+
 def _make(cs: list[Claim], official_ok: dict[str, bool], now: datetime) -> dict:
     place, typ = cs[0].place, cs[0].type
     origins = _origins(cs)
@@ -80,16 +84,20 @@ def _make(cs: list[Claim], official_ok: dict[str, bool], now: datetime) -> dict:
                 reasons.append(f"Ten sam tekst w {len(srcs)} miejscach (przeklejanie lub koordynacja)")
         if all(SOURCE_WEIGHT[c.item.kind] <= 0.25 for c in cs):
             reasons.append("Wyłącznie źródła niskiej wiarygodności (social/agregatory)")
-        verdict = "likely" if cred >= 75 else "unverified" if cred >= 40 else "dubious"
+        verdict = verdict_for(cred)
 
     attribution = any(c.attribution_claimed for c in cs)
     if attribution and not any(c.item.kind == "official" and c.attribution_claimed for c in cs):
         reasons.append("Wątek sabotażu/ataku bez potwierdzenia służb")
 
     best = max(cs, key=lambda c: SOURCE_WEIGHT[c.item.kind])
-    seen = {}
-    for c in cs:
-        seen.setdefault(c.item.source_id, {"name": c.item.source_name, "url": c.item.url, "kind": c.item.kind})
+    # źródła z linkiem do konkretnego artykułu/komunikatu: najpierw najwiarygodniejsze, potem najnowsze
+    seen: dict[str, dict] = {}
+    for c in sorted(cs, key=lambda c: (-SOURCE_WEIGHT[c.item.kind], -c.item.published.timestamp())):
+        u = c.item.url or c.item.source_id
+        seen.setdefault(u, {"name": c.item.source_name, "url": c.item.url, "kind": c.item.kind,
+                            "title": c.item.title or c.item.text[:100],
+                            "published": c.item.published.isoformat()})
     keyed = next((c for c in cs if c.key), None)
     stable = keyed.key if keyed else f"{first:%Y%m%d}"   # dzień, nie godzina: stabilne id między uruchomieniami
     eid = hashlib.sha1(f"{place.name}|{typ}|{stable}".encode()).hexdigest()[:12]
@@ -103,7 +111,7 @@ def _make(cs: list[Claim], official_ok: dict[str, bool], now: datetime) -> dict:
         "first_seen": first.isoformat(), "last_seen": last.isoformat(),
         "credibility": cred, "verdict": verdict, "attribution_claimed": attribution,
         "summary": f"{place.name}: {labelled or LABEL.get(typ, 'zdarzenie')}",
-        "snippet": best.item.text[:200], "reasons": reasons, "sources": list(seen.values()),
+        "snippet": best.item.text[:200], "reasons": reasons, "sources": list(seen.values())[:8],
     }
 
 

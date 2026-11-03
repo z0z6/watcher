@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'background.dart';
@@ -59,6 +60,15 @@ bool isDark(BuildContext c) => CupertinoTheme.brightnessOf(c) == Brightness.dark
 Widget section(BuildContext c, List<Widget> children, {Widget? header, Widget? footer}) =>
     CupertinoListSection.insetGrouped(
         backgroundColor: appBg.resolveFrom(c), header: header, footer: footer, children: children);
+
+/// Otwiera link w przeglądarce (do samodzielnej weryfikacji źródła).
+Future<void> openLink(String url) async {
+  final u = Uri.tryParse(url);
+  if (u == null || !(u.scheme == 'https' || u.scheme == 'http')) return;
+  try {
+    await launchUrl(u, mode: LaunchMode.externalApplication);
+  } catch (_) {}
+}
 
 String ago(DateTime t) {
   final m = DateTime.now().difference(t).inMinutes;
@@ -125,15 +135,12 @@ class AppState extends ChangeNotifier {
   Future<void> refresh() async {
     error = null;
     await _locate();
-    if (settings.feedUrl.isEmpty) {
-      error = 'Ustaw adres feedu w zakładce Ustawienia';
-    } else {
-      try {
-        feed = await FeedService.fetch(settings.feedUrl);
-        await _detectNew();
-      } catch (_) {
-        error = 'Nie udało się pobrać danych (pokazuję ostatnie znane)';
-      }
+    if (settings.feedUrl.trim().isEmpty) settings.feedUrl = defaultFeedUrl;
+    try {
+      feed = await FeedService.fetch(settings.feedUrl);
+      await _detectNew();
+    } catch (_) {
+      error = 'Nie udało się pobrać danych (pokazuję ostatnie znane)';
     }
     notifyListeners();
   }
@@ -547,8 +554,22 @@ class DetailPage extends StatelessWidget {
               ),
           ]),
           section(context, header: const Text('ŹRÓDŁA'), [
-            for (final s in e.sources) CupertinoListTile(title: Text(s.name), additionalInfo: Text(s.kind)),
+            for (final s in e.sources)
+              CupertinoListTile(
+                title: Text(s.title.isNotEmpty ? s.title : s.name, maxLines: 3, overflow: TextOverflow.ellipsis),
+                subtitle: Text([s.name, kindLabels[s.kind] ?? s.kind, if (s.published != null) ago(s.published!)]
+                    .where((x) => x.isNotEmpty).join(' · ')),
+                trailing: s.openable ? Icon(CupertinoIcons.arrow_up_right_square, size: 20, color: cBlue.resolveFrom(context)) : null,
+                onTap: s.openable ? () => openLink(s.url) : null,
+              ),
           ]),
+          if (e.sources.any((s) => s.openable))
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 0, 32, 12),
+              child: Text('Dotknij źródła, żeby otworzyć oryginalny artykuł lub komunikat i sprawdzić samemu, '
+                  'czy taka informacja faktycznie się pojawiła.',
+                  style: TextStyle(fontSize: 12, color: secondary(context))),
+            ),
           if (e.snippet.isNotEmpty)
             section(context,
                 header: const Text('FRAGMENT (TREŚĆ ZEWNĘTRZNA, NIEZWERYFIKOWANA)'),
@@ -822,6 +843,27 @@ class _Popup extends StatelessWidget {
               const SizedBox(height: 6),
               Text(e.reasons.first, maxLines: 3, overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12, height: 1.25)),
+            ],
+            if (e.sources.any((s) => s.openable)) ...[
+              const SizedBox(height: 6),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => openLink(e.sources.firstWhere((s) => s.openable).url),
+                child: Row(children: [
+                  Icon(CupertinoIcons.arrow_up_right_square, size: 13, color: cBlue.resolveFrom(context)),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      () {
+                        final s = e.sources.firstWhere((s) => s.openable);
+                        return 'Źródło: ${s.name}${s.title.isNotEmpty ? ' — ${s.title}' : ''}';
+                      }(),
+                      maxLines: 2, overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 11, color: cBlue.resolveFrom(context), decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ]),
+              ),
             ],
             const SizedBox(height: 6),
             Row(children: [

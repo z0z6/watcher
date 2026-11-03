@@ -13,6 +13,7 @@ from .extract import extract
 from .geo import Gazetteer, Powiaty
 from .score import build_events, LABEL
 from .sources import collect
+from .verify import verify_events
 
 ROOT = Path(__file__).resolve().parent.parent
 COVERAGE = {  # statyczny opis pokrycia - pokazywany w aplikacji ("brak alertu != spokój")
@@ -21,26 +22,40 @@ COVERAGE = {  # statyczny opis pokrycia - pokazywany w aplikacji ("brak alertu !
 }
 
 
-def notify(events: list[dict], out: Path) -> None:
+def notify(events: list[dict], state: dict) -> None:
     """Opcjonalny push przez ntfy: temat na powiat, tylko ważne i niepodejrzane zdarzenia."""
     prefix = os.environ.get("NTFY_PREFIX")
     if not prefix:
         return
-    state_f = out / "state.json"
-    state = json.loads(state_f.read_text()) if state_f.exists() else {"notified": []}
+    sent = state.setdefault("notified", [])
     for e in events:
         key = f"{e['id']}:{e['verdict']}"
-        if e["severity"] >= 4 and e["verdict"] != "dubious" and key not in state["notified"]:
+        if e["severity"] >= 4 and e["verdict"] != "dubious" and key not in sent:
             body = {"topic": f"{prefix}-{e['powiat_slug']}", "title": e["summary"],
                     "message": f"{e['verdict']} ({e['credibility']}%). " + "; ".join(e["reasons"][:2]),
                     "priority": 4, "tags": ["warning"]}
+            if e["sources"] and e["sources"][0].get("url", "").startswith("https://"):
+                body["click"] = e["sources"][0]["url"]     # dotknięcie powiadomienia otwiera źródło
             try:
                 requests.post("https://ntfy.sh/", json=body, timeout=10).raise_for_status()
-                state["notified"].append(key)
+                sent.append(key)
             except requests.RequestException as ex:
                 print(f"[ntfy] {ex}", file=sys.stderr)
-    state["notified"] = state["notified"][-500:]
-    state_f.write_text(json.dumps(state))
+    state["notified"] = sent[-500:]
+
+
+def load_state(out: Path) -> dict:
+    f = out / "state.json"
+    try:
+        return json.loads(f.read_text()) if f.exists() else {}
+    except ValueError:
+        return {}
+
+
+def fresh_items(items, now: datetime, max_age_h: float):
+    """Twarda świeżość: pozycje bez daty albo starsze niż max_age_h odpadają."""
+    limit = now - timedelta(hours=max_age_h)
+    return [i for i in items if limit <= i.published <= now + timedelta(hours=2)]
 
 
 def probe(cfg, gaz, powiaty, now) -> None:
@@ -64,22 +79,35 @@ def main() -> None:
     if "--probe" in sys.argv:
         cfg = yaml.safe_load((ROOT / "sources.yaml").read_text(encoding="utf-8"))
         return probe(cfg, gaz, powiaty, now)
+    cfg = yaml.safe_load((ROOT / "sources.yaml").read_text(encoding="utf-8"))
     if os.environ.get("DEMO") == "1":
         items, claims, official_ok = demo_items(now, powiaty)
         status = {"demo": "ok"}
     else:
-        cfg = yaml.safe_load((ROOT / "sources.yaml").read_text(encoding="utf-8"))
         items, claims, official_ok, status = collect(cfg, gaz, powiaty, now)
 
-    claims = claims + extract(items, gaz)
+    max_age = float(cfg.get("max_age_hours", 36)) if os.environ.get("DEMO") != "1" else 1e6
+    items = fresh_items(items, now, max_age)
+    claims = claims + extract(items, gaz, now)
     events = [e for e in build_events(claims, official_ok, now)
-              if datetime.fromisoformat(e["last_seen"]) > now - timedelta(hours=48)]
+              if (e["valid_to"] and datetime.fromisoformat(e["valid_to"]) > now)
+              or datetime.fromisoformat(e["last_seen"]) > now - timedelta(hours=max_age)]
+    state = load_state(out)
+    client = None
+    if os.environ.get("ANTHROPIC_API_KEY") and os.environ.get("VERIFY", "1") == "1":
+        try:
+            import anthropic
+            client = anthropic.Anthropic()
+        except Exception as ex:  # noqa: BLE001
+            print(f"[verify] brak klienta: {ex}", file=sys.stderr)
+    verify_events(events, state, now, client)
     feed = {"generated_at": now.isoformat(), "events": events,
             "coverage": {**COVERAGE, "power": "good" if official_ok.get("power") else COVERAGE["power"],
                          "power_live": bool(official_ok.get("power"))},
             "source_status": status, "labels": LABEL}
+    notify(events, state)
+    (out / "state.json").write_text(json.dumps(state), encoding="utf-8")
     (out / "feed.json").write_text(json.dumps(feed, ensure_ascii=False, indent=1), encoding="utf-8")
-    notify(events, out)
     print(f"events={len(events)} status={status}")
 
 
