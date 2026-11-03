@@ -1290,12 +1290,12 @@ class SettingsTab extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: CupertinoSlidingSegmentedControl<double>(
-                          groupValue: s.shelterKm,
-                          children: const {1.0: Text('1 km'), 2.0: Text('2 km'), 5.0: Text('5 km')},
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: s.shelterKm.round(),
+                          children: const {1: Text('1 km'), 2: Text('2 km'), 5: Text('5 km')},
                           onValueChanged: (v) {
                             if (v != null) {
-                              s.shelterKm = v;
+                              s.shelterKm = v.toDouble();
                               st.save();
                             }
                           },
@@ -1556,12 +1556,12 @@ class SheltersTab extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12),
-                      child: CupertinoSlidingSegmentedControl<double>(
-                        groupValue: s.shelterKm,
-                        children: const {1.0: Text('1 km'), 2.0: Text('2 km'), 5.0: Text('5 km')},
+                      child: CupertinoSlidingSegmentedControl<int>(
+                        groupValue: s.shelterKm.round(),
+                        children: const {1: Text('1 km'), 2: Text('2 km'), 5: Text('5 km')},
                         onValueChanged: (v) {
                           if (v != null) {
-                            s.shelterKm = v;
+                            s.shelterKm = v.toDouble();
                             st.save();
                           }
                         },
