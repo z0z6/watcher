@@ -1,0 +1,1003 @@
+{
+ "generated_at": "2026-11-07T14:05:39.838679+00:00",
+ "events": [
+  {
+   "id": "118af686485d",
+   "type": "sabotage",
+   "severity": 5,
+   "place": "Gołdap",
+   "powiat": "gołdapski",
+   "powiat_slug": "goldapski",
+   "lat": 54.305,
+   "lon": 22.3047,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T08:19:51+00:00",
+   "last_seen": "2026-11-06T11:39:26+00:00",
+   "credibility": 97,
+   "verdict": "likely",
+   "attribution_claimed": true,
+   "summary": "Gołdap: podejrzenie sabotażu",
+   "snippet": "Warmińsko-mazurskie/ Z Zalewu Gołdap wypłynęła woda; policja: to nie akt sabotażu, a awaria. Warmińsko-mazurskie/ Z Zalewu Gołdap wypłynęła woda; policja: to nie akt sabotażu, a awaria &nbsp;&nbsp; ko",
+   "reasons": [
+    "4 niezależnych źródeł",
+    "Wątek sabotażu/ataku bez potwierdzenia służb"
+   ],
+   "sources": [
+    {
+     "name": "Radio 5",
+     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOcENHSHgwb1pJUzFvYmw2dTFGMElvUDF6NEJfSk9ldnZQWktqRHk2NXA4aUxIUVNreEppd3ZVMFUzNkRQV1BEVVJtRlpBbG5TNmxXWTFETGtIYWJucE84djQwMjhXa2tQV2lPU1VKNUNCY3MxNThRMl9iNUxtM0pkWHJhSXR5NGxDN3dBQUdCdlhvU2p0cHg2T1JBZTV5aTdrU3BtVG9B0gGrAUFVX3lxTFBCY1B5UmhyNkIzSHpSRWZhTVA0RGtKcVlHTGZHYnI3c0JCcTQ1aTB6eVBMZTNqZ0RCWkZvZ2ZSS2tId2Y1aGxmckJmb200QXRwMGVGWU00Wjg3QXdpVUdzcFl6Tl9WMVdGdml4UjAzSXJ0STF4b2xqMUxHZXl0UWoxY3Bkajl4ZmJmLVFzSEFDUjJDTnRmWmltaERjeU40WGt6QkxFNC1iMmt0SQ?oc=5",
+     "kind": "media_local",
+     "title": "Z Zalewu Gołdap wypływała woda. Wstępne ustalenia wykluczyły akt dywersji - Radio5",
+     "published": "2026-11-06T11:39:26+00:00"
+    },
+    {
+     "name": "Wprost",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNMmJ1dXZwRHBlUDAyelhKQS1iMGExbmpfYW1lQW82Z2hsLUVFVEYyUmNSRTRfYkdJWG5sUmJKNUF4aXduYnJES3FCT0t5bXFsSU1nYUNHZnIzU05wUnhsYTJEa0djak12dXBqS0dvS3pmVWtWQzM1X00tek40b1hpOHAxYV9MNW53YkFzYm9MMTFtSzg5QjFV0gGWAUFVX3lxTFBzR0pZV3pObVIxMktMOUlfamFsam1hMWs3WmNvWlh3SlFtakNxMXNKYkJhaFlaSXZzd2hTeFlqWjQ3VUx0TFNkNnU3S0VtQy1pTk1LR1Vvc0x1bEJocGxOSHg5Tjk3a3pFMnhZWU5uWndJRkpxcGpabFVuY3FoSWxFLS1FR3AwRlA4ak5tVjB4T3dTeWg1UQ?oc=5",
+     "kind": "media_local",
+     "title": "Awaria na Zalewie Gołdap. Policja wykluczyła sabotaż",
+     "published": "2026-11-06T10:50:00+00:00"
+    },
+    {
+     "name": "GazetaOlsztynska.pl",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5jQkUwd3FXQ291a2dVTkhkd0lFOURPX2hlUHNFa0NlTkQyR0hEbjd2WTVidHhRWHNHdllkMnM0bVlUYjB2UDBfX0dwMlJHQkpqR3NKb3d1ZzlCOEpaVk01QXhadjJjYU1vT2lfalI5aldsNXkxX1BKNEh3?oc=5",
+     "kind": "media_local",
+     "title": "Z Zalewu Gołdap wypłynęła woda. Zdarzenie badano pod kątem dywersji",
+     "published": "2026-11-06T08:44:45+00:00"
+    },
+    {
+     "name": "kolniak24",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNUHlqN3ZlZHg2RnBLN2JRREg5YWs3YlltS0pkNWh0azREVF9TSzJMdGpjd0pZTFBlSUJoRzRpZDl3dzhMZ1RlQXVqamhBZkRUSHdXaVZKRjY4Vjh4VVV5aWxHQ2t5cEtWTDN0a290eDAwUVA3R2d4d1NzVmh0RWE2NmtXUV9LMFc2S1I2SUJ2V3FWWE5mcDVQVlB1REpadF93NHlTZGd5R2RSZml1R3FzN3lxM0trUGpz?oc=5",
+     "kind": "media_local",
+     "title": "Warmińsko-mazurskie/ Z Zalewu Gołdap wypłynęła woda; policja: to nie akt sabotażu, a awaria",
+     "published": "2026-11-06T08:19:51+00:00"
+    }
+   ]
+  },
+  {
+   "id": "2149946a0dc9",
+   "type": "power",
+   "severity": 3,
+   "place": "Płońsk",
+   "powiat": "płoński",
+   "powiat_slug": "plonski",
+   "lat": 52.6226,
+   "lon": 20.3783,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T23:08:35+00:00",
+   "last_seen": "2026-11-06T23:08:35+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płońsk: brak prądu",
+   "snippet": "Czy w Płońsku istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11. Czy w Płońsku istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11 &nbsp;&",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płońsk Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOcVBldUttRHNnOTFPRDEyUklzSEhvdlFfV0lfTGZSX2htRmVEOWlZNElTT2p6TC1qWlJvcUtjWkNBeFZwa0tjaE5vbHUtUG91UHRRNlFwWF8yZzZLemplUUNxNzRiTkpRdWJ4aGlUa2xXWjNwb1Jlb25CTzI1SXZ4akl5Z3ZsQmdraUFUWjRqUkhIcFlDUkpLazdYMzVlVHJPQVMydUxlVW13eHlxalE?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płońsku istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11",
+     "published": "2026-11-06T23:08:35+00:00"
+    }
+   ]
+  },
+  {
+   "id": "f76bce28eebd",
+   "type": "power",
+   "severity": 3,
+   "place": "Przasnysz",
+   "powiat": "przasnyski",
+   "powiat_slug": "przasnyski",
+   "lat": 53.0197,
+   "lon": 20.8815,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T10:08:41+00:00",
+   "last_seen": "2026-11-07T10:08:41+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Przasnysz: brak prądu",
+   "snippet": "Czy w Przasnyszu może dojść do zakłóceń w zasilaniu elektrycznym? Sprawdź bieżące dane z 7.11. Czy w Przasnyszu może dojść do zakłóceń w zasilaniu elektrycznym? Sprawdź bieżące dane z 7.11 &nbsp;&nbsp",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Przasnysz Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNOGNxQnc3SjdhVTFlSm9uR1Jfb2Fjb3RCc1ZCWTFhSWl0MEFiWl9YNnp5SGxpTG5mQ1JhUC12NDJpTHhBOVZHS0UydDViUHdQRWV4ZU9wdG9wLXc3VFpmZmJsYS1WX1pvSmg1cXJIUzV2UndLTl81dlVXM0k0ZUp5Vy1qZzNjRXpDS255THlBSGlNN3VWQWtLNjViZVBILXpTeWY4UGxySnVWUlZTcDNTMnlja0c4NUlpdWpQQUtWaDJxT0lSeDZKVjd3?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Przasnyszu może dojść do zakłóceń w zasilaniu elektrycznym? Sprawdź bieżące dane z 7.11",
+     "published": "2026-11-07T10:08:41+00:00"
+    }
+   ]
+  },
+  {
+   "id": "cabc122f801a",
+   "type": "power",
+   "severity": 3,
+   "place": "Ostrołęka",
+   "powiat": "ostrołęcki",
+   "powiat_slug": "ostrolecki",
+   "lat": 53.084,
+   "lon": 21.574,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T00:06:13+00:00",
+   "last_seen": "2026-11-07T00:06:13+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrołęka: brak prądu",
+   "snippet": "Czy w Ostrołęce mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 7.11. Czy w Ostrołęce mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 7.11 &nbsp;&nbsp; Ostrołęka Nasze ",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ostrołęka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPelNvNmthZTk5NlcwRVYyLWxEVkxsZThUaFc4Z1hhVEdtc0Q1YWlUR1dLNldpeURfbDZxMG1CM1BBaWZHSnhDaC11VVFldnhBNzlJb2R4R1htcUk4cGJ1T2Y3SFpFX3Y4MGdKejh1Smx0ekdVWldDWUJTUXE4RVUtanhNRU9WaW9JT2hHRWJqWlVvMkQ5RTlUWjlOcGRxLUJyNnB3Qw?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrołęce mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 7.11",
+     "published": "2026-11-07T00:06:13+00:00"
+    }
+   ]
+  },
+  {
+   "id": "89a3d22dcaae",
+   "type": "power",
+   "severity": 3,
+   "place": "Ostrów Mazowiecka",
+   "powiat": "ostrowski",
+   "powiat_slug": "ostrowski",
+   "lat": 52.8003,
+   "lon": 21.89,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T05:07:44+00:00",
+   "last_seen": "2026-11-07T08:08:19+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrów Mazowiecka: brak prądu",
+   "snippet": "Czy w Ostrowi Mazowieckiej mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 7.11. Czy w Ostrowi Mazowieckiej mogą pojawić się braki energii elektrycznej? Sprawdź najśwież",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ostrów Mazowiecka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQUUFSejB1UkRXMTdObURxX3VHSGdXT0J5a3Z6Z2N2QUN3TnROdk5KeEpYSkc3a1NTcFJ0T29rLXczTkNCX1NLY3J3UkN2SUxzUXVQcDhER0lxZ3d4SWxMVDdIVjJDcnA1WDcwcWZUMTA2N2VPVEtHbzZZQ3hkQWwyMGZUc1F5RUJzRjlwRlpNZTZSVEhyME03YU1VbVY5NXRuSThtZl95V3N1V2RUOTFmcEVGMjFRdWtGVFBnT1BxZjZqMjlnUGJJSEJGTzI?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrowi Mazowieckiej może dojść do zakłóceń w zasilaniu elektrycznym? Sprawdź bieżące dane z 7.11",
+     "published": "2026-11-07T08:08:19+00:00"
+    },
+    {
+     "name": "Ostrów Mazowiecka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxON3JhRDQzVWMwQzRoQkdvN3BuWnFMOWRlcDFxUHdfblBwcnJxTk1kX1d5ZjItUTA1STBLVkRweVJiUEZ5VDhwSXJnZDdLMkF0ZmU3QjFmUlJvM2I0UmkxbGpGOW1pWjQySTZaVGdlbG9RZzJ2OG15UnA0OEhkOWVaNmJ4dzZDaVdsaUhmRHI4Y2dXMEJOUkhoOXhJUUtjb1Y0MFNEU2NqQkNJSGNSM2dFc0RJVWJ5bk45cklNRnpscl90cDE4LXNVZU1CUHJGYnItaDFmWjhqQkVSNDZYeVBkVFQzMA?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrowi Mazowieckiej mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 7.11",
+     "published": "2026-11-07T05:07:44+00:00"
+    }
+   ]
+  },
+  {
+   "id": "aa45b9505362",
+   "type": "power",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T11:13:24+00:00",
+   "last_seen": "2026-11-06T11:13:24+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: brak prądu",
+   "snippet": "Czy w Płocku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 6.11. Czy w Płocku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 6.11 &nbsp",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płock Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQRTVNQW9ab3pVTUU0cndoNlZrUnVlS3ZxaHdhRF9WblhscnRoNWVaM1pTeEZ4cW10djN4R3hEcTJXR1FNQTZEcFV2Yld2TW5DNUxUakZyZXJRaUpMUkpvZTNWVnlZY0I0a0JibHNNcDg1RU9waFJ1ZjVmWkk0d2d2elNlQTZTTDY0ejVuV04zelRqZEV2UURQeHA5TWk1Y0tyV3ROcWZpZGlzUktESjIwWWZCakNJdENRcDRHOGhWUXZDZDdIaXN3WVVzSzk?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płocku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 6.11",
+     "published": "2026-11-06T11:13:24+00:00"
+    }
+   ]
+  },
+  {
+   "id": "f434de2bc038",
+   "type": "power",
+   "severity": 3,
+   "place": "Białystok",
+   "powiat": "białostocki",
+   "powiat_slug": "bialostocki",
+   "lat": 53.1325,
+   "lon": 23.1688,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T21:04:45+00:00",
+   "last_seen": "2026-11-07T00:04:41+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Białystok: brak prądu",
+   "snippet": "Czy w Białymstoku może zabraknąć energii elektrycznej? Zobacz najnowszy przegląd informacji z 6.11. Czy w Białymstoku może zabraknąć energii elektrycznej? Zobacz najnowszy przegląd informacji z 6.11 &",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Białystok Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNUURoSDVRajEwcE5TT2JLTXl5c3NlTUlMTi1WN0pvaVVDeVBWWU40QXZWenUzSVdpMFIyLUd2aXB3VXdERThFZlNrOFN3aXNGa1NuTV9zbG9yMjJTMVQ3bTZnMzliaVJ4bW8wbHpWYUtGR2h3aExhUXRDNk1IMmFDWWtvRjlTR1RtU01rY3hIcGN5cU85dDVLQnVQYW9zOEdpSUF3RU1ndlFPR2dUdUF0OUZIOGZBTkFtLWswUmFWY2NCQXRFOWItNGMyTQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Białymstoku przewidziano prace mogące wpłynąć na dostawy prądu? Zobacz szczegóły z 7.11",
+     "published": "2026-11-07T00:04:41+00:00"
+    },
+    {
+     "name": "Białystok Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNVGdaSklYRkE5SElFVTdBUEFQMDRiZTM3NXozbjVUNEZfSVB6U09VUFZieWhTellMclhkQVJ0N01QR2liY1hXUF9GZ09rLWRyNGhXTVlvU1RyVzZ3YUZ5dmdaeGNxbEhwYXh4S3FkNkx0SFd4bEs3aV9RZnoxMFg5dXlGOUZ1U1c4VEtPeFZ0NjVKRExfTHJxeVVCY244S1JTWG93VzhHR0FLSzJjekNtUlJ3?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Białymstoku może zabraknąć energii elektrycznej? Zobacz najnowszy przegląd informacji z 6.11",
+     "published": "2026-11-06T21:04:45+00:00"
+    }
+   ]
+  },
+  {
+   "id": "5571059fa364",
+   "type": "power",
+   "severity": 3,
+   "place": "Suwałki",
+   "powiat": "suwalski",
+   "powiat_slug": "suwalski",
+   "lat": 54.1118,
+   "lon": 22.9309,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T15:05:47+00:00",
+   "last_seen": "2026-11-06T15:05:47+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Suwałki: brak prądu",
+   "snippet": "Czy w Suwałkach istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11. Czy w Suwałkach istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11 &nb",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Suwałki Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOc3lncUVBdWU4cUJZcnhuN2V6XzVaY3dCSGxFTEx4UmxHb25kRHdGWFpVSVVvTm1Bb3dvclFKQXQ0blNwSGVKRUQydDhibnFIQ2ZGcDhPQVE1a0d6ZXNEMGlRdkJRUkVGVmxtcTlndXd1YVJWLUxNaHlnZzdkMFRmUlE2cXpyc0xLc09GVnd4SVVqVk8wV0xGSnBZM19wU255dkE?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Suwałkach istnieje zagrożenie utraty zasilania? Zobacz aktualne informacje dostępne na 7.11",
+     "published": "2026-11-06T15:05:47+00:00"
+    }
+   ]
+  },
+  {
+   "id": "4044439d5f5f",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T13:06:05+00:00",
+   "last_seen": "2026-11-06T13:06:05+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 6.11. Czy w Olsztynie przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 6.11 &nbsp;&nbsp; Olsz",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPWHdjYWcwZGp1ekh4OG5JSVR2RTdkMEI4dEVRQ0w5VXU4djR2Rkl2YWpiYnNJRTYyMzhmaVFzVzJwTkVWeEx0UFJoeERQRW5nRXE4X3Y0S0ZTV05ubGdCUldjX2FtZXowLUNMOHlJU3kyVTlMZU0yZVJpVzJPanVGMW9Kcmd5aWF5Q1l6OEFGR3pTYWRpU3FuUE5RTHEwM0diNEFzVmNpVTRKaHVOUHB2R1JpWGVEQ0c4TWNRbmMwNA?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 6.11",
+     "published": "2026-11-06T13:06:05+00:00"
+    }
+   ]
+  },
+  {
+   "id": "87f2343277da",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T03:04:56+00:00",
+   "last_seen": "2026-11-07T03:04:56+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11. Czy w Olsztynie mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11 &nbsp;&nbsp; Ol",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNTlJseFUzSmRITl9TRllsdDBvU0pzbjR2WWVmODJGd2ZibEt3OGFnRmZfWnBKMnQ3R0FmbzR5d1hpdGh3T2lUNDFZU2lSNm1hdC1GM1Y1UkdBVkdWNFFqUlR6OU5tNVcwZmpkdjd4S241SzVma0ZLV0s4dk1qNmFUTzlEZFpheWxZSjFueS0xdU9SVWl0SkFSUDRDVG9PdDIzUlJJWFVpQUF6UWJ6VUgtZlhR?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11",
+     "published": "2026-11-07T03:04:56+00:00"
+    }
+   ]
+  },
+  {
+   "id": "0bac2a34e614",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T21:05:09+00:00",
+   "last_seen": "2026-11-06T21:05:09+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11. Czy w Elblągu mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11 &nbsp;&nbsp; Elbląg",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOUmNSWmw0c0J4Tk1ENlNtRHV0QUczN2tPQmtnRHpyR0YyNW9SUl95cmVwa3hQeEp5NHpNVTFKVmh3QmxIdXlqNlZ4YlRhbTNhcE9EUENKRHpxNG1BUTBHS1JsU2hXT2pabkd1bm9BUE9EeFk0ZDh1ak9NenJINkpORU9rVGp1VU1NR0lkQXdSUlhDWDlyTUZ4SHVrTWlJQkQyakJreVRTT2RLZGpQd1dwU1N5ZlFjaGYxN2FOQnFXVGRCRklRNTNGOTVGTQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu mogą nastąpić nieplanowane przerwy w zasilaniu? Poznaj aktualne dane z 7.11",
+     "published": "2026-11-06T21:05:09+00:00"
+    }
+   ]
+  },
+  {
+   "id": "d8cdc59445fe",
+   "type": "disaster",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T15:43:08+00:00",
+   "last_seen": "2026-11-06T15:43:08+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: klęska żywiołowa",
+   "snippet": "Chcą zapobiec podtopieniom. Powstaje zbiornik retencyjny w Ełku. Chcą zapobiec podtopieniom. Powstaje zbiornik retencyjny w Ełku &nbsp;&nbsp; TVP Olsztyn",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "TVP Olsztyn",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQeHB6MmtLdUNTaDMtTUd0dXNfMFVUTk1xc0VUTEZFYlhRdGxfVTJBb1Z3eDJqNWE3eE5Fa3JDZWZBN1FEdldjalhnQXFIMjlKWGtfTlpDU3NKYVZYeEwtRnhhMGp2dVI4UlNkWkVxeEhoTmUzMFR0LVpObGZfY3BmOHV5QzRxOU82TFJlU1lFMEp1U0xMZ1JVOGhn?oc=5",
+     "kind": "media_local",
+     "title": "Chcą zapobiec podtopieniom. Powstaje zbiornik retencyjny w Ełku",
+     "published": "2026-11-06T15:43:08+00:00"
+    }
+   ]
+  },
+  {
+   "id": "34ecb95c4ae1",
+   "type": "epidemic",
+   "severity": 3,
+   "place": "Szczytno",
+   "powiat": "szczycieński",
+   "powiat_slug": "szczycienski",
+   "lat": 53.563,
+   "lon": 20.987,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T14:02:34+00:00",
+   "last_seen": "2026-11-06T14:02:34+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Szczytno: zagrożenie epidemiologiczne",
+   "snippet": "Woda w Czarnym Piecu nadal tylko po przegotowaniu. Sanepid wydał nowy komunikat. Woda w Czarnym Piecu nadal tylko po przegotowaniu. Sanepid wydał nowy komunikat &nbsp;&nbsp; Tygodnik Szczytno",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Tygodnik Szczytno",
+     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxORDBrRlZYZ08tVUdpZm1wTS01cFQ0MFgxN1Y4T2RMbzRfQXpqY3V5aTMtZXEwS20yNGZhWGcyZHdYZXFDZTdUN2ZnMy1XalU4a0pzUlVsTW1vd3ktTUxna3Q0a2JGd0JvM0pPUzRjOEY0Q2FxNG5kaGlvOU1BR0FFejh6SVU5ZllUWVJIa29qb25GemF4Z3pGRDlEMHhDU0JMQ0tVMWcxRTZPb05PX3k2RnkwUThfYmdzTWc?oc=5",
+     "kind": "media_local",
+     "title": "Woda w Czarnym Piecu nadal tylko po przegotowaniu. Sanepid wydał nowy komunikat",
+     "published": "2026-11-06T14:02:34+00:00"
+    }
+   ]
+  },
+  {
+   "id": "c3fcb53f7b5f",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat ciechanowski",
+   "powiat": "ciechanowski",
+   "powiat_slug": "ciechanowski",
+   "lat": 52.858,
+   "lon": 20.6066,
+   "radius_km": 18.4,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat ciechanowski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "6330c6641473",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat łosicki",
+   "powiat": "łosicki",
+   "powiat_slug": "losicki",
+   "lat": 52.2248,
+   "lon": 22.8407,
+   "radius_km": 15.7,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat łosicki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "38d2636395a9",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat mławski",
+   "powiat": "mławski",
+   "powiat_slug": "mlawski",
+   "lat": 53.0515,
+   "lon": 20.3635,
+   "radius_km": 19.4,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat mławski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "9c1580d148ab",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat płocki",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5501,
+   "lon": 19.8396,
+   "radius_km": 23.9,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat płocki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "9429a263139b",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat płoński",
+   "powiat": "płoński",
+   "powiat_slug": "plonski",
+   "lat": 52.6275,
+   "lon": 20.3545,
+   "radius_km": 20.9,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat płoński: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "18d35cc055db",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat pułtuski",
+   "powiat": "pułtuski",
+   "powiat_slug": "pultuski",
+   "lat": 52.6767,
+   "lon": 21.0421,
+   "radius_km": 16.2,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat pułtuski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "f35189bbf1d1",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat siedlecki",
+   "powiat": "siedlecki",
+   "powiat_slug": "siedlecki",
+   "lat": 52.174,
+   "lon": 22.3177,
+   "radius_km": 22.6,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat siedlecki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "80794886ccf5",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat sierpecki",
+   "powiat": "sierpecki",
+   "powiat_slug": "sierpecki",
+   "lat": 52.8292,
+   "lon": 19.6948,
+   "radius_km": 16.5,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat sierpecki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "a3e26b78ea69",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat sokołowski",
+   "powiat": "sokołowski",
+   "powiat_slug": "sokolowski",
+   "lat": 52.4914,
+   "lon": 22.2835,
+   "radius_km": 19.0,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat sokołowski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "6b179be3de68",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat węgrowski",
+   "powiat": "węgrowski",
+   "powiat_slug": "wegrowski",
+   "lat": 52.4596,
+   "lon": 21.8895,
+   "radius_km": 19.7,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat węgrowski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ecf2ba4a85b2",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat wyszkowski",
+   "powiat": "wyszkowski",
+   "powiat_slug": "wyszkowski",
+   "lat": 52.6465,
+   "lon": 21.4677,
+   "radius_km": 16.7,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat wyszkowski: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "09d2a2e64a61",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat żuromiński",
+   "powiat": "żuromiński",
+   "powiat_slug": "zurominski",
+   "lat": 53.0292,
+   "lon": 19.906,
+   "radius_km": 16.0,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat żuromiński: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "7b8ded3ba972",
+   "type": "weather",
+   "severity": 2,
+   "place": "m. Płock",
+   "powiat": "Płock",
+   "powiat_slug": "plock",
+   "lat": 52.5375,
+   "lon": 19.7016,
+   "radius_km": 5.3,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "m. Płock: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "545751d7e205",
+   "type": "weather",
+   "severity": 2,
+   "place": "m. Siedlce",
+   "powiat": "Siedlce",
+   "powiat_slug": "siedlce",
+   "lat": 52.1651,
+   "lon": 22.2712,
+   "radius_km": 3.2,
+   "valid_to": "2026-11-08T11:00:00+01:00",
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "m. Siedlce: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokalnie mgły mogą osadzać szadź, powodując śliskość nawierzchni dróg i chodników.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m. Lokal",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ad3df3d3ace4",
+   "type": "disaster",
+   "severity": 2,
+   "place": "woj. podlaskie",
+   "powiat": "podlaskie",
+   "powiat_slug": "podlaskie",
+   "lat": 53.2,
+   "lon": 22.9,
+   "radius_km": 60.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T14:05:39.838679+00:00",
+   "last_seen": "2026-11-07T14:05:39.838679+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "woj. podlaskie: Susza hydrologiczna, stopień -1",
+   "snippet": "podlaskie, Bug, susza hydrologiczna",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia hydro",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "podlaskie, Bug, susza hydrologiczna",
+     "published": "2026-11-07T14:05:39.838679+00:00"
+    }
+   ]
+  },
+  {
+   "id": "307eefc74042",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Szczytno",
+   "powiat": "szczycieński",
+   "powiat_slug": "szczycienski",
+   "lat": 53.563,
+   "lon": 20.987,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-07T00:54:12+00:00",
+   "last_seen": "2026-11-07T00:54:12+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Szczytno: klęska żywiołowa",
+   "snippet": "Pożar domu wielorodzinnego w Wielbarku. Sąsiad: „Usłyszałem coś jak wystrzał”. Pożar domu wielorodzinnego w Wielbarku. Sąsiad: „Usłyszałem coś jak wystrzał” &nbsp;&nbsp; Tygodnik Szczytno",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Tygodnik Szczytno",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNMkxsd3hmRmQ3Z3g0OHFjbk1DcWRHUnktS1RmazE1MXdhR092eXQxakhtNTg4bmV6V2ozNTVPX195eWpTRmlZSHBaSWRmdmRYN3UyUEtMTGtVWUpicVBWRmN2VXdMQ3dEXzJmNmtsbjJCM1czbzhRaklQWkJ3WTNhaG1nVG80dklyekkyYmlOdk1YaEZYLXFETFhNZzZCUVFGUUh4WjR0RXdwWVlodHpaUm9oaw?oc=5",
+     "kind": "media_local",
+     "title": "Pożar domu wielorodzinnego w Wielbarku. Sąsiad: „Usłyszałem coś jak wystrzał”",
+     "published": "2026-11-07T00:54:12+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ccfce7f8b9d0",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Wysokie Mazowieckie",
+   "powiat": "wysokomazowiecki",
+   "powiat_slug": "wysokomazowiecki",
+   "lat": 52.918,
+   "lon": 22.515,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-06T11:19:04+00:00",
+   "last_seen": "2026-11-06T11:19:04+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Wysokie Mazowieckie: klęska żywiołowa",
+   "snippet": "Nocny pożar domu w Wysokiem Mazowieckiem. Trzy osoby w szpitalu. Nocny pożar domu w Wysokiem Mazowieckiem. Trzy osoby w szpitalu &nbsp;&nbsp; Podlaskie TV",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Podlaskie TV",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOZFhON21WbWRNNGRsZVB3VkUwbHpEam5OdHRsMU84ZGNnVElnNTBBcld1RVpNSE1XX01hUmZqSGxselBsRmtQSjRhQVZqQURsWjV1TUdsY0gwcTBiV1VmTkU4dUY3bVpDcTUtUFJKNmh2WGczUElxc1Y5WjBjR2Vnb2Q1MjU0UUZSZWhFNw?oc=5",
+     "kind": "media_local",
+     "title": "Nocny pożar domu w Wysokiem Mazowieckiem. Trzy osoby w szpitalu",
+     "published": "2026-11-06T11:19:04+00:00"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "weather": "good",
+  "disaster": "partial",
+  "power": "partial",
+  "water": "partial",
+  "infrastructure": "weak",
+  "epidemic": "weak",
+  "unrest": "weak",
+  "shortage": "weak",
+  "power_live": false
+ },
+ "source_status": {
+  "imgw_meteo": "ok (14)",
+  "imgw_hydro": "ok (1)",
+  "google_news": "ok (116)",
+  "energa_biezace": "wyłączone",
+  "pge_bialystok": "wyłączone",
+  "shelters": "bez zmian (25978 punktów, stan 2026-10-26)",
+  "poi": "bez zmian (pharmacy: 2640, fuel: 1810, hospital: 217, school: 3616, bridge: 1087, military: 264)"
+ },
+ "labels": {
+  "power": "brak prądu",
+  "water": "awaria wody",
+  "weather": "zagrożenie pogodowe",
+  "disaster": "klęska żywiołowa",
+  "infrastructure": "awaria infrastruktury",
+  "epidemic": "zagrożenie epidemiologiczne",
+  "unrest": "niepokoje",
+  "shortage": "braki w sklepach",
+  "sabotage": "podejrzenie sabotażu",
+  "other": "zdarzenie"
+ }
+}
