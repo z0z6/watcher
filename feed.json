@@ -1,0 +1,812 @@
+{
+ "generated_at": "2026-11-14T14:32:07.435372+00:00",
+ "events": [
+  {
+   "id": "4ef80ece3422",
+   "type": "infrastructure",
+   "severity": 3,
+   "place": "Cała Polska",
+   "powiat": "ogólnokrajowo",
+   "powiat_slug": "ogolnokrajowo",
+   "lat": 52.0,
+   "lon": 19.4,
+   "radius_km": 400.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T08:00:00+00:00",
+   "last_seen": "2026-11-13T08:00:00+00:00",
+   "credibility": 70,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Cała Polska: awaria infrastruktury",
+   "snippet": "Udaremniono cyberatak na ePUAP. Trwa przerwa w dostępie do systemu. Udaremniono cyberatak na ePUAP. Trwa przerwa w dostępie do systemu &nbsp;&nbsp; | Serwis Samorządowy PAP",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "| Serwis Samorządowy PAP",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQd1Vyamh4cG5nRkkzcDU1b2syc2dRY19lWU94VDN4UmkxMElyeWZJa1BmdjRZRlZXbHgxUVFTTE5Hc0tVdVpWeVZoWnRIOGRMdFlXbTRDYlJxcFh6THVWaW1oakNNekVpd2ozRlI3RzVnQWc5TXJHODZBWlBUYXdxYWJ3NXBZT1d2dDNiWUZzVm1EYTRQR2hnd2J4UUR4aVZuOUtjYjJDTkxBLWs?oc=5",
+     "kind": "media_national",
+     "title": "Udaremniono cyberatak na ePUAP. Trwa przerwa w dostępie do systemu",
+     "published": "2026-11-13T08:00:00+00:00"
+    }
+   ]
+  },
+  {
+   "id": "171dede9b92b",
+   "type": "power",
+   "severity": 3,
+   "place": "Płońsk",
+   "powiat": "płoński",
+   "powiat_slug": "plonski",
+   "lat": 52.6226,
+   "lon": 20.3783,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T17:08:34+00:00",
+   "last_seen": "2026-11-13T17:08:34+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płońsk: brak prądu",
+   "snippet": "Czy w Płońsku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11. Czy w Płońsku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11 &nbsp;&nbsp; Płońsk Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płońsk Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQN0RaX2JpV1gwcmoyellSOE1yWWVUME5jRG0zQlNsSWFCWTl0NGdfWnpSRjBtdHpVMGNESHBYV3l2UmxOR3llV3pQcnJrX3JQRERWUTBxMGd5U0FuNGxtTVBaTk95ZTZiQ0hQYWpUWkRFeXFWOHdRamRBbC1hQzVodkdMQUhTVnlpTlUyZkR2bDJYMGcwVy1YTE1XTmNBRTV3UHRDN0lscDZ4WGxGM3ZReGplM0dxQUktVlNMeHdEaktCS0thcHlIb0NOUUs?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płońsku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11",
+     "published": "2026-11-13T17:08:34+00:00"
+    }
+   ]
+  },
+  {
+   "id": "e90be6be02cb",
+   "type": "power",
+   "severity": 3,
+   "place": "Ostrołęka",
+   "powiat": "ostrołęcki",
+   "powiat_slug": "ostrolecki",
+   "lat": 53.084,
+   "lon": 21.574,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T07:05:43+00:00",
+   "last_seen": "2026-11-14T07:05:43+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrołęka: brak prądu",
+   "snippet": "Czy w Ostrołęce dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 14.11. Czy w Ostrołęce dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 14.11 &nbsp;&nbsp; Ostrołęka Nasze ",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ostrołęka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPaUNXZDRQTUlRTlNxdVBKYkQ3eGFpblotTlVFU2NGdmx4dV9aWXNyY2xlaWNPQ0J5MlVBV2NjVDVndkNNYVhPTUxpNVhFYk9GSFFNR3VMRXBNM3E1VlZRMjhYemxxU2xpbXk2Z3h0cVBTeGlybWdBSXpHalpsTmFsUVFkZWc5T1dKUEFCUHJLb0FFcDZ0SDJ5bDZtZXdPTENLdWpadVA2OEdFOENRaWF6V3pIaG44blVXWFV5WTdzbS1pTVY4dXd1THlDdXhha0R1R1gw?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrołęce dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 14.11",
+     "published": "2026-11-14T07:05:43+00:00"
+    }
+   ]
+  },
+  {
+   "id": "b5bdcf7d2fe3",
+   "type": "epidemic",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T13:38:38+00:00",
+   "last_seen": "2026-11-13T13:38:38+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: zagrożenie epidemiologiczne",
+   "snippet": "Bakterie coli w wodzie! Sanepid ostrzega mieszkańców gminy Słupno. Nie wolno jej pić ani używać do mycia!. Bakterie coli w wodzie! Sanepid ostrzega mieszkańców gminy Słupno. Nie wolno jej pić ani używ",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Panorama Płock",
+     "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPRkFoQnJ5bUpoUnFjYm04dk0zZ2U2ZWU4OTZPTXA1bnZud3NkeXBQUjdCREtIQjNBQ0lQWlZpNXVudUI5Y2UwTUpMNzB2MUd1MzBFLXd3enU2dUo0dHB6dHR2V0lVUzNQMm12eWV4QzlWakw2cms0TE1kdldkSUZrV3lXQUNwYVl3bFRoMnZpN2JIZU56RTd5aGhoN2tYcURBQ0hRcVRHU0dlcUFuQlZXb2NSMU5rLUp6TW5oRWZlZWtiNnUxa0pKRzNlNGFDS3VTRUN5bHFWTmVzNE56Rnc?oc=5",
+     "kind": "media_local",
+     "title": "Bakterie coli w wodzie! Sanepid ostrzega mieszkańców gminy Słupno. Nie wolno jej pić ani używać do mycia!",
+     "published": "2026-11-13T13:38:38+00:00"
+    }
+   ]
+  },
+  {
+   "id": "d257fc0871f1",
+   "type": "infrastructure",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T10:12:01+00:00",
+   "last_seen": "2026-11-13T10:12:01+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: awaria infrastruktury",
+   "snippet": "Globalna awaria usług Microsoftu paraliżuje pracę w Płocku. Kiedy naprawią Outlooka?. Globalna awaria usług Microsoftu paraliżuje pracę w Płocku. Kiedy naprawią Outlooka? &nbsp;&nbsp; Portal Płock",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Portal Płock",
+     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPMWxVOGc5eWdxSWZKbGZGaHNaTUt6eHF6T29RUjA0eUp4ZmxvRUhFTkpWejQ3VENCWk5zdUExVS1rVkxUQTdpV2JpUDNhcVZucTBPbVFiV3BxUDBmQ3hNM0NSbXdpZkp2RS1HNVdua2xkeUpkdnQ1a19tNkRDQndDNVVzTFRQTWpHOG13TzJtQlowc05nektwcExEdkVEVXNHVHFRdVpJZnZiODdEbGJ5YUVyYzgwMVVrSkh3ZFJvQmhWTzRkTHdaZjNWSkluQVo4TW5j?oc=5",
+     "kind": "media_local",
+     "title": "Globalna awaria usług Microsoftu paraliżuje pracę w Płocku. Kiedy naprawią Outlooka?",
+     "published": "2026-11-13T10:12:01+00:00"
+    }
+   ]
+  },
+  {
+   "id": "b79c1617b791",
+   "type": "power",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T01:05:46+00:00",
+   "last_seen": "2026-11-14T01:05:46+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: brak prądu",
+   "snippet": "Czy w Płocku grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 14.11. Czy w Płocku grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 14.11 &nbsp;&nbsp; Płock Nasze Mias",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płock Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPZU5oLU1HT2xzc1NjNGNzcDBjT3c1WktJVTdBZ0NKdEJVVHVlSndoc0xhRVVVX0k1a0NVMjd0V1V3WWptLVpsWnFTVk9iR19XU1ZDLVdqTnVUc3NCamFLaFFYbDhSd0hybGxNVTAzQ2dJdkR4UDgzQVo5NUZHSmxWakRpUHprNTlObFNCbUM5RjBHM1pqTTM1bHgydFBqdjI2bWZ6bHRrTTBOeG5LWmNyaS1STlFOR193TTV3bDBDSXQ2ZnlKWGxxbmp3QzhLQQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płocku grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 14.11",
+     "published": "2026-11-14T01:05:46+00:00"
+    }
+   ]
+  },
+  {
+   "id": "27c54b4025b4",
+   "type": "power",
+   "severity": 3,
+   "place": "Siedlce",
+   "powiat": "siedlecki",
+   "powiat_slug": "siedlecki",
+   "lat": 52.1676,
+   "lon": 22.2902,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T10:06:20+00:00",
+   "last_seen": "2026-11-13T10:06:20+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Siedlce: brak prądu",
+   "snippet": "Czy w Siedlcach mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 13.11. Czy w Siedlcach mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 13.11 &nbsp;&nbsp; Siedlce Nasze ",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Siedlce Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxONWl3dFp3TXNOZ2c1djdmSnlrWlN4MG9IcnVDNC1VRmlnTDQzcWc4TWRBbndDSl9SLU1LUHhIUmxxOEhrM1lQaU5aWFpBQzlGTGhDU3lfckN3SVZEOVNUU1dHeVhZWUtEdmMwS01FbGZqXzhteDlfOHdsOXlDMHZyLW5WUEQ3ck9BdE1zRThtdE1vbjZwQlNGQjhPbkFIblo0TGhsZlh2TmdaLTVTeEc5Wlo2UFpCZWZHMk1hdjNxREVkNE4xQ1dj?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Siedlcach mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 13.11",
+     "published": "2026-11-13T10:06:20+00:00"
+    }
+   ]
+  },
+  {
+   "id": "826d746f4a70",
+   "type": "epidemic",
+   "severity": 3,
+   "place": "Białystok",
+   "powiat": "białostocki",
+   "powiat_slug": "bialostocki",
+   "lat": 53.1325,
+   "lon": 23.1688,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T17:00:00+00:00",
+   "last_seen": "2026-11-13T17:00:00+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Białystok: zagrożenie epidemiologiczne",
+   "snippet": "Skażona woda w przedszkolu w Grabówce. Sanepid wydał komunikat. Skażona woda w przedszkolu w Grabówce. Sanepid wydał komunikat &nbsp;&nbsp; Białystok Online",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Białystok Online",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNV0NxSDhEQ3dTdkVmYXFjb2FqbHZFMDNRcHBqQXd6dEFUXzh4TlFFVTNGdjFNN3RwbXRLZF9oS2Z6b3loQ19fb2w3VjhjUFpVX1NmRUVLZ2RUbTkzQ0ZzenlldWhLeXBEZHU2MEU1ZTdCS3lmZkd4cEhXcnh1SHRpYVB1Y1JUNXd1TjFmWnZ5U3N0MzhsQkd0NkNrUElCYlp3OGcwYUhsaFhlVXlEbnA5RjNjWkFaUG8?oc=5",
+     "kind": "media_local",
+     "title": "Skażona woda w przedszkolu w Grabówce. Sanepid wydał komunikat",
+     "published": "2026-11-13T17:00:00+00:00"
+    }
+   ]
+  },
+  {
+   "id": "19183426dc0a",
+   "type": "power",
+   "severity": 3,
+   "place": "Łomża",
+   "powiat": "łomżyński",
+   "powiat_slug": "lomzynski",
+   "lat": 53.178,
+   "lon": 22.059,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T08:07:07+00:00",
+   "last_seen": "2026-11-13T08:07:07+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Łomża: brak prądu",
+   "snippet": "Czy w Łomży przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 13.11. Czy w Łomży przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 13.11 &nbsp;&nbsp; Łomża Nasz",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Łomża Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQN19RekZHc2hBQ2xib3oyYXltdndxdWc5Rl91ZTV5dHNYc1VYamF3NlJxT1BaWnY4NUdKbFpuRVluRHloSnRrYWRTVEZvM18zS2NCSXJwTlUxUXFjZElEN3FDUUphWldlMFA1Y3h0NlcyVGxnRVRFYWxYdTFBZ05wNXY4dW00VHNDX2ctaFVITU00NDFKVWdtM3UyM0pCcGpHaXk0QzUwbHFCX3dIUlJ3ZFFBTmF0d3Vk?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Łomży przewidywane są wyłączenia energii elektrycznej? Sprawdź szczegóły na 13.11",
+     "published": "2026-11-13T08:07:07+00:00"
+    }
+   ]
+  },
+  {
+   "id": "91b7fcaad6de",
+   "type": "power",
+   "severity": 3,
+   "place": "Łomża",
+   "powiat": "łomżyński",
+   "powiat_slug": "lomzynski",
+   "lat": 53.178,
+   "lon": 22.059,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T00:12:28+00:00",
+   "last_seen": "2026-11-14T00:12:28+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Łomża: brak prądu",
+   "snippet": "Czy w Łomży mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 14.11. Czy w Łomży mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 14.11 &nbsp;&nbsp; Łomża Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Łomża Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQVTNiY3FIZlR6WENJS29KbDh2TjlvMUpBdXV3aF9XSHFMa0FuTWtIOEdMbk14Q2x5QXFUekV1MUlZc1FZcDgxcXo3d2dTclpEazk2Mnk4ak1vd1RDSDFDWTNoX0dKU1RTR1JRMnY3ODBjZ3pndDRTN1JfaFZpRGU5NWM5dUJPQjI5UGcyR09QYUFTVGFZcmE3TjFqdWZvcHRXU3hncW1zMXVWcHNlZkxUbURLbXkyUU5PVENCV3RvWGNRVndzckUyS2FjcnU?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Łomży mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 14.11",
+     "published": "2026-11-14T00:12:28+00:00"
+    }
+   ]
+  },
+  {
+   "id": "13ce8677bad2",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T12:06:41+00:00",
+   "last_seen": "2026-11-13T12:06:41+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 13.11. Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 13.11 &nbsp;&nbsp; Ol",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNT0F3ZVhmYW1hbzl0a1BMak9oYnNONV96XzhtQnhRdVdDVkxUd0ROSWFPN0FQNDJ2OXdKMGo2Ui1BUnJXTHdPU2ZQNGdXbktqd0dfclFhTW1nOHNZTlEwVUw1RVo3aG1EdlZDeHVNa3hGQnRZUmtmWW9PVlFDSFl2M2p4eHNQRWdrdVUzZGVuUkRkNm5wcmx2M29Ja1Y0S0pUT1BEZFhLd3VWQzRoZi1XME1kUnViN3M?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 13.11",
+     "published": "2026-11-13T12:06:41+00:00"
+    }
+   ]
+  },
+  {
+   "id": "0ee8f8b40c6f",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T05:05:07+00:00",
+   "last_seen": "2026-11-14T05:05:07+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 14.11. Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 14.11 &nbsp;&nbsp; Ol",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNYXBVYkdJOTBzaXYyaTlsZm1Ia1BGbHFBMEdVMWVGS0tQQ0dWbUtMU0VpMVJCcjJEaWNFUHI2MHU1M2FoYTktNkJ6aVVRMEpKZWFfTWs4RVNHQlRPenBVQnFuZkNJNFpHZi1wdEN6SEZUSVVXMWh1Sm0tbzgxdGU1SUJQX2VfcnNjRTNSY01BZ3A1WmVwRUZTX1JWNmhCUkhmRW0xclNZdHlERE83ZFBBTnpNSjVkWG9QSk9Mb2tDMllrcVpXT25MeXMySnJxQUNLN3BDMA?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 14.11",
+     "published": "2026-11-14T05:05:07+00:00"
+    }
+   ]
+  },
+  {
+   "id": "68d4831d723e",
+   "type": "infrastructure",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T14:22:58+00:00",
+   "last_seen": "2026-11-13T14:22:58+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: awaria infrastruktury",
+   "snippet": "Globalna awaria usług Microsoftu. Problemy odczuł także UWM. Globalna awaria usług Microsoftu. Problemy odczuł także UWM &nbsp;&nbsp; Radio Olsztyn",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Radio Olsztyn",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNbVAtSVlFY3B4SHM1OUV3WGhrM19MdGoyc2w2U2hyU3FibnBEWnJjbDYyZTRmWm1rNWt5bXlFbjdlV08zOWkzVmRBRHFjQkVSZjhsdzdZQmxtZGdjSkpacXJCSmJXMlBaT3ZjcDdaSGFNWHNnZ0dRNmVyYWJSUGJDNENwbXZ1YjE2eXJsWkpwYWw4XzJCS3c?oc=5",
+     "kind": "media_local",
+     "title": "Globalna awaria usług Microsoftu. Problemy odczuł także UWM",
+     "published": "2026-11-13T14:22:58+00:00"
+    }
+   ]
+  },
+  {
+   "id": "dd643457ddf7",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T05:05:10+00:00",
+   "last_seen": "2026-11-13T05:05:10+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu może braknąć prądu? Sprawdź dane z 13.11. Czy w Elblągu może braknąć prądu? Sprawdź dane z 13.11 &nbsp;&nbsp; Elbląg Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOQW01Rmt5M29YS3RGa2VZTDR2WUY4X1BQd3pGWVhvX29LeDBZRExWWXdXRUVoLXlydHB5Yjk2RWF0WWhLUlZCRm9HaTFSNnZtblphVV9FTV9KVVAwdlMyY3NsOUV2OXVITDI3UDZwc3NsdjJRY1FXb0dFVWkxbTlvTUVqdGE3U0JfNVRJTzdubmJJVFpKdTlpdlJDX1hINUlYRkFRNGNGaFNETmhJTGc5cUVWVGFVTS14R08yLQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu może braknąć prądu? Sprawdź dane z 13.11",
+     "published": "2026-11-13T05:05:10+00:00"
+    }
+   ]
+  },
+  {
+   "id": "dd643457ddf7",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T17:05:25+00:00",
+   "last_seen": "2026-11-13T17:05:25+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11. Czy w Elblągu może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11 &nbsp;&nbsp; Elbląg Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQNnBoLWM4c3ZfWnhyV0kxTjZUQmpiOTN2dFU0Ry1uN28yZkpkYjk1N1lTLUw3MXJMdDZvTlpGQ0Y2VHdUQ0R0TVZpTnI0YW9JLUhIYzBSODIxWU5KSTNkOExfNHJtdDZOVFdza2M1a1BabXFWSGJyZ1B5NVI5LWNtX3JrYXNzTVI5emlUQmo3QnkyWE5MU2l4aGlpNHhOazMwUmxZbEFXZDN2dw?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 13.11",
+     "published": "2026-11-13T17:05:25+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ca9c20ecf467",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T01:05:44+00:00",
+   "last_seen": "2026-11-14T01:05:44+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 14.11. Czy w Elblągu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 14.11 &nbsp;&nbsp; Elbląg Nas",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPSDVOaWZjN3dRczRwZWxlNHdObldGeU1IMEx1ZEZ0RS1Nd0dWTzgyRnhLQnJEd01ISDVMbjBVbVNwRDFQVDFmMmphZ3JWeEZYZmVveU11b3E5NndBZ2VwRXp2Z2lXaGJPQUJwcjZZblpxbkxZcXpzWk8zR3BqYkYzb3dvbEdFRHM5RnNBTzRyYVFFZlk3YzE3YXdUY3lWaEE?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 14.11",
+     "published": "2026-11-14T01:05:44+00:00"
+    }
+   ]
+  },
+  {
+   "id": "07344743205b",
+   "type": "power",
+   "severity": 3,
+   "place": "Grajewo",
+   "powiat": "grajewski",
+   "powiat_slug": "grajewski",
+   "lat": 53.6481,
+   "lon": 22.4547,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T08:51:44+00:00",
+   "last_seen": "2026-11-14T08:51:44+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Grajewo: brak prądu",
+   "snippet": "Mlekpol. Jak odpady zamieniają się w prąd i ciepło? - e-Grajewo. Mlekpol. Jak odpady zamieniają się w prąd i ciepło? &nbsp;&nbsp; e-Grajewo",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "e-Grajewo",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPQUVhejNNaHdlSEE3cHJpaVhPZE9nSklFTWE0S1FzMTJ4NzVEMFpEZmh4RGl0VkJ3MkJaV01XYVFNb3JVU2U2ekswZXVXNTY4R2xjUVRlYTdQUnItMmhBYkszdE9YVGRIc3RKOVZCeEI3UURFT3p3eWVPQ1V5WkVhMmVXampmQmdtcjVsZkpBRXpEdkM4YzFN?oc=5",
+     "kind": "media_local",
+     "title": "Mlekpol. Jak odpady zamieniają się w prąd i ciepło? - e-Grajewo",
+     "published": "2026-11-14T08:51:44+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ebf9400c21b3",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat płocki",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5501,
+   "lon": 19.8396,
+   "radius_km": 23.9,
+   "valid_to": "2026-11-15T08:00:00+01:00",
+   "first_seen": "2026-11-14T14:32:07.435372+00:00",
+   "last_seen": "2026-11-14T14:32:07.435372+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat płocki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+     "published": "2026-11-14T14:32:07.435372+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ad365395684a",
+   "type": "weather",
+   "severity": 2,
+   "place": "powiat sierpecki",
+   "powiat": "sierpecki",
+   "powiat_slug": "sierpecki",
+   "lat": 52.8292,
+   "lon": 19.6948,
+   "radius_km": 16.5,
+   "valid_to": "2026-11-15T08:00:00+01:00",
+   "first_seen": "2026-11-14T14:32:07.435372+00:00",
+   "last_seen": "2026-11-14T14:32:07.435372+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "powiat sierpecki: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+     "published": "2026-11-14T14:32:07.435372+00:00"
+    }
+   ]
+  },
+  {
+   "id": "b814af9f57a2",
+   "type": "weather",
+   "severity": 2,
+   "place": "m. Płock",
+   "powiat": "Płock",
+   "powiat_slug": "plock",
+   "lat": 52.5375,
+   "lon": 19.7016,
+   "radius_km": 5.3,
+   "valid_to": "2026-11-15T08:00:00+01:00",
+   "first_seen": "2026-11-14T14:32:07.435372+00:00",
+   "last_seen": "2026-11-14T14:32:07.435372+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "m. Płock: Gęsta mgła, stopień 1",
+   "snippet": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia meteo",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "Prognozuje się gęste mgły, w zasięgu których widzialność może miejscami wynosić poniżej 200 m.",
+     "published": "2026-11-14T14:32:07.435372+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ad3df3d3ace4",
+   "type": "disaster",
+   "severity": 2,
+   "place": "woj. podlaskie",
+   "powiat": "podlaskie",
+   "powiat_slug": "podlaskie",
+   "lat": 53.2,
+   "lon": 22.9,
+   "radius_km": 60.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T14:32:07.435372+00:00",
+   "last_seen": "2026-11-14T14:32:07.435372+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "woj. podlaskie: Susza hydrologiczna, stopień -1",
+   "snippet": "podlaskie, Bug, susza hydrologiczna",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia hydro",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "podlaskie, Bug, susza hydrologiczna",
+     "published": "2026-11-14T14:32:07.435372+00:00"
+    }
+   ]
+  },
+  {
+   "id": "66638ced635a",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Ostrołęka",
+   "powiat": "ostrołęcki",
+   "powiat_slug": "ostrolecki",
+   "lat": 53.084,
+   "lon": 21.574,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-13T05:21:00+00:00",
+   "last_seen": "2026-11-13T05:21:00+00:00",
+   "credibility": 70,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrołęka: klęska żywiołowa",
+   "snippet": "Ostrołęka: Groził w komentarzu pod artykułem, że wywoła pożar budynku. Ostrołęka: Groził w komentarzu pod artykułem, że wywoła pożar budynku &nbsp;&nbsp; WP",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "WP",
+     "url": "https://news.google.com/rss/articles/CBMi6wFBVV95cUxNb0ZKVzNuTkhTeHVXeVFoRmZCdFVEYnFXUmM5c1poNVNOMXgzX2tzaHFIcmFUa1gwTldMczBDN3ZZTlBDOFBLTHhtNmtoQ0dONWFKVVZxOXU3ck9uWnlDR2JGQ3RYQXlhZDZFdDVHeFphNnZ0LVFCaTRPRUJvaWNUdkpFX2JFZGNzenFKXzMtWXl0OTQxYTNnQ2xkeS00dWtIMUl3OVJ0ZXc5VS0ybXBkWTVldDl3M09jeWt6OGpobndQRlp4dGdKLW1YU0w4c1FZVmxIT205alJHS1hrNHdhOVVHQy1XbTQ3M2c4?oc=5",
+     "kind": "media_national",
+     "title": "Ostrołęka: Groził w komentarzu pod artykułem, że wywoła pożar budynku",
+     "published": "2026-11-13T05:21:00+00:00"
+    }
+   ]
+  },
+  {
+   "id": "665d521800d4",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Mława",
+   "powiat": "mławski",
+   "powiat_slug": "mlawski",
+   "lat": 53.1126,
+   "lon": 20.3841,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T06:52:04+00:00",
+   "last_seen": "2026-11-14T06:52:04+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Mława: klęska żywiołowa",
+   "snippet": "Pożar stodoły w Nosarzewie Polnym. Pożar stodoły w Nosarzewie Polnym &nbsp;&nbsp; Codziennik mławski",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Codziennik mławski",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5KX2Q0S2VXNkFIM0c4SzBGNERsdFM3ZVgyTFhKRDVfc2ZJazYyeGx3WW9TQlZ4ZXR5Y2dRbWFWNTVJVFpjNHQ0S3NjYl9mNHY1c01QQTNZUG9nMmlnUDNfc2lReGFPaGdTTnpTQUl1ZzZFRjNKLTNzU3ZtRVo4bFE?oc=5",
+     "kind": "media_local",
+     "title": "Pożar stodoły w Nosarzewie Polnym",
+     "published": "2026-11-14T06:52:04+00:00"
+    }
+   ]
+  },
+  {
+   "id": "d773577b54ae",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Ostrów Mazowiecka",
+   "powiat": "ostrowski",
+   "powiat_slug": "ostrowski",
+   "lat": 52.8003,
+   "lon": 21.89,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T07:27:00+00:00",
+   "last_seen": "2026-11-14T07:27:00+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrów Mazowiecka: klęska żywiołowa",
+   "snippet": "Nocna akcja strażaków w Złotorii. Doszło do pożaru sadzy w kominie (zdjęcia) - OPI Ostrowski Portal Internetowy. Nocna akcja strażaków w Złotorii. Doszło do pożaru sadzy w kominie (zdjęcia) &nbsp;&nbs",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "OPI Ostrowski Portal Internetowy - Ostrów Mazowiecka",
+     "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9wTVRPb0JFUmVQYlNYZy02bUdxQ0tyQkcyYmhqUlZaVEw4SWF5OE9IRWdya1Rpc3lRN2NZZFpQYVhCSDJSbTRXd2s5U29lb2VaSE5Nd2tn?oc=5",
+     "kind": "media_local",
+     "title": "Nocna akcja strażaków w Złotorii. Doszło do pożaru sadzy w kominie (zdjęcia) - OPI Ostrowski Portal Internetowy",
+     "published": "2026-11-14T07:27:00+00:00"
+    }
+   ]
+  },
+  {
+   "id": "e7ff66d597dd",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Raciąż",
+   "powiat": "płoński",
+   "powiat_slug": "plonski",
+   "lat": 52.7728,
+   "lon": 20.1264,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-14T07:07:00+00:00",
+   "last_seen": "2026-11-14T07:07:00+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Raciąż: klęska żywiołowa",
+   "snippet": "Pożar sadzy w kominie. Policjanci z Raciąża uratowali mieszkańców przed niebezpieczeństwem. Pożar sadzy w kominie. Policjanci z Raciąża uratowali mieszkańców przed niebezpieczeństwem &nbsp;&nbsp; Pano",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Panorama Płock",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPaUNPX05vQTVONGFmWFlWdWhqclJKMWp6ODhqRURxRnJlWVg2TXVDM3pLc2NXV0dRa1pUTU9qek9rRTgtbkFSNmpTYkw2c3UzTWtLS3lrRGw3d1BhUmg3T3BrN2FCamhIWG5rc2kzUG52TXpsLUp4R3lCaTZha3NWWmQxUHdPc2JIbl9MRDd1bjdqamVJVnJoZkNhM3dTZklxWi1yc1l6NWVaSThNNUUtR3hieFE0LWNHTzFIMi01M2xILXI5eURYSWRIVVc?oc=5",
+     "kind": "media_local",
+     "title": "Pożar sadzy w kominie. Policjanci z Raciąża uratowali mieszkańców przed niebezpieczeństwem",
+     "published": "2026-11-14T07:07:00+00:00"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "weather": "good",
+  "disaster": "partial",
+  "power": "partial",
+  "water": "partial",
+  "infrastructure": "weak",
+  "epidemic": "weak",
+  "unrest": "weak",
+  "shortage": "weak",
+  "power_live": false
+ },
+ "source_status": {
+  "imgw_meteo": "ok (3)",
+  "imgw_hydro": "ok (1)",
+  "google_news": "ok (132)",
+  "energa_biezace": "wyłączone",
+  "pge_bialystok": "wyłączone",
+  "shelters": "bez zmian (26078 punktów, stan 2026-11-10)",
+  "poi": "bez zmian (pharmacy: 2639, fuel: 1812, hospital: 218, school: 3615, bridge: 1087, military: 264)"
+ },
+ "labels": {
+  "power": "brak prądu",
+  "water": "awaria wody",
+  "weather": "zagrożenie pogodowe",
+  "disaster": "klęska żywiołowa",
+  "infrastructure": "awaria infrastruktury",
+  "epidemic": "zagrożenie epidemiologiczne",
+  "unrest": "niepokoje",
+  "shortage": "braki w sklepach",
+  "sabotage": "podejrzenie sabotażu",
+  "other": "zdarzenie"
+ }
+}
