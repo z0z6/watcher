@@ -1,0 +1,668 @@
+{
+ "generated_at": "2026-11-21T11:36:09.328950+00:00",
+ "events": [
+  {
+   "id": "4cb281a23d06",
+   "type": "power",
+   "severity": 3,
+   "place": "Ciechanów",
+   "powiat": "ciechanowski",
+   "powiat_slug": "ciechanowski",
+   "lat": 52.8817,
+   "lon": 20.6193,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T09:08:24+00:00",
+   "last_seen": "2026-11-20T09:08:24+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ciechanów: brak prądu",
+   "snippet": "Czy w Ciechanowie zapowiedziano przerwy w zasilaniu? Przeczytaj najnowsze komunikaty z 20.11. Czy w Ciechanowie zapowiedziano przerwy w zasilaniu? Przeczytaj najnowsze komunikaty z 20.11 &nbsp;&nbsp; ",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ciechanów Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxObFVEaTVpd1NySXlNZWc4X3AzVEJseDZWd2RpOEo2QS1ybGgxX2pkaTd5SFpndWlzdXRwdkFhREY2R1UtSTlCNXY3MVU1RWNXS0p0UXBXOS1seW1acU4xd1c5WjJvLS1SclVGX0NHaWdzT0x1REl6S3VremFpdjl5MHhsUERieE9BRWlLOW9oLXJIdkROLUVneGtVb1B2bmpreEZfaUNPLWJYU1VKSWdhb3RXSVhnY1Y4aUdIYWFyQWE3NXhUY2RRWnNXTkFwWFBLMXdrWDBCQV9aQQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ciechanowie zapowiedziano przerwy w zasilaniu? Przeczytaj najnowsze komunikaty z 20.11",
+     "published": "2026-11-20T09:08:24+00:00"
+    }
+   ]
+  },
+  {
+   "id": "7726654a60c1",
+   "type": "power",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T20:05:23+00:00",
+   "last_seen": "2026-11-20T20:05:23+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: brak prądu",
+   "snippet": "Czy w Płocku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 20.11. Czy w Płocku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 20.11 &nbsp;&nbsp; Płock Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płock Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPUHBhcUZwZ3VKaVNjaDJsa0w3VGFORHNqODBaaFU0RHp6Z2NFTmpjcDFXT3pBa2lOQlJBZkRzUnJCTjdQRkZZMkhmYmNCUGk5b1NLZ2VZUmZQYnRaWGJQU2E4VVdvMEwydDBrejd2MTF3MmNhOG5ZTlhlQ21YbDJRX1dOTk1VV2R4X1FjSHUxbnhsYXctRmpTNTZJdEFUM0p1M0JVQUlOeTVSRWpoTTgwa1h2c2V5Sk9ReUhFRm1xc3JNbWJuZlEycHNR?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płocku może dojść do wyłączenia zasilania? Zobacz, co wiadomo na 20.11",
+     "published": "2026-11-20T20:05:23+00:00"
+    }
+   ]
+  },
+  {
+   "id": "bce12e38e5e3",
+   "type": "power",
+   "severity": 3,
+   "place": "Białystok",
+   "powiat": "białostocki",
+   "powiat_slug": "bialostocki",
+   "lat": 53.1325,
+   "lon": 23.1688,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T10:11:14+00:00",
+   "last_seen": "2026-11-20T10:11:14+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Białystok: brak prądu",
+   "snippet": "Czy w Białymstoku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 20.11. Czy w Białymstoku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Białystok Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPS1Q2RnY2aVFlWl9iTUJtMzZaZXhGTmNWRVpiSWRnbWVweTg4cjUwOHZZa2NVbmhfbVpEaDFsNG5sNjZtaUZPZ2VCY0h5QmZ5QUVSWlE2RzZNeUw5WjI1cnh0Nm82MktrX2VlZzVDRXhrLUcwQnBqX3ZjMnRxLTRVMHZBQ1FKNDJqT28xbDI3SlJNTFg4eURURmEtZGJZZWFkZXlvV1VPdXZ4OFQyVXdDNFJWQWY3V3l1bnFXcQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Białymstoku mogą pojawić się braki energii elektrycznej? Sprawdź najświeższe doniesienia z 20.11",
+     "published": "2026-11-20T10:11:14+00:00"
+    }
+   ]
+  },
+  {
+   "id": "bce12e38e5e3",
+   "type": "power",
+   "severity": 3,
+   "place": "Białystok",
+   "powiat": "białostocki",
+   "powiat_slug": "bialostocki",
+   "lat": 53.1325,
+   "lon": 23.1688,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T19:04:52+00:00",
+   "last_seen": "2026-11-20T19:04:52+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Białystok: brak prądu",
+   "snippet": "Czy wystąpią braki prądu w Białymstoku? Sprawdź, czy są planowane wyłączenia prądu 20.11. Czy wystąpią braki prądu w Białymstoku? Sprawdź, czy są planowane wyłączenia prądu 20.11 &nbsp;&nbsp; Białysto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Białystok Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPY1k4S3dWc0l6c0gzZVlDc3lVZThHWGRDSmN2bGM4LXhoRjFhaW9tNk1FMEo0Q1ZONHlJRGdCTEJkRHRFakF4OFh3YkFNUW9CeTFNdWpfdHVqeWhHQmpqczhUU3NiS0VJdVA0UDN2VnNrZkhmeGRuenFEV1RzRF9pSzVSOGg2XzJ5M29jejBCNzhsVmIzTGhnSlltQjVDcDR2MnBGdmk2SURhOTM2YThVeHBBTlNMOHBWT1BRY0ZYbndNLU9CRHFlTEZ0Sk95NVdzWGc?oc=5",
+     "kind": "media_local",
+     "title": "Czy wystąpią braki prądu w Białymstoku? Sprawdź, czy są planowane wyłączenia prądu 20.11",
+     "published": "2026-11-20T19:04:52+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ca1f950f425b",
+   "type": "power",
+   "severity": 3,
+   "place": "Łomża",
+   "powiat": "łomżyński",
+   "powiat_slug": "lomzynski",
+   "lat": 53.178,
+   "lon": 22.059,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T04:13:21+00:00",
+   "last_seen": "2026-11-20T04:13:21+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Łomża: brak prądu",
+   "snippet": "Czy w Łomży może braknąć prądu? Sprawdź najnowsze informacje z 20.11. Czy w Łomży może braknąć prądu? Sprawdź najnowsze informacje z 20.11 &nbsp;&nbsp; Łomża Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Łomża Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQM1hNZkY0c05hNmJSN3NSRHFQSUVkZkFKWHJ3UEVrUk9felNXaHJIUExIVmJkZUVWODFGRGtZWTk5R1pISzRzQmxIYjctUC1peXdmeFd3ZEZJaE1GZzhoQ1VfSTQ0YWd4ZGpPS3dCU2NJTG0tWlowMy02QkdEUWR0X04waFUyM0hBVzR4Q0lwdXVXM1hiSS1TT1dJdHFoNWtXWWxHZFFXOVBIOG5LcUZ3?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Łomży może braknąć prądu? Sprawdź najnowsze informacje z 20.11",
+     "published": "2026-11-20T04:13:21+00:00"
+    }
+   ]
+  },
+  {
+   "id": "0730359ec027",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T19:05:05+00:00",
+   "last_seen": "2026-11-20T19:05:05+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 20.11. Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 20.11 &nbsp;&nbsp; Ol",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNQUlyMmpGcXhkdFp3bkJxb1pveWU3bU1wUklqTUZMdXoxU3VMX0FFVDhIV2lQcW03N3dPeVl5eDhpUndZZU1vakNnZmltdUhPcVFCX1BhaGFUVGtxcFdTbDloNlhQUlB0Tk5LTTF6eE4zSVNkQlVtbjV4Yy02VWowSjVxZTRfODlESzVzRlNNRGFBQUhEWkpHZ2lXM2txdmdZRnZIWjFZTHVnazdtSUJHSVQ1M3BPbmZ5T05GVEQ4eXlmNjNuNGhQRm1SRkdRQkVL?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie wystąpią ograniczenia w dostawie prądu? Sprawdź dostępne komunikaty z 20.11",
+     "published": "2026-11-20T19:05:05+00:00"
+    }
+   ]
+  },
+  {
+   "id": "411934b0cb82",
+   "type": "power",
+   "severity": 3,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-21T03:05:16+00:00",
+   "last_seen": "2026-11-21T09:00:00+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: brak prądu",
+   "snippet": "Czy w Olsztynie dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 21.11. Czy w Olsztynie dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 21.11 &nbsp;&nbsp; Olsztyn Nasze Mi",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPMXpvQmlXYWljQkZvQlNmT0FpZ09xSVlUZWZ4ZzZYTzRtRkhSVHZ2YnFqR1dzWmg5Z05mRFc4S2NpT1JIRHNkcUdqUmxUdng2Q3NtaV9qQmxRcWI2MTBWRk85RVJnM3poX3JwUkJYYWE1R2RoZkxveFJZNnRZQWlncGhiR1V1VWFvYjZVUHJSMHRrU0dwMFdhUmtRTml4RFlKWlRwQ1RSYjl1V05lMWduR0NPYw?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie są możliwe przerwy w dostawie prądu? Sprawdź najnowsze aktualizacje z 21.11",
+     "published": "2026-11-21T09:00:00+00:00"
+    },
+    {
+     "name": "Olsztyn Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOajc1eHhjQ2tVYVJiUW5zc3hUR2VUNWdTd1Y2d2tRVkdGZzFqa2Q3R2l6NjNNdkYxSUlTbEtKU2R0cFBoS1g2WVZNRlFFNUpBS0dZa08xcnJ2SV8xOVdmaHhXOW1yWVdRNjNyVW44WElvOHhUaTNYbWozdUZITmxsUWZ2b3p0SVRZTnZCeWdqRkZONklQaU45WTF6aWhtUFVFamRPNzFWUi1tcDQtWVQ3UG9GMXpWNGs1SFh6S1JsVWVQQTlOZC1HUm1QNkNYQTFacnQtVg?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Olsztynie dojdzie do czasowych wyłączeń prądu? Sprawdź aktualny wykaz na 21.11",
+     "published": "2026-11-21T03:05:16+00:00"
+    }
+   ]
+  },
+  {
+   "id": "34a76f4f47b8",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T05:15:07+00:00",
+   "last_seen": "2026-11-20T05:15:07+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 20.11. Czy w Elblągu grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 20.11 &nbsp;&nbsp; Elbląg Nasze M",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOM1ltam1pZWNrT2hBX05nTm1oU0EtUlp1WE9yREZoZkF3aWRON3hhZTVXVjRwRjdkTEFQYmpaMWM4RUhEU3pZQUtXcmFtVUZicHpTd1lfQmNEYllyU09HR3E3UlZiZDlvS1VJVVYxbmd3TG50Yi1xY1Y2Rjg4TTNCUENjYmo0UkhrWGNRWHhxSFVkeHpjM1JEcDdpUEZVUlhpNXJkM01sR1BsUjhabWdpNGNZWmx0cEpUVXo5NExsaG1nZklpV0tFd1M3cjZJWEF2?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 20.11",
+     "published": "2026-11-20T05:15:07+00:00"
+    }
+   ]
+  },
+  {
+   "id": "34a76f4f47b8",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T12:07:03+00:00",
+   "last_seen": "2026-11-20T12:07:03+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu może braknąć prądu? Sprawdź najnowsze informacje z 20.11. Czy w Elblągu może braknąć prądu? Sprawdź najnowsze informacje z 20.11 &nbsp;&nbsp; Elbląg Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOYTU3c2s1VDRsWlNvdDN6b3dHRE9PS1UxZmhOV2MtS2w3V3FVQlZZVEtkLU0zX0o5V0p3LVhLMHZLTkFEdkNid2R1U3FEb29pOU4yYVBCV2xVVzlYQUd1UDNjYkRKYVV4eHNMVTZqWUVDc1lLVjhCX2NwMHhTNUh0ZGhNNjBJZHpIMndna3l4Sk9kUmE4LUctOS1JQVZMc0k5UVEyMVNTT3lMVGtxbndJQmh6VQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu może braknąć prądu? Sprawdź najnowsze informacje z 20.11",
+     "published": "2026-11-20T12:07:03+00:00"
+    }
+   ]
+  },
+  {
+   "id": "612194163edf",
+   "type": "epidemic",
+   "severity": 3,
+   "place": "Szczytno",
+   "powiat": "szczycieński",
+   "powiat_slug": "szczycienski",
+   "lat": 53.563,
+   "lon": 20.987,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-21T05:08:01+00:00",
+   "last_seen": "2026-11-21T05:08:01+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Szczytno: zagrożenie epidemiologiczne",
+   "snippet": "Woda w ośmiu miejscowościach znów nadaje się do picia. Jest decyzja sanepidu. Woda w ośmiu miejscowościach znów nadaje się do picia. Jest decyzja sanepidu &nbsp;&nbsp; Tygodnik Szczytno",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Tygodnik Szczytno",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQVzhzSU1JMnVaYzhxTVdOYTdiUUNYVEV0bFl6djBMUHBYUERWU2ZlNGh0cENuV1h2Rk9NTkgwa0poRS12TXJVZ0dyNENVVDFfTnpYSVBsOWthR3JRbW5rbE5sb0VIOXgtck1MT3EtaFNxUHhtWVIwMWEyT0VoMzFGS1QwV190NDQzdFZfdXBLTTdacmhQek5qbnMwRlhBb01sVEx0blp5d3AzY0V5OWZYbnFFcG84QQ?oc=5",
+     "kind": "media_local",
+     "title": "Woda w ośmiu miejscowościach znów nadaje się do picia. Jest decyzja sanepidu",
+     "published": "2026-11-21T05:08:01+00:00"
+    }
+   ]
+  },
+  {
+   "id": "1b417613e72e",
+   "type": "power",
+   "severity": 3,
+   "place": "Ostróda",
+   "powiat": "ostródzki",
+   "powiat_slug": "ostrodzki",
+   "lat": 53.696,
+   "lon": 19.964,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-21T01:07:38+00:00",
+   "last_seen": "2026-11-21T01:07:38+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostróda: brak prądu",
+   "snippet": "Czy w Ostródzie może braknąć prądu? Sprawdź dane z 21.11. Czy w Ostródzie może braknąć prądu? Sprawdź dane z 21.11 &nbsp;&nbsp; Ostróda Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ostróda Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNbjdhT0xtYnF6MS1xWFhzZnlpaHhIRHZpRlVOYnFZNWdpNWxHUWFZaG1Qa1hxWjVTa2sxSUhYWmxkWTdDTWJuRGNXdEZ1bW9nQmdweUEyUk83c0RrelhZbDNMZVlMV3Zsd3BLdHFYV2ZScFhSSWVtX2ptdFVqSW1CaFNqTkpsUFEza1R6eVJKZXdHOVhwQWl6cVA4S0hwaVNlLUREYVNXSkVjdXpTX3JuN25IZWMxMlBWY1VfSzNoelV3MjFhVGNvQWRRRzhTZ0hsZzRUUA?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostródzie może braknąć prądu? Sprawdź dane z 21.11",
+     "published": "2026-11-21T01:07:38+00:00"
+    }
+   ]
+  },
+  {
+   "id": "a756bbd09e9e",
+   "type": "power",
+   "severity": 3,
+   "place": "Iława",
+   "powiat": "iławski",
+   "powiat_slug": "ilawski",
+   "lat": 53.596,
+   "lon": 19.568,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T14:07:44+00:00",
+   "last_seen": "2026-11-20T14:07:44+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Iława: brak prądu",
+   "snippet": "Czy w Iławie grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 21.11. Czy w Iławie grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 21.11 &nbsp;&nbsp; Iława Nasze Mias",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Iława Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQV2x5TkJnUkhYQWRFa1lFM3ZGRTU0amd1bHhMWHhlOWNjRklQalM3OVFacGtiRkdQTWx4TWRhaGlDRWJ5Y3ZvUjRnblpvSWhrWkNoSDdiWkY2bGRJUWNEVU5iYjk2NW9JUVB3ckVMNUpxVnpXWU5CeHQ1YTI5YnVKOHFPWmVETmZRX0dRcldhaUlpWl84LVpRQjJVR2w4VDY3enZUMXItY0p2b253ZTNsTQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Iławie grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 21.11",
+     "published": "2026-11-20T14:07:44+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ad3df3d3ace4",
+   "type": "disaster",
+   "severity": 2,
+   "place": "woj. podlaskie",
+   "powiat": "podlaskie",
+   "powiat_slug": "podlaskie",
+   "lat": 53.2,
+   "lon": 22.9,
+   "radius_km": 60.0,
+   "valid_to": null,
+   "first_seen": "2026-11-21T11:36:09.328950+00:00",
+   "last_seen": "2026-11-21T11:36:09.328950+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "woj. podlaskie: Susza hydrologiczna, stopień -1",
+   "snippet": "podlaskie, Bug, susza hydrologiczna",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia hydro",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "podlaskie, Bug, susza hydrologiczna",
+     "published": "2026-11-21T11:36:09.328950+00:00"
+    }
+   ]
+  },
+  {
+   "id": "c3622b2213ad",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T16:58:44+00:00",
+   "last_seen": "2026-11-20T17:30:32+00:00",
+   "credibility": 98,
+   "verdict": "likely",
+   "attribution_claimed": false,
+   "summary": "Płock: klęska żywiołowa",
+   "snippet": "Pożar mieszkania przy ul. Kazimierza Wielkiego w Płocku. Kilkanaście osób ewakuowanych. Pożar mieszkania przy ul. Kazimierza Wielkiego w Płocku. Kilkanaście osób ewakuowanych &nbsp;&nbsp; WP",
+   "reasons": [
+    "4 niezależnych źródeł"
+   ],
+   "sources": [
+    {
+     "name": "WP",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNbERMVm5ERmJYbnpGTzF4Q1l0d3FiS1lqb2dqMHVLZXlmR0d5c0o3TEZLRzdXUFc1dkVMWmRCNDJENUpWeHkzZWFUZFhvUFZwZkh5UkdVcm9EUWI1ZGJtMGJwc29SQWFhWXhaQlQ0UWhLRFV1WVpLWVVkaXo1UGpmYUJqdzVMNkZFcTczQjBnaGZPZUE2OUxRU1BCVmY2QVhBMkFGbEhWcWM2dGFsZ3I5UV9SRTZvaFczcnhVN2NqcTFfWHdnYTdsbk9BMTA1WHNucTVwQg?oc=5",
+     "kind": "media_national",
+     "title": "Pożar mieszkania przy ul. Kazimierza Wielkiego w Płocku. Kilkanaście osób ewakuowanych",
+     "published": "2026-11-20T17:28:12+00:00"
+    },
+    {
+     "name": "Portal Płock",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQUVpQLV9GLVdqbHJRNEN0TmVweHM1c0NBZkpNVU9lSEMzQ1VXWFBpN0hzUDFWT3RLVVk4WkYwdzNNQXN3UDZxeXNTLTRCTHd5ckhxSnQ4em9zYjk3TUg1QzdDMnNvN1F0TnZ4ODVmejAxTWFDVnhEOWRYTjZpdGdMN1NNQWcxYXpKZ3ZMeXI5ZnZJZF9zVk5yRDhUWkpNRHFMWEIzZFRuaEdnSnJ6OHItdmk5cG43d1E?oc=5",
+     "kind": "media_local",
+     "title": "Pożar w Płocku. Kilkanaście osób ewakuowanych, są ranni! [ZDJĘCIA]",
+     "published": "2026-11-20T17:30:32+00:00"
+    },
+    {
+     "name": "Wirtualny Nowy Dwór",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOb1Z1ZGJLQXl3dWZkbExTcW4wQTVXMjY2T3pza0hEdW5rTzQ3NnZYd0FBaGRPNlItYVhsZFF4MFEzS0hVUk1CLTZncEMwQnpNdGprSVBqdnhXcHYtbDVuXzVkc3BHWXNqLWlVZl9vSW1MWWtrLUV5UmE0RHZzWVZaTk16TzA0VGV2amdoRG1mX2VoRjZMR2JJVGJ6NWlUZlEwX1lhSThmdXFFbnA0VXpWTXJ3QnFBT2RzTVdoUVJRYlRyLXAyUkxyVE4zd0k?oc=5",
+     "kind": "media_local",
+     "title": "Pożar mieszkania przy ul. Kazimierza Wielkiego w Płocku. Ewakuowano 14 osób, 57-latka trafiła do szpitala",
+     "published": "2026-11-20T17:09:37+00:00"
+    },
+    {
+     "name": "Dziennik Płocki",
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9aTGNaVmlkTElpN01aMlNmZ29lR28yUHVxWVk0elhyOC1QWFIzXzBHYVg4RzQ4NkxidExVVktMamdVQkpJTS1nemd3VnBObTc4R3Y5NkQ3dTIzbVFGUnJWYkJ2clJITDVqc1VEb2tCeDg4WnItbzYtaTRtWQ?oc=5",
+     "kind": "media_local",
+     "title": "Pożar mieszkania w Płocku. Ewakuowano 11 osób!",
+     "published": "2026-11-20T16:58:44+00:00"
+    }
+   ]
+  },
+  {
+   "id": "76bd634d72d9",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Ostróda",
+   "powiat": "ostródzki",
+   "powiat_slug": "ostrodzki",
+   "lat": 53.696,
+   "lon": 19.964,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T07:10:27+00:00",
+   "last_seen": "2026-11-20T08:43:39+00:00",
+   "credibility": 84,
+   "verdict": "likely",
+   "attribution_claimed": false,
+   "summary": "Ostróda: klęska żywiołowa",
+   "snippet": "Pożar Koziej Farmy w Złotnej w gminie Morąg. Ogień gasi 13 zastępów straży pożarnej - Nasz Głos Ostróda. Pożar Koziej Farmy w Złotnej w gminie Morąg. Ogień gasi 13 zastępów straży pożarnej - Nasz Głos",
+   "reasons": [
+    "2 niezależnych źródeł"
+   ],
+   "sources": [
+    {
+     "name": "Ostróda News",
+     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQVHZidDNKZXJscXViUG9BZl9tclJLaWVCTlhVcTI3RGk4R3BsNjZQYm9Wc3A3RlNjSWx0aUlRRm5tMDYwOHFXMG12WVptOTZjRENsdHFmUXhKdDZKUEpQX2dXb2xlWXc4aGNEX2VOamdIVkE5Zm9CUGR0S2NHamFsQ3U3RWdsZHBNN1NJTVV5MzRVeFJDaTJpU0JDQmFHbGppT3dRS0d3?oc=5",
+     "kind": "media_local",
+     "title": "POŻAR KOZIEJ FARMY W ZŁOTNIE. STRAŻACY URATOWALI OKOŁO 120 ZWIERZĄT",
+     "published": "2026-11-20T08:43:39+00:00"
+    },
+    {
+     "name": "Nasz Głos Ostróda",
+     "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1tWnFFQnVHWlN2VmQ4eDV3M2lkUW5OWmJsMGc1cC1zVWNuai1rMHBKNTJISUwwdU45Nlo1ZkpmZjRfOEYzdlJwSm1obDNkSngtbU5fUzBld0hEdEtIZUJGNGtwcDhsaHN1VnAtUW51dERKOUVyNHEwU1c3TlPSAXxBVV95cUxNbVpxRUJ1R1pTdlZkOHg1dzNpZFFuTlpibDBnNXAtc1VjbmotazBwSjUySElMMHVOOTZaNWZKZmY0XzhGM3ZScEptaGwzZEp4LW1OX1MwZXdIRHRLSGVCRjRrcHA4bGhzdVZwLVFudXRESjlFcjRxMFNXN05T?oc=5",
+     "kind": "media_local",
+     "title": "Pożar Koziej Farmy w Złotnej w gminie Morąg. Ogień gasi 13 zastępów straży pożarnej - Nasz Głos Ostróda",
+     "published": "2026-11-20T07:10:27+00:00"
+    }
+   ]
+  },
+  {
+   "id": "3caa4937bc6e",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Ciechanów",
+   "powiat": "ciechanowski",
+   "powiat_slug": "ciechanowski",
+   "lat": 52.8817,
+   "lon": 20.6193,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T08:24:36+00:00",
+   "last_seen": "2026-11-20T08:24:36+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ciechanów: klęska żywiołowa",
+   "snippet": "Pożar w Żarnowie. Samochód doszczętnie spłonął. Pożar w Żarnowie. Samochód doszczętnie spłonął &nbsp;&nbsp; Ciechanowinaczej.pl",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ciechanowinaczej.pl",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE93aWlGcHRHV29aUkVUZnN3MV85WlhBMExfQU1RdlkxLUtlV281U1hfU3Z6UFJqZ1BtODJ1TGlrWjhfYU4zeFpseXM4WjFHVHJpd2lqSWlXY29PRHZEZGpvWjBtZEpqdW5hVWU1YTlFZ0hzSWdNVDdhUVp3?oc=5",
+     "kind": "media_local",
+     "title": "Pożar w Żarnowie. Samochód doszczętnie spłonął",
+     "published": "2026-11-20T08:24:36+00:00"
+    },
+    {
+     "name": "Ciechanowinaczej.pl",
+     "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE96Ui00WW9sNWRvV0VJMTloekt3ajN5Yjljc2pDdjhncXdIS1NXUk4ycWo4Q2RNdllaTWF3SVZHSkI5SnplWUdhY256aS1uVzRFeXlZSmdYNzFENTI1MkNaNXhFdWEwZnVkWmJzaHl6aGc3emxpRWxqNg?oc=5",
+     "kind": "media_local",
+     "title": "Zdjęcia Pożar w Żarnowie. Samochód doszczętnie spłonął - fotorelacja",
+     "published": "2026-11-20T08:24:36+00:00"
+    }
+   ]
+  },
+  {
+   "id": "d4e028fa77f3",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-21T03:14:24+00:00",
+   "last_seen": "2026-11-21T03:14:24+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: klęska żywiołowa",
+   "snippet": "Pożar mieszkania w Płocku. 14 osób ewakuowano, jedna osoba trafiła do szpitala. Pożar mieszkania w Płocku. 14 osób ewakuowano, jedna osoba trafiła do szpitala &nbsp;&nbsp; Tygodnik Płocki",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Tygodnik Płocki",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBidU02b0RZNmNSeHdpM2lyemNsV19ieXBIWmVYUUdPOTdVT2taajNMUTMzYWFkZDY5S2ozeDZldGFmd1I0NGZKcVVWczFZaFZWTVdrWThTY0FXa192ZWl5UkZIdkItLU5fOHBrUA?oc=5",
+     "kind": "media_local",
+     "title": "Pożar mieszkania w Płocku. 14 osób ewakuowano, jedna osoba trafiła do szpitala",
+     "published": "2026-11-21T03:14:24+00:00"
+    }
+   ]
+  },
+  {
+   "id": "7822df425521",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Morąg",
+   "powiat": "ostródzki",
+   "powiat_slug": "ostrodzki",
+   "lat": 54.0167,
+   "lon": 19.9333,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T11:54:08+00:00",
+   "last_seen": "2026-11-20T11:54:08+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Morąg: klęska żywiołowa",
+   "snippet": "Duży pożar gospodarstwa w gminie Morąg. Duży pożar gospodarstwa w gminie Morąg &nbsp;&nbsp; Radio Olsztyn",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Radio Olsztyn",
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1TSUVSY3JZaDloT05wbFpraTRSbThkbHhzLXplV1hmMFRJYVRwNzNnLU02eXZsaC1kX1hWZ1FHWEMxOGpCS0NFSXhSX25weXN0Ym9JNzd0S3FCejNRNlVvWnpTakVNbUdfaFI1LVZGR3dfSlBpSnMtVGdFUQ?oc=5",
+     "kind": "media_local",
+     "title": "Duży pożar gospodarstwa w gminie Morąg",
+     "published": "2026-11-20T11:54:08+00:00"
+    }
+   ]
+  },
+  {
+   "id": "53687b6e0d4d",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-20T08:36:37+00:00",
+   "last_seen": "2026-11-20T08:36:37+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: klęska żywiołowa",
+   "snippet": "Pożar w Złotnej. Ewakuowano zwierzęta. Pożar w Złotnej. Ewakuowano zwierzęta &nbsp;&nbsp; TVP Olsztyn",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "TVP Olsztyn",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE81V2ZOMXM5MW50NjVURDkxUGpGZnJqT05kWGF6TEdfcF81RlVhR2YxRmYzUmxhMkhvaUtjZlNLVUpNSVVGOGp2dnd2cnpGc1lseGxScFJZc1BScnM0dEcySS1ZLXBBc0k3MV9nM0hUS2puSU1hQVFn?oc=5",
+     "kind": "media_local",
+     "title": "Pożar w Złotnej. Ewakuowano zwierzęta",
+     "published": "2026-11-20T08:36:37+00:00"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "weather": "good",
+  "disaster": "partial",
+  "power": "partial",
+  "water": "partial",
+  "infrastructure": "weak",
+  "epidemic": "weak",
+  "unrest": "weak",
+  "shortage": "weak",
+  "power_live": false
+ },
+ "source_status": {
+  "imgw_meteo": "ok (0)",
+  "imgw_hydro": "ok (1)",
+  "google_news": "ok (124)",
+  "energa_biezace": "wyłączone",
+  "pge_bialystok": "wyłączone",
+  "shelters": "bez zmian (26078 punktów, stan 2026-11-10)",
+  "poi": "bez zmian (pharmacy: 2638, fuel: 1811, hospital: 218, school: 3616, bridge: 1087, military: 264)"
+ },
+ "labels": {
+  "power": "brak prądu",
+  "water": "awaria wody",
+  "weather": "zagrożenie pogodowe",
+  "disaster": "klęska żywiołowa",
+  "infrastructure": "awaria infrastruktury",
+  "epidemic": "zagrożenie epidemiologiczne",
+  "unrest": "niepokoje",
+  "shortage": "braki w sklepach",
+  "sabotage": "podejrzenie sabotażu",
+  "other": "zdarzenie"
+ }
+}
