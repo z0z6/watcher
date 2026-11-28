@@ -1,0 +1,430 @@
+{
+ "generated_at": "2026-11-28T11:46:45.521489+00:00",
+ "events": [
+  {
+   "id": "fb905da47446",
+   "type": "power",
+   "severity": 3,
+   "place": "Przasnysz",
+   "powiat": "przasnyski",
+   "powiat_slug": "przasnyski",
+   "lat": 53.0197,
+   "lon": 20.8815,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T18:16:04+00:00",
+   "last_seen": "2026-11-27T23:19:02+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Przasnysz: brak prądu",
+   "snippet": "Czy w Przasnyszu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 27.11. Czy w Przasnyszu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 27.11 &nbsp;&nbsp; Prza",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Przasnysz Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOeVpPUngzWmNlbHdtQlkzZEstTEpXRDV4eGlvVVFlemFUeWt1bnhBdXN3X1lwaEI2TnZweFh2QTF1cUdjTFFZeDFPN0pIbFdUNU9RSVdaUGtDUnkxbEUyYXVQX1hfbjNxZHJKQnNjNi1ZaEh5SXVjMWtXdEsxeHpqT2p3dHUwTTJUQVotdVpRbkhNd21VZkotUVIyY0NyVUxwNGk3M0kydE5uY2RTX0hLR0RLdHdIbjJJWVVFZjh3eGJZd2hEYmt4ZjBoaXB6UQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Przasnyszu przewidziano prace mogące wpłynąć na dostawy prądu? Zobacz szczegóły z 28.11",
+     "published": "2026-11-27T23:19:02+00:00"
+    },
+    {
+     "name": "Przasnysz Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxONlRKZlRNcFpsSlo0aU5UbWN4US1hdTcwemY5U1NwTkRlS1IwNjRwTmk4Q0twWWI1TmMwa1BMVXJuWkEtOWlkSUd2OWxHdEhLZnd1cHY4cHZUZGRSVUtOWVFkNi1yZVBzM05XLWliT2l0RWYxczE0WVYtMGRDOHZKdkxManpvZmd2d2VlREN6TDI2NmZwRDNqc1dubmQ2cXJDVDlfSzZSSTEya2hrczZkYUEzd1lHbWQxRzB2WjlCdzJHdEozdnc1UDhjbHZDUQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Przasnyszu grożą czasowe wyłączenia prądu? Dowiedz się więcej z informacji z 27.11",
+     "published": "2026-11-27T22:43:12+00:00"
+    },
+    {
+     "name": "Przasnysz Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOU1liLUwzal9vZGo0QkJqMjBPY0F4Y1hmS2Y3cWRPTktJeE0yRmVfX1B2X2VobmxkVHNRQ1gtcGJvbUo1aTF3S3owdm5mUW1ZZ3pWMW03eHF5M1NvSnlIZ3ZzWW54MllYRmc2LUl2SzBfeFNYd1VHY0dZVEVPTDRZX0VQekhjeFBpUEE1V0FybEhPRzBSbktZRUJsSGdTdDl0aUhVOE5vRlJ6VnZ0Q18tYm5fWTc5SnlnOEM3d3pSbjNqVWxhZmdHY21SYzVNbXlPYlZSbUFXdS0?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Przasnyszu mogą wystąpić problemy z dostawą prądu? Zobacz bieżące informacje z 27.11",
+     "published": "2026-11-27T18:16:04+00:00"
+    }
+   ]
+  },
+  {
+   "id": "d0308fa95d40",
+   "type": "power",
+   "severity": 3,
+   "place": "Ostrołęka",
+   "powiat": "ostrołęcki",
+   "powiat_slug": "ostrolecki",
+   "lat": 53.084,
+   "lon": 21.574,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T12:06:58+00:00",
+   "last_seen": "2026-11-27T12:06:58+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Ostrołęka: brak prądu",
+   "snippet": "Czy w Ostrołęce występuje ryzyko blackoutu? Przejrzyj najnowsze informacje z 27.11. Czy w Ostrołęce występuje ryzyko blackoutu? Przejrzyj najnowsze informacje z 27.11 &nbsp;&nbsp; Ostrołęka Nasze Mias",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Ostrołęka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPMWhmYjQ0N2RUbkZSY29RZEhVOWJrYzJzTF9sOTBsNk5KMWpvclhNelhXQnIyUURlaVlZYnBFRHZRMU8zSHg1SVVOb0htQU54SXlKN2lnUUhRQVB3ZHRkWHJQd21ZaENmX2RER2FCbVk1TW1ycy1UbmNCc2JTNTNYek1PT1ZtWmRlT3c4VmZfdXdYRXJUZUJzYXZQcktHNHl2MGtTb1ZEMk1pbTNxQzBPUWV4YzY4dWdQSDhzSlpJcm5tS3Jic1pLbVZxYlJOTnFldHZPblozNA?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrołęce występuje ryzyko blackoutu? Przejrzyj najnowsze informacje z 27.11",
+     "published": "2026-11-27T12:06:58+00:00"
+    },
+    {
+     "name": "Ostrołęka Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOck01ZDhMdW1oT1hBc1ZVY3FEdWJOaHBObDdkRHItSzk0VmNmNU1SQ3FYMzUyaHktV0s1ZHBGWDhWU0hOMnFRc2loU2VJTlIwNC01NHhuaF9OdTh3WlYxYkZJQTJBRV9Bd05mb1hyU1VqUTlwVVZZRkc4OHZtOTBVQjMzZGdPUEljVUw5MjNNLUxsRkpJdHJScU1jVUtCWnk2aWRfWnowd2lsTEFLMkYwbQ?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Ostrołęce może zabraknąć energii elektrycznej? Zobacz najnowszy przegląd informacji z 27.11",
+     "published": "2026-11-27T12:06:58+00:00"
+    }
+   ]
+  },
+  {
+   "id": "fdc25eb70956",
+   "type": "power",
+   "severity": 3,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-28T09:05:16+00:00",
+   "last_seen": "2026-11-28T09:05:16+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: brak prądu",
+   "snippet": "Czy w Płocku może braknąć prądu? Sprawdź najnowsze informacje z 28.11. Czy w Płocku może braknąć prądu? Sprawdź najnowsze informacje z 28.11 &nbsp;&nbsp; Płock Nasze Miasto",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Płock Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNcHFaVUtGTWxuQkl3eTRuamVmb3RLenY2eFdMZWs1SS1sdGpjMmN6Mk5qeE8tOGItaWlMeVhXeVJYTGVtaF9CaG1mOWFqM0MyTjNlV2R3bnpoYVVZX1RCdy05dGxMMVMzaGxVMUhNSjVfOXJ5U05YTXNNdG5IVFBLUGZ1SGR3dmtJMy1YNEtfR3ViTnktWkxlY2l3R0VNTHlZNHRsSEFnUW1Ia3paNEZYeU02NUlka0pBYml3U1FXVloyZmVSUnAwNFpqemlKZw?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Płocku może braknąć prądu? Sprawdź najnowsze informacje z 28.11",
+     "published": "2026-11-28T09:05:16+00:00"
+    }
+   ]
+  },
+  {
+   "id": "fd2caca16dff",
+   "type": "power",
+   "severity": 3,
+   "place": "Siedlce",
+   "powiat": "siedlecki",
+   "powiat_slug": "siedlecki",
+   "lat": 52.1676,
+   "lon": 22.2902,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T14:06:30+00:00",
+   "last_seen": "2026-11-27T14:06:30+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Siedlce: brak prądu",
+   "snippet": "Czy w Siedlcach są możliwe przerwy w dostawie prądu? Sprawdź najnowsze aktualizacje z 28.11. Czy w Siedlcach są możliwe przerwy w dostawie prądu? Sprawdź najnowsze aktualizacje z 28.11 &nbsp;&nbsp; Si",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Siedlce Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPTzJtYW82WVNnNDNPMlNUeW5IUURhVHV4UDZ5N003NTcxR2J6VWIzVV91V2tpYy0tdlNYTnBSSUh4TldMdXR5Qmg0cmNoMDg3Z01hNU1YOUdNeHo0UWx0eE5UQ0hMSFJQZXZqUDhLU1ZPbUVubVExMXNfbnFVNjVxenVSbkV5bVYxWld6R0xwZTk3TjBJUzNSeHBKOVlwUkwwSnQyN1pGa2V6ZEMzWnc?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Siedlcach są możliwe przerwy w dostawie prądu? Sprawdź najnowsze aktualizacje z 28.11",
+     "published": "2026-11-27T14:06:30+00:00"
+    }
+   ]
+  },
+  {
+   "id": "c491ccf16a10",
+   "type": "power",
+   "severity": 3,
+   "place": "Elbląg",
+   "powiat": "elbląski",
+   "powiat_slug": "elblaski",
+   "lat": 54.1522,
+   "lon": 19.4088,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T11:06:38+00:00",
+   "last_seen": "2026-11-27T11:06:38+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Elbląg: brak prądu",
+   "snippet": "Czy w Elblągu mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 28.11. Czy w Elblągu mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 28.11 &nbsp;&nbsp; Elbląg Nasze Miast",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Elbląg Nasze Miasto",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOV1VCVWdnLWwzTHZEa1U4SGNmYU1YaWZaWE1sc0pCX0RCWkNNMThnWGJFTWdDbVZqWjM0MC1PWG9FT3phUW9RVDJrLU9Ec3NQZXFrU0dUUHFuUjFRTXNaTzh0THJqY2lXR2xHS0pvWkRsREJlZ3M1NXdEQnp5QllRUlVPcW1YZDgtWHJKbnJFalBScm16WUxiSXY2bmlnRWtuamo5bFdQc1E0WlR4OU9zZ1AxWnVmYVdxQlhyNmtxYXRvTG5ZdDNlcVVNbmI?oc=5",
+     "kind": "media_local",
+     "title": "Czy w Elblągu mieszkańcy mogą zostać bez zasilania? Poznaj najświeższe dane z 28.11",
+     "published": "2026-11-27T11:06:38+00:00"
+    }
+   ]
+  },
+  {
+   "id": "a5f678ec705d",
+   "type": "epidemic",
+   "severity": 3,
+   "place": "Cała Polska",
+   "powiat": "ogólnokrajowo",
+   "powiat_slug": "ogolnokrajowo",
+   "lat": 52.0,
+   "lon": 19.4,
+   "radius_km": 400.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T12:46:11+00:00",
+   "last_seen": "2026-11-27T12:46:11+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Cała Polska: zagrożenie epidemiologiczne",
+   "snippet": "145. ognisko grypy ptaków w Polsce. Wirus H5N1 w Wielkopolsce. 145. ognisko grypy ptaków w Polsce. Wirus H5N1 w Wielkopolsce &nbsp;&nbsp; Agropolska",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Agropolska",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOelNZTUpTekcyZHFBWUJFVnU0MlV4ajdYai0xOTlmdWJ5SFE4Nzk2TFFIZ2dHSXdVMmJvbW0wdGpsZ1NVLVN1R1pBTkl4Vmo4SVFGLUFITEhtSE41WVRtc1EtN2JxckZPS0JJXy1BNVFwcDRXV25UVW5VUXNZOFEtaGVraERaZDRqazk0enNLTHN6eFctZDkteGlJVVVhSUptUHc?oc=5",
+     "kind": "media_local",
+     "title": "145. ognisko grypy ptaków w Polsce. Wirus H5N1 w Wielkopolsce",
+     "published": "2026-11-27T12:46:11+00:00"
+    }
+   ]
+  },
+  {
+   "id": "ad3df3d3ace4",
+   "type": "disaster",
+   "severity": 2,
+   "place": "woj. podlaskie",
+   "powiat": "podlaskie",
+   "powiat_slug": "podlaskie",
+   "lat": 53.2,
+   "lon": 22.9,
+   "radius_km": 60.0,
+   "valid_to": null,
+   "first_seen": "2026-11-28T11:46:45.521489+00:00",
+   "last_seen": "2026-11-28T11:46:45.521489+00:00",
+   "credibility": 100,
+   "verdict": "confirmed",
+   "attribution_claimed": false,
+   "summary": "woj. podlaskie: Susza hydrologiczna, stopień -1",
+   "snippet": "podlaskie, Bug, susza hydrologiczna",
+   "reasons": [
+    "Potwierdzone w oficjalnym źródle"
+   ],
+   "sources": [
+    {
+     "name": "IMGW-PIB ostrzeżenia hydro",
+     "url": "https://meteo.imgw.pl/",
+     "kind": "official",
+     "title": "podlaskie, Bug, susza hydrologiczna",
+     "published": "2026-11-28T11:46:45.521489+00:00"
+    }
+   ]
+  },
+  {
+   "id": "88ff39fee2dc",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Płock",
+   "powiat": "płocki",
+   "powiat_slug": "plocki",
+   "lat": 52.5463,
+   "lon": 19.7065,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T19:29:15+00:00",
+   "last_seen": "2026-11-27T19:29:15+00:00",
+   "credibility": 70,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płock: klęska żywiołowa",
+   "snippet": "Pożar mieszkania w Płocku. Policjanci ewakuowali 57-letnią kobietę. Pożar mieszkania w Płocku. Policjanci ewakuowali 57-letnią kobietę &nbsp;&nbsp; WP",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "WP",
+     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOWFJJUGZtZUhrRnpQZnhwSUhIRXY4SFVmbFJRUHU5alZoUEtDSDlhZTkycDI5d1lqSTQwYzJzOENodzNFUm9aN0M4RTN3Qjd1SXdDRlMydXBQbXZacGIxQUZGNmp4T3o5bGZHb3ZMOWhNeno1NW02Z0pJX09BN3RudDRuRWtUNFZKSXdmcXU2a1JsQTMxY2p5OVNZNFJUZnBVNTNNMEVuT3VrcHhIMUpmdGJtalQzWXZrWUpv?oc=5",
+     "kind": "media_national",
+     "title": "Pożar mieszkania w Płocku. Policjanci ewakuowali 57-letnią kobietę",
+     "published": "2026-11-27T19:29:15+00:00"
+    }
+   ]
+  },
+  {
+   "id": "0200f5d1ada7",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Płońsk",
+   "powiat": "płoński",
+   "powiat_slug": "plonski",
+   "lat": 52.6226,
+   "lon": 20.3783,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-27T08:32:00+00:00",
+   "last_seen": "2026-11-27T08:32:00+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Płońsk: klęska żywiołowa",
+   "snippet": "Awaria pieca wstępną przyczyną pożaru w Cieszkowie Nowym. Awaria pieca wstępną przyczyną pożaru w Cieszkowie Nowym &nbsp;&nbsp; Radio Płońsk",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Radio Płońsk",
+     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxObk9rZVFfaFRHNFhFRnp3QzEzak1hcUhFcDE2VEI0elVDY1VUUFZ5VEFNSFVkOUdlUExUM19fYVdZREc1dnJfLUxUdXMzZFF1TzNMTlhNNEM4R0hidms3bWJQamhkemotYzVaaEVfUVZPU3B6dVYxRC1mYzJZQS1ObXFwd2kxXzVkSXpaTEpPQ0c0TmNIZnA0UFlEeWMydw?oc=5",
+     "kind": "media_local",
+     "title": "Awaria pieca wstępną przyczyną pożaru w Cieszkowie Nowym",
+     "published": "2026-11-27T08:32:00+00:00"
+    }
+   ]
+  },
+  {
+   "id": "667306306b9c",
+   "type": "water",
+   "severity": 2,
+   "place": "Olsztyn",
+   "powiat": "olsztyński",
+   "powiat_slug": "olsztynski",
+   "lat": 53.7784,
+   "lon": 20.4801,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-28T09:00:03+00:00",
+   "last_seen": "2026-11-28T09:00:03+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Olsztyn: awaria wody",
+   "snippet": "Olsztyn: powstaną kolejne kilometry wodociągu. Rozstrzygnięto przetarg. Olsztyn: powstaną kolejne kilometry wodociągu. Rozstrzygnięto przetarg &nbsp;&nbsp; Radio Jura",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "Radio Jura",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxONjJwZGZqY0NTT1NQMjFjU2s3WXc3RHNqZHVwRXZVUjRBYlNQSVVBOEZDNGtubmVzbzJmalgyUkZXSFBoX0o5bWFZUm1yUWw1TlZsN2kwSjNnUUl3LXJMbGR1eS1weFUxN19DVi1WazgxWmZIN0ZfMml6elNqVXZyX056blhmSjg2SDJXZ1A5WkdpZmVDSVhWQU16SGxFWlk?oc=5",
+     "kind": "media_local",
+     "title": "Olsztyn: powstaną kolejne kilometry wodociągu. Rozstrzygnięto przetarg",
+     "published": "2026-11-28T09:00:03+00:00"
+    }
+   ]
+  },
+  {
+   "id": "6aca04a827d5",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Szczytno",
+   "powiat": "szczycieński",
+   "powiat_slug": "szczycienski",
+   "lat": 53.563,
+   "lon": 20.987,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-28T00:06:48+00:00",
+   "last_seen": "2026-11-28T00:06:48+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Szczytno: klęska żywiołowa",
+   "snippet": "Pożar sadzy w przewodzie kominowym w Szczytnie. Pożar sadzy w przewodzie kominowym w Szczytnie &nbsp;&nbsp; WM112.pl",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "WM112.pl",
+     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9rQk1KOHlCSGRfWWpYNE5nRXlraFNVeE8xcmZzUmc4MGtTODVIVC0ybHhPcm5qUEcyOGVmQVExdjVIR05teEMtcFp3aVZUay1iZjF2Vk14RTlvSFExdk5FMDhoazRNREthQlRsbkpnVnh6bWtCNzRCWkV0SFV4Zw?oc=5",
+     "kind": "media_local",
+     "title": "Pożar sadzy w przewodzie kominowym w Szczytnie",
+     "published": "2026-11-28T00:06:48+00:00"
+    }
+   ]
+  },
+  {
+   "id": "65acf8ce702a",
+   "type": "disaster",
+   "severity": 2,
+   "place": "Grajewo",
+   "powiat": "grajewski",
+   "powiat_slug": "grajewski",
+   "lat": 53.6481,
+   "lon": 22.4547,
+   "radius_km": 0.0,
+   "valid_to": null,
+   "first_seen": "2026-11-28T01:09:55+00:00",
+   "last_seen": "2026-11-28T01:09:55+00:00",
+   "credibility": 60,
+   "verdict": "unverified",
+   "attribution_claimed": false,
+   "summary": "Grajewo: klęska żywiołowa",
+   "snippet": "Pożar sadzy w przewodzie kominowym - e-Grajewo. Pożar sadzy w przewodzie kominowym &nbsp;&nbsp; e-Grajewo",
+   "reasons": [
+    "Tylko 1 niezależne źródło"
+   ],
+   "sources": [
+    {
+     "name": "e-Grajewo",
+     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNelhvVFJRNjVwdkpiOHpHaHktMGQ5TlR6emVIZmhaUGgzbGgxRmUzRDFDMDJaUTlzUXFtMTlZTEJGUkpabG0wS1BVTFNhYi13d1pVNzVZZHBoTWJ6eFAtQ1VYWWVfZ1BQOGNIRVpVZ044VFQySjFkVjdESTJsV2RhMGJn?oc=5",
+     "kind": "media_local",
+     "title": "Pożar sadzy w przewodzie kominowym - e-Grajewo",
+     "published": "2026-11-28T01:09:55+00:00"
+    }
+   ]
+  }
+ ],
+ "coverage": {
+  "weather": "good",
+  "disaster": "partial",
+  "power": "partial",
+  "water": "partial",
+  "infrastructure": "weak",
+  "epidemic": "weak",
+  "unrest": "weak",
+  "shortage": "weak",
+  "power_live": false
+ },
+ "source_status": {
+  "imgw_meteo": "ok (0)",
+  "imgw_hydro": "ok (1)",
+  "google_news": "ok (129)",
+  "energa_biezace": "wyłączone",
+  "pge_bialystok": "wyłączone",
+  "shelters": "bez zmian (25829 punktów, stan 2026-11-23)",
+  "poi": "bez zmian (pharmacy: 2638, fuel: 1811, hospital: 219, school: 3616, bridge: 1094, military: 265)"
+ },
+ "labels": {
+  "power": "brak prądu",
+  "water": "awaria wody",
+  "weather": "zagrożenie pogodowe",
+  "disaster": "klęska żywiołowa",
+  "infrastructure": "awaria infrastruktury",
+  "epidemic": "zagrożenie epidemiologiczne",
+  "unrest": "niepokoje",
+  "shortage": "braki w sklepach",
+  "sabotage": "podejrzenie sabotażu",
+  "other": "zdarzenie"
+ }
+}
